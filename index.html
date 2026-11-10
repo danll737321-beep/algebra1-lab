@@ -1062,7 +1062,7 @@ function renderHome(){
  app.innerHTML=`<div class="wrap"><div class="card hero"><h1>Algebra 1 Visual Lab</h1><p style="margin:4px 0">See the idea first. Then do it with your pencil.</p>
  <div class="flow"><span>🖼 1. Picture</span><span>🪜 2. Steps</span><span>✏️ 3. Pencil</span><span>✅ 4. Check</span></div>
  <a class="btn primary" href="#/l/${nid}/0">${anyDone?'Continue':'Start'}: ${META[nid].title} ▶</a>
- <div class="bar"><i style="width:${done/ORDER.length*100}%"></i></div><div class="mute" style="font-size:14px">${done} of ${ORDER.length} lessons complete · ${avail.length} lessons open now, more coming soon</div></div>
+ <div class="bar"><i style="width:${done/ORDER.length*100}%"></i></div><div class="mute" style="font-size:14px">${done} of ${ORDER.length} lessons complete${avail.length<ORDER.length?` · ${avail.length} lessons open now, more coming soon`:' · Algebra 1A and 1B, all 10 modules'}</div></div>
  ${COURSE.map(c=>`<h2>Algebra ${c.id}</h2><div class="mods">${c.modules.map(m=>`<div class="mod" style="--mc:${m.color}"><span class="mn">Module ${m.n}</span><b>${m.title}</b><ol>${m.lessons.map((t,i)=>{const id=`${c.id}-${m.n}-${i+1}`;return hasLesson(id)?`<li><a href="#/l/${id}/0"><span class="st ${isDone(id)?'d':''}">${isDone(id)?'✓':'○'}</span>${i+1}. ${t}</a></li>`:`<li class="soon"><span class="st">·</span>${i+1}. ${t}<small>soon</small></li>`;}).join('')}</ol></div>`).join('')}</div>`).join('')}</div>`;
 }
 
