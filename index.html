@@ -1,1139 +1,635 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Algebra 1 Master Curriculum Lab</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- React & React DOM CDNs -->
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <!-- Babel Standalone CDN -->
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Algebra 1 Visual Lab</title>
+<style>
+:root{--ink:#1f2937;--mute:#6b7280;--line:#e5e7eb;--bg:#f6f5f1;--x:#2563eb;--k:#ea580c;--ok:#15803d;--bad:#b91c1c;--rise:#7c3aed;--run:#059669;--acc:#2563eb}
+*{box-sizing:border-box}
+body{margin:0;font:17px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg)}
+a{color:var(--acc)}
+header.top{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px}
+.brand{font-weight:800;font-size:18px;text-decoration:none;color:var(--ink)}
+.brand span{color:var(--acc)}
+.topprog{font-size:14px;color:var(--mute)}
+.wrap{max-width:900px;margin:0 auto;padding:12px 16px 60px}
+h1{font-size:28px;line-height:1.25;margin:6px 0}
+h2{font-size:22px;margin:28px 0 8px}
+h3{font-size:19px;margin:4px 0 8px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;margin:14px 0}
+.tag{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--acc);margin-bottom:4px}
+.mute{color:var(--mute)}
+.math{font-family:"Cambria Math","STIX Two Math","Times New Roman",Georgia,serif;font-size:1.2em}
+.big{font-size:1.5em}
+i.v{color:var(--x);font-style:italic;font-weight:600}
+.k{color:var(--k);font-weight:700}
+.bad{color:var(--bad);font-weight:700}
+.good{color:var(--ok);font-weight:700}
+button,.btn{font:inherit;font-size:16px;cursor:pointer;border-radius:10px;border:1px solid #d1d5db;background:#fff;color:var(--ink);padding:9px 14px;min-height:44px;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+button:hover,.btn:hover{border-color:var(--acc)}
+button:disabled{opacity:.4;cursor:not-allowed}
+button.primary,.btn.primary{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:700}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+svg.fig{width:100%;height:auto;display:block;margin:6px auto}
+.gl{stroke:#e5e7eb;stroke-width:1}.ax{stroke:#6b7280;stroke-width:1.6}.tl{font-size:12px;fill:#6b7280}
+.ln{stroke:var(--x);stroke-width:3}
+.touch{touch-action:none}
+/* home */
+.hero{background:linear-gradient(135deg,#eff6ff,#fff7ed)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 14px}
+.flow span{background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-weight:600;font-size:15px}
+.bar{height:10px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin:14px 0 4px}
+.bar i{display:block;height:100%;background:var(--ok)}
+.mods{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.mod{background:#fff;border:1px solid var(--line);border-top:6px solid var(--mc);border-radius:14px;padding:14px}
+.mod .mn{font-size:13px;font-weight:700;color:var(--mc);text-transform:uppercase;letter-spacing:.05em}
+.mod b{display:block;font-size:18px;margin-bottom:6px}
+.mod ol{list-style:none;padding:0;margin:0}
+.mod li{padding:5px 0;border-top:1px solid #f3f4f6;font-size:15.5px}
+.mod li a{display:flex;gap:8px;text-decoration:none;color:var(--ink);font-weight:600}
+.mod li a:hover{color:var(--acc)}
+.mod li.soon{color:#9ca3af;display:flex;gap:8px}
+.mod li small{margin-left:auto;font-size:12px}
+.st{width:20px;flex:none;text-align:center}
+.st.d{color:var(--ok);font-weight:800}
+/* lesson */
+.crumb{font-size:14px;color:var(--mute);margin-top:8px}
+.goal{background:#fff;border-left:5px solid var(--ok);padding:8px 12px;border-radius:8px;margin:8px 0 12px}
+.stepper{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;position:sticky;top:57px;z-index:4;background:var(--bg);padding:6px 0}
+.pill{white-space:nowrap;text-align:center;padding:9px 4px;border-radius:999px;border:1px solid #d1d5db;background:#fff;font-weight:700;font-size:15px;text-decoration:none;color:var(--ink)}
+.pill.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.pill.done:not(.on){border-color:var(--ok);color:var(--ok)}
+.pill.done::after{content:" ✓"}
+.navrow{display:flex;justify-content:space-between;gap:10px;margin-top:18px}
+.life{border-left:6px solid var(--k)}
+.life .tag{color:var(--k)}
+dl.vocab{margin:0}
+dl.vocab dt{font-weight:800;margin-top:8px}
+dl.vocab dd{margin:0 0 0 0;color:#374151}
+.note{min-height:52px;margin-top:8px;padding:10px 12px;background:#f9fafb;border-radius:10px}
+.eqline{text-align:center;font-size:1.7em;margin-top:4px}
+/* steps */
+.ln-step{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px;align-items:center;padding:10px 0;border-top:1px dashed #e5e7eb;animation:fade .35s}
+.ln-step .m{font-size:1.3em;text-align:center}
+.ln-step .why{font-size:15.5px;color:#374151;background:#f9fafb;border-radius:8px;padding:6px 10px}
+.ln-step.hide{display:none}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+.prob{font-size:18px}
+.mistake{border-left:6px solid var(--bad)}
+.mistake .tag{color:var(--bad)}
+.mk{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.mk div{padding:10px;border-radius:10px;text-align:center}
+.mk .x{background:#fef2f2}.mk .o{background:#f0fdf4}
+/* practice */
+.pencilnote{background:#fffbeb;border:1px dashed #f59e0b;border-radius:10px;padding:8px 12px;margin:8px 0 12px;font-size:15.5px}
+.fld{display:inline-flex;align-items:center;gap:8px;margin:6px 14px 6px 0;font-weight:700}
+.fld input{font:inherit;font-size:18px;width:120px;padding:8px 10px;border:2px solid #d1d5db;border-radius:10px}
+.fld input:focus{outline:none;border-color:var(--acc)}
+.opt{display:flex;width:100%;text-align:left;margin:6px 0;justify-content:flex-start}
+.opt.right{background:#f0fdf4;border-color:var(--ok);color:var(--ok);font-weight:700}
+.opt.wrong{background:#fef2f2;border-color:var(--bad);color:var(--bad)}
+.opt.sel{border:2px solid var(--acc);background:#eff6ff}
+.fb{margin-top:10px;font-weight:600;min-height:1em}
+.fb.okk{color:var(--ok)}.fb.no{color:var(--bad)}
+.solbox{margin-top:10px;background:#f9fafb;border-radius:10px;padding:8px 12px}
+.streak{margin-top:12px;font-size:14.5px;color:var(--mute)}
+table.t{border-collapse:collapse;margin:8px 0}
+table.t td,table.t th{border:1px solid #d1d5db;padding:5px 14px;text-align:center}
+table.t th{background:#f3f4f6}
+/* quiz */
+.qq{padding:12px 0;border-top:1px solid var(--line)}
+.qq .why{display:none;margin-top:6px;font-size:15.5px;background:#f9fafb;border-radius:8px;padding:6px 10px}
+.qq.shown .why{display:block}
+.done-banner{background:#f0fdf4;border:1px solid #86efac;border-radius:12px;padding:14px;margin-top:12px;font-weight:700}
+/* widgets */
+.ctrl{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:6px 0}
+.ctrl label{font-weight:700;display:flex;align-items:center;gap:8px}
+input[type=range]{width:200px;accent-color:var(--acc)}
+.readout{margin-top:8px;padding:10px 12px;background:#f9fafb;border-radius:10px}
+.anat{display:flex;justify-content:center;align-items:flex-start;gap:10px;flex-wrap:wrap;margin:8px 0}
+.term{text-align:center}
+.tbox{font-family:"Cambria Math","Times New Roman",serif;font-size:42px;border:3px solid #d1d5db;border-radius:12px;padding:2px 16px;background:#fff}
+.tl{font-size:14px;color:#374151;margin-top:4px;max-width:150px}
+.op{font-size:42px;padding-top:6px}
+.legend{display:flex;flex-wrap:wrap;gap:10px 20px;justify-content:center;font-size:15px}
+.stepper2{display:inline-flex;align-items:center;gap:6px}
+.stepper2 b{min-width:26px;text-align:center;font-size:20px}
+.darts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center;font-size:14px}
+.darts b{display:block}
+.tri-btns button.on{background:#fef9c3;border-color:#ca8a04;font-weight:800}
+@media (max-width:640px){
+ body{font-size:16px}
+ h1{font-size:23px}
+ .ln-step{grid-template-columns:1fr;gap:4px}
+ .darts{grid-template-columns:repeat(2,1fr)}
+ .pill{font-size:13px;padding:9px 2px} .pill .ic{display:none}
+ .stepper{top:53px}
+ .tbox{font-size:32px}.op{font-size:32px}
+ input[type=range]{width:150px}
+}
+footer{text-align:center;font-size:13px;color:var(--mute);padding:20px}
+</style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans overflow-hidden select-none">
-  <div id="root"></div>
-<script type="text/babel">
-    const { useState, useEffect, useRef, useMemo } = React;
+<body>
+<header class="top"><a class="brand" href="#/">Algebra 1 <span>Visual Lab</span></a><span class="topprog" id="topprog"></span></header>
+<main id="app"></main>
+<footer>Picture → Steps → Pencil → Check · Follows the Algebra 1A &amp; 1B module sequence</footer>
+<script>
+/* ============ helpers ============ */
+const $=(s,el=document)=>el.querySelector(s);
+const $$=(s,el=document)=>[...el.querySelectorAll(s)];
+const rand=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const gcd=(a,b)=>b?gcd(b,a%b):Math.abs(a);
+const MINUS='−';
+function fmtNeg(n){n=+(+n).toFixed(4);return (n<0?MINUS:'')+Math.abs(n);}
+function frac(n,d){if(d<0){n=-n;d=-d;}const g=gcd(Math.abs(n),d)||1;n/=g;d/=g;return d===1?fmtNeg(n):(n<0?MINUS:'')+Math.abs(n)+'/'+d;}
+function T(c,v){return c===1?v:c===-1?MINUS+v:fmtNeg(c)+v;}
+function S(n){return n<0?' '+MINUS+' '+fmtNeg(-n):' + '+fmtNeg(n);}
+function P(n){return n<0?'('+fmtNeg(n)+')':fmtNeg(n);}
+function mx(s){return String(s).replace(/[a-zA-Z]/g,c=>`<i class="v">${c}</i>`);}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function mcFrom(correct,wrongs){const opts=shuffle([correct,...wrongs]);return {opts,a:opts.indexOf(correct)};}
+function parseAns(s){s=String(s).trim().replace(/[−–]/g,'-').replace(/\s+/g,'').replace(/^\$/,'').replace(/%$/,'').replace(/,/g,'');
+ if(!s)return NaN;
+ if(/^-?\d+(\.\d+)?\/-?\d+(\.\d+)?$/.test(s)){const [a,b]=s.split('/').map(Number);return b===0?NaN:a/b;}
+ if(/^-?(\d+\.?\d*|\.\d+)$/.test(s))return Number(s);
+ return NaN;}
 
-    // SVG Icons Helper Components
-    const Icon = ({ name, size = 16, className = "" }) => {
-      useEffect(() => {
-        if (window.lucide) {
-          window.lucide.createIcons();
-        }
-      }, [name]);
-      return <i data-lucide={name} className={`inline-block ${className}`} style={{ width: size, height: size }}></i>;
-    };
+/* ============ storage ============ */
+const STORE='alg1lab-v1';
+let PR={};try{PR=JSON.parse(localStorage.getItem(STORE))||{};}catch(e){PR={};}
+function save(){try{localStorage.setItem(STORE,JSON.stringify(PR));}catch(e){}}
+function prog(id){return PR[id]||(PR[id]={});}
+function isDone(id){return !!(PR[id]&&PR[id].done);}
 
-    // ALL ALGEBRA 1 MODULES (1 to 9) DATA STRUCTURE
-    const MODULES_DATA = [
-      {
-        id: 'm1',
-        title: 'Module 1: Expressions & Equations',
-        category: 'Foundations',
-        color: 'bg-blue-600 text-white border-blue-400',
-        accentColor: '#3b82f6',
-        summary: 'Variables, algebraic properties, order of operations, and solving linear equations.',
-        details: {
-          formulas: [
-            'Distributive Property: a(b + c) = ab + ac',
-            'Literal Equation Rearrangement: d = rt ⇒ t = d/r',
-            'Absolute Value Equation: |x| = a ⇒ x = a or x = -a'
-          ],
-          keyConcepts: [
-            'Combining like terms by identifying identical variable factors.',
-            'Inverse operations balance equations (addition/subtraction, multiplication/division).',
-            'Multi-step equations: Simplify sides first, collect variables on one side, isolate.'
-          ],
-          vocab: [
-            { term: 'Coefficient', def: 'A numerical factor multiplying a variable (e.g., 5 in 5x).' },
-            { term: 'Literal Equation', def: 'An equation consisting primarily of letters and variables.' },
-            { term: 'Like Terms', def: 'Terms with the exact same variables raised to the same exponents.' }
-          ],
-          example: {
-            problem: 'Solve for x: 3(2x - 4) + 5 = 23',
-            solution: '6x - 12 + 5 = 23  ⇒  6x - 7 = 23  ⇒  6x = 30  ⇒  x = 5'
-          }
-        },
-        children: [
-          { id: 'm1-1', title: 'Algebraic Expressions', type: 'leaf', summary: 'Simplifying & evaluating expressions.' },
-          { id: 'm1-2', title: 'Multi-Step Equations', type: 'leaf', summary: 'Isolating variables across equality signs.' },
-          { id: 'm1-3', title: 'Absolute Value Equations', type: 'leaf', summary: 'Solving equations with distance from zero.' }
-        ]
-      },
-      {
-        id: 'm2',
-        title: 'Module 2: Inequalities & Function Intro',
-        category: 'Foundations',
-        color: 'bg-cyan-600 text-white border-cyan-400',
-        accentColor: '#06b6d4',
-        summary: 'Solving linear inequalities, set notation, function definitions, and domain/range.',
-        details: {
-          formulas: [
-            'Interval Notation: [a, b] (inclusive), (a, b) (exclusive)',
-            'Function Rule: f(x) = y',
-            'Inequality Rule: Multiplying/dividing by negative flips symbol!'
-          ],
-          keyConcepts: [
-            'Vertical Line Test: A relation is a function if no vertical line intersects its graph more than once.',
-            'Domain is the set of valid input x-values; Range is the set of output y-values.',
-            'Compound inequalities: AND (intersection) vs OR (union).'
-          ],
-          vocab: [
-            { term: 'Domain', def: 'The complete set of all possible input values (x-axis).' },
-            { term: 'Range', def: 'The set of all possible output values resulting from domain inputs (y-axis).' },
-            { term: 'Function', def: 'A relation where every input has EXACTLY one output.' }
-          ],
-          example: {
-            problem: 'Solve & express in interval notation: -2x + 4 ≤ 10',
-            solution: '-2x ≤ 6  ⇒  Flip inequality sign!  ⇒  x ≥ -3  ⇒  [-3, ∞)'
-          }
-        },
-        children: [
-          { id: 'm2-1', title: 'Linear Inequalities', type: 'leaf', summary: 'Graphing number line solutions & sign flips.' },
-          { id: 'm2-2', title: 'Function Basics', type: 'leaf', summary: 'Input/output tables, domain & range definitions.' },
-          { id: 'm2-3', title: 'Compound Inequalities', type: 'leaf', summary: 'AND/OR number line representations.' }
-        ]
-      },
-      {
-        id: 'm3',
-        title: 'Module 3: Linear Functions & Slope',
-        category: 'Linear',
-        color: 'bg-emerald-600 text-white border-emerald-400',
-        accentColor: '#10b981',
-        summary: 'Rate of change, slope-intercept, point-slope, standard forms, and parallel/perpendicular lines.',
-        details: {
-          formulas: [
-            'Slope Formula: m = (y₂ - y₁) / (x₂ - x₁)',
-            'Slope-Intercept Form: y = mx + b',
-            'Point-Slope Form: y - y₁ = m(x - x₁)',
-            'Standard Form: Ax + By = C',
-            'Perpendicular Slopes: m₁ × m₂ = -1'
-          ],
-          keyConcepts: [
-            'Slope measures constant rate of change (rise over run).',
-            'Parallel lines have equal slopes (m₁ = m₂).',
-            'Perpendicular lines have negative reciprocal slopes (m₂ = -1/m₁).'
-          ],
-          vocab: [
-            { term: 'Slope (m)', def: 'The ratio of vertical change to horizontal change.' },
-            { term: 'Y-Intercept (b)', def: 'The point where a line crosses the vertical y-axis (x = 0).' },
-            { term: 'Rate of Change', def: 'How fast output y changes relative to input x.' }
-          ],
-          example: {
-            problem: 'Find line parallel to y = 3x - 2 through (2, 5).',
-            solution: 'Slope m = 3. Point-slope: y - 5 = 3(x - 2)  ⇒  y - 5 = 3x - 6  ⇒  y = 3x - 1'
-          }
-        },
-        children: [
-          { id: 'm3-1', title: 'Slope & Rate of Change', type: 'leaf', summary: 'Rise over run calculation & context interpretation.' },
-          { id: 'm3-2', title: 'Linear Forms', type: 'leaf', summary: 'Converting between Slope-Intercept, Point-Slope, and Standard.' },
-          { id: 'm3-3', title: 'Parallel & Perpendicular Lines', type: 'leaf', summary: 'Comparing geometric line properties algebraically.' }
-        ]
-      },
-      {
-        id: 'm4',
-        title: 'Module 4: Systems of Equations & Inequalities',
-        category: 'Linear',
-        color: 'bg-amber-600 text-white border-amber-400',
-        accentColor: '#f59e0b',
-        summary: 'Graphing, substitution, elimination methods, and linear inequality systems.',
-        details: {
-          formulas: [
-            'Substitution: Isolate 1 variable, plug into other equation.',
-            'Elimination: Multiply to align coefficients, add/subtract equations.',
-            'System Types: Consistent-Independent (1 sol), Dependent (∞ sol), Inconsistent (0 sol).'
-          ],
-          keyConcepts: [
-            'Intersection point (x, y) satisfies all equations in the system.',
-            'Parallel lines in a system mean NO SOLUTION.',
-            'Identical overlapping lines mean INFINITE SOLUTIONS.'
-          ],
-          vocab: [
-            { term: 'Consistent System', def: 'A system of equations with at least one solution.' },
-            { term: 'Inconsistent System', def: 'A system with no solutions (parallel lines).' },
-            { term: 'Feasible Region', def: 'The shaded overlap region satisfying all linear inequalities.' }
-          ],
-          example: {
-            problem: 'Solve: 2x + y = 7 and x - y = 2',
-            solution: 'Add equations: 3x = 9 ⇒ x = 3. Plug into 2nd eq: 3 - y = 2 ⇒ y = 1. Solution: (3, 1)'
-          }
-        },
-        children: [
-          { id: 'm4-1', title: 'Solving Systems Graphically', type: 'leaf', summary: 'Finding intersection points visually.' },
-          { id: 'm4-2', title: 'Algebraic Methods', type: 'leaf', summary: 'Mastering Substitution and Elimination techniques.' },
-          { id: 'm4-3', title: 'Systems of Linear Inequalities', type: 'leaf', summary: 'Shading region of overlap solutions.' }
-        ]
-      },
-      {
-        id: 'm5',
-        title: 'Module 5: Linear, Exponential & Quadratic Functions',
-        category: 'Non-Linear',
-        color: 'bg-purple-600 text-white border-purple-400',
-        accentColor: '#a855f7',
-        summary: 'Comparing additively, multiplicatively, and quadratically growing data sets.',
-        details: {
-          formulas: [
-            'Linear: y = mx + b (1st differences constant)',
-            'Exponential: y = a(b)^x (Constant ratio)',
-            'Quadratic: y = ax² + bx + c (2nd differences constant)',
-            'Average Rate of Change: [f(b) - f(a)] / (b - a)'
-          ],
-          keyConcepts: [
-            '1st Differences = Constant ⇒ Linear Function.',
-            'Ratios between consecutive values = Constant ⇒ Exponential Function.',
-            '2nd Differences = Constant ⇒ Quadratic Function.'
-          ],
-          vocab: [
-            { term: 'First Difference', def: 'Difference between consecutive y-values.' },
-            { term: 'Second Difference', def: 'Difference between consecutive first differences.' },
-            { term: 'Growth Factor (b)', def: 'Multiplier in exponential function y = a(b)^x.' }
-          ],
-          example: {
-            problem: 'Identify pattern for y values: 3, 7, 13, 21, 31',
-            solution: '1st differences: 4, 6, 8, 10. 2nd differences: 2, 2, 2. Constant 2nd difference ⇒ Quadratic!'
-          }
-        },
-        children: [
-          { id: 'm5-1', title: 'Differences & Ratios', type: 'leaf', summary: 'Table inspection for pattern classification.' },
-          { id: 'm5-2', title: 'Model Comparisons', type: 'leaf', summary: 'Evaluating linear vs exponential growth rates.' },
-          { id: 'm5-3', title: 'Nonlinear Systems', type: 'leaf', summary: 'Solving line-parabola intersections.' }
-        ]
-      },
-      {
-        id: 'm6',
-        title: 'Module 6: Polynomials & Factoring',
-        category: 'Polynomials',
-        color: 'bg-pink-600 text-white border-pink-400',
-        accentColor: '#ec4899',
-        summary: 'Polynomial arithmetic, FOIL, GCF, grouping, trinomial factoring, and special products.',
-        details: {
-          formulas: [
-            'Difference of Squares: a² - b² = (a - b)(a + b)',
-            'Perfect Square Trinomial: a² ± 2ab + b² = (a ± b)²',
-            'Trinomial Factoring: x² + bx + c = (x + p)(x + q) where p+q=b and p·q=c'
-          ],
-          keyConcepts: [
-            'Degree of polynomial is highest exponent term.',
-            'Standard Form: Terms arranged from highest to lowest degree.',
-            'Always check for Greatest Common Factor (GCF) FIRST when factoring!'
-          ],
-          vocab: [
-            { term: 'Trinomial', def: 'A polynomial with exactly three terms (e.g., x² + 5x + 6).' },
-            { term: 'GCF', def: 'Greatest Common Factor shared across all polynomial terms.' },
-            { term: 'Degree', def: 'The exponent value of the highest-power term.' }
-          ],
-          example: {
-            problem: 'Factor completely: 2x² - 8x - 24',
-            solution: 'Factor out GCF of 2: 2(x² - 4x - 12). Find factors of -12 that add to -4 (-6 and 2). Result: 2(x - 6)(x + 2)'
-          }
-        },
-        children: [
-          { id: 'm6-1', title: 'Polynomial Operations', type: 'leaf', summary: 'Adding, subtracting, and multiplying polynomials.' },
-          { id: 'm6-2', title: 'Factoring Trinomials', type: 'leaf', summary: 'Factoring x² + bx + c and ax² + bx + c.' },
-          { id: 'm6-3', title: 'Special Products & Grouping', type: 'leaf', summary: 'Difference of squares and 4-term grouping.' }
-        ]
-      },
-      {
-        id: 'm7',
-        title: 'Module 7: Quadratic Equations & Parabolas',
-        category: 'Non-Linear',
-        color: 'bg-rose-600 text-white border-rose-400',
-        accentColor: '#f43f5e',
-        summary: 'Solving quadratics by factoring, square roots, completing square, and quadratic formula.',
-        details: {
-          formulas: [
-            'Quadratic Formula: x = [-b ± √(b² - 4ac)] / (2a)',
-            'Discriminant: D = b² - 4ac',
-            'Vertex Coordinates: h = -b / (2a), k = f(h)',
-            'Vertex Form: y = a(x - h)² + k'
-          ],
-          keyConcepts: [
-            'Discriminant > 0: 2 Real Solutions. Discriminant = 0: 1 Real Solution. Discriminant < 0: 2 Complex Solutions.',
-            'Zero Product Property: If A × B = 0, then A = 0 or B = 0.',
-            'Axis of Symmetry bisects parabola through the vertex x = -b/(2a).'
-          ],
-          vocab: [
-            { term: 'Discriminant', def: 'b² - 4ac, determines number and type of roots.' },
-            { term: 'Vertex', def: 'The peak maximum or minimum point of a parabola.' },
-            { term: 'Zeros / Roots / X-Intercepts', def: 'Values of x where f(x) = 0.' }
-          ],
-          example: {
-            problem: 'Solve x² - 6x + 5 = 0 using Quadratic Formula.',
-            solution: 'a=1, b=-6, c=5. x = [6 ± √(36 - 20)]/2 = [6 ± √16]/2 = [6 ± 4]/2. Roots: x = 5 and x = 1'
-          }
-        },
-        children: [
-          { id: 'm7-1', title: 'Solving by Factoring & Square Roots', type: 'leaf', summary: 'Zero product property applications.' },
-          { id: 'm7-2', title: 'Completing the Square', type: 'leaf', summary: 'Converting standard form to vertex form.' },
-          { id: 'm7-3', title: 'Quadratic Formula & Discriminant', type: 'leaf', summary: 'Universal solver for any quadratic equation.' }
-        ]
-      },
-      {
-        id: 'm8',
-        title: 'Module 8: Radical & Rational Expressions',
-        category: 'Advanced',
-        color: 'bg-indigo-600 text-white border-indigo-400',
-        accentColor: '#6366f1',
-        summary: 'Simplifying radicals, radical equations, rational exponents, and rational expression operations.',
-        details: {
-          formulas: [
-            'Rational Exponent: x^(m/n) = ⁿ√(xᵐ)',
-            'Simplifying Radicals: √(a · b) = √a · √b',
-            'Rationalizing Denominator: Multiply by conjugate or radical'
-          ],
-          keyConcepts: [
-            'Extraneous solutions can be introduced when squaring both sides of a radical equation.',
-            'Radical index dictates n-th root grouping.',
-            'Denominator can never equal zero (Excluded values in rational expressions).'
-          ],
-          vocab: [
-            { term: 'Radicand', def: 'The expression inside the radical symbol.' },
-            { term: 'Extraneous Solution', def: 'A derived solution that does not satisfy original equation.' },
-            { term: 'Conjugate', def: 'Expression pair (a + √b) and (a - √b).' }
-          ],
-          example: {
-            problem: 'Solve √(x + 3) = x - 3',
-            solution: 'Square both sides: x + 3 = (x - 3)²  ⇒  x + 3 = x² - 6x + 9  ⇒  x² - 7x + 6 = 0  ⇒  (x - 6)(x - 1) = 0. Check x=6: √9=3 (Valid). Check x=1: √4=-2 (Extraneous!). Solution: x = 6'
-          }
-        },
-        children: [
-          { id: 'm8-1', title: 'Simplifying & Operations on Radicals', type: 'leaf', summary: 'Simplifying radical expressions and rational exponents.' },
-          { id: 'm8-2', title: 'Solving Radical Equations', type: 'leaf', summary: 'Isolating radicals & screening extraneous roots.' },
-          { id: 'm8-3', title: 'Rational Expressions Basics', type: 'leaf', summary: 'Simplifying algebraic fractions & domain restrictions.' }
-        ]
-      },
-      {
-        id: 'm9',
-        title: 'Module 9: Statistics & Data Analysis',
-        category: 'Advanced',
-        color: 'bg-teal-600 text-white border-teal-400',
-        accentColor: '#14b8a6',
-        summary: 'Measures of center, spread, box plots, histograms, standard deviation, and scatter plot regressions.',
-        details: {
-          formulas: [
-            'Mean (x̄): Σx / n',
-            'Interquartile Range (IQR): Q3 - Q1',
-            'Outlier Fence: x < Q1 - 1.5(IQR) or x > Q3 + 1.5(IQR)',
-            'Correlation Coefficient (r): -1 ≤ r ≤ 1'
-          ],
-          keyConcepts: [
-            'Mean is sensitive to extreme outliers; Median is robust.',
-            'Standard Deviation measures data dispersion around the mean.',
-            'Correlation does NOT imply Causation!'
-          ],
-          vocab: [
-            { term: 'IQR', def: 'Middle 50% range of data (Q3 - Q1).' },
-            { term: 'Standard Deviation', def: 'Average distance of data points from the mean.' },
-            { term: 'Residual', def: 'Observed y value minus predicted y value (y - ŷ).' }
-          ],
-          example: {
-            problem: 'Data set: 2, 4, 6, 8, 20. Compare Mean vs Median.',
-            solution: 'Sum = 40, n = 5. Mean = 8. Median (middle value) = 6. Outlier (20) pulls mean higher than median!'
-          }
-        },
-        children: [
-          { id: 'm9-1', title: 'Measures of Center & Spread', type: 'leaf', summary: 'Mean, median, mode, range, and standard deviation.' },
-          { id: 'm9-2', title: 'Data Displays & Box Plots', type: 'leaf', summary: 'Creating & interpreting 5-number summaries.' },
-          { id: 'm9-3', title: 'Bivariate Data & Regression', type: 'leaf', summary: 'Scatterplots, line of best fit, & r correlation.' }
-        ]
-      }
-    ];
+/* ============ course map ============ */
+const COURSE=[
+{id:'1A',modules:[
+ {n:1,title:'Algebraic Modeling',color:'#2563eb',lessons:['Solving Equations','Reporting with Precision and Accuracy','Modeling with Expressions','Creating and Solving Equations','Solving for a Variable in a Formula']},
+ {n:2,title:'Characteristics of Linear Relationships',color:'#0891b2',lessons:['Understanding Linear Equations','Using Intercepts','Interpreting Rate of Change and Slope','Slope-Intercept Form','Modeling Linear Relationships','Understanding Relations and Functions','Modeling with Functions']},
+ {n:3,title:'Understanding Linear Functions',color:'#059669',lessons:['Graphing Functions','Using Functions to Solve One-Variable Equations','Linear Inequalities in Two Variables','Graphing Relationships','Identifying and Graphing Sequences','Constructing Arithmetic Sequences']},
+ {n:4,title:'Linear Systems',color:'#d97706',lessons:['Solving Linear Systems by Graphing','Solving Linear Systems by Substitution','Solving Linear Systems by Adding or Subtracting','Solving Linear Systems by Multiplying','Creating Systems of Linear Equations','Graphing Systems of Linear Inequalities']},
+ {n:5,title:'Linear and Statistical Models',color:'#0d9488',lessons:['Measures of Center and Spread','Dot Plots, Histograms, and Outliers','Normal Distributions & Probability','Scatter Plots and Trend Lines','Fitting a Linear Model to Data']}]},
+{id:'1B',modules:[
+ {n:1,title:'Exponential Relationships',color:'#9333ea',lessons:['Constructing Exponential Functions','Graphing Exponential Functions','Modeling Exponential Growth and Decay','Understanding Geometric Sequences','Constructing Geometric Sequences']},
+ {n:2,title:'Polynomial Operations',color:'#db2777',lessons:['Understanding Polynomial Expressions','Adding Polynomial Expressions','Subtracting Polynomial Expressions','Multiplying Polynomial Expressions by Monomials','Multiplying Polynomial Expressions']},
+ {n:3,title:'Quadratic Equations and Modeling',color:'#e11d48',lessons:['Connecting Intercepts and Zeros','Solving Equations by Factoring x² + bx + c','Solving Equations by Factoring ax² + bx + c','Solving Equations by Taking Square Roots','Using the Quadratic Formula to Solve Equations','Solving Equations by Completing the Square']},
+ {n:4,title:'Quadratic Functions',color:'#4f46e5',lessons:['Describing Effects on Quadratic Functions','Transforming Quadratic Functions','Interpreting Vertex and Standard Form','Interpreting Factored Form and Standard Form']},
+ {n:5,title:'Linear, Exponential, and Quadratic Functions',color:'#475569',lessons:['Comparing Linear and Exponential Models','Modeling with Quadratic Functions','Comparing Properties of Linear, Exponential, and Quadratic Functions','Solving Nonlinear Systems']}]}];
+const ORDER=[];const META={};
+COURSE.forEach(c=>c.modules.forEach(m=>m.lessons.forEach((t,i)=>{const id=`${c.id}-${m.n}-${i+1}`;ORDER.push(id);META[id]={c:c.id,m:m.n,mt:m.title,n:i+1,title:t,color:m.color};})));
 
-    const MASTER_QUIZ_BANK = [
-      {
-        module: 'Module 1',
-        question: 'What is the solution to 4(x - 2) + 3 = 19?',
-        options: ['x = 4', 'x = 6', 'x = 5', 'x = 7'],
-        correct: 1,
-        explanation: '4x - 8 + 3 = 19 ⇒ 4x - 5 = 19 ⇒ 4x = 24 ⇒ x = 6.'
-      },
-      {
-        module: 'Module 2',
-        question: 'When solving the inequality -3x > 12, what is the correct inequality sign in the solution?',
-        options: ['x > -4', 'x < -4', 'x ≥ -4', 'x ≤ 4'],
-        correct: 1,
-        explanation: 'Dividing both sides by a negative number (-3) flips the inequality sign from > to <. x < -4.'
-      },
-      {
-        module: 'Module 3',
-        question: 'What is the slope of a line perpendicular to y = -2/5 x + 4?',
-        options: ['-2/5', '2/5', '5/2', '-5/2'],
-        correct: 2,
-        explanation: 'Perpendicular lines have negative reciprocal slopes. The negative reciprocal of -2/5 is +5/2.'
-      },
-      {
-        module: 'Module 4',
-        question: 'How many solutions does a system of equations have if the two lines have the same slope but different y-intercepts?',
-        options: ['Exactly 1 solution', 'Infinite solutions', 'No solution', '2 solutions'],
-        correct: 2,
-        explanation: 'Same slope with different y-intercepts means the lines are parallel and will never intersect (0 solutions).'
-      },
-      {
-        module: 'Module 5',
-        question: 'If a sequence of values has constant 2nd differences, what function family models it best?',
-        options: ['Linear', 'Exponential', 'Quadratic', 'Absolute Value'],
-        correct: 2,
-        explanation: 'Constant 1st differences indicate linear; constant 2nd differences strictly indicate a quadratic function.'
-      },
-      {
-        module: 'Module 6',
-        question: 'Which of the following is the complete factorization of x² - 9x + 20?',
-        options: ['(x - 4)(x - 5)', '(x + 4)(x + 5)', '(x - 2)(x - 10)', '(x - 1)(x - 20)'],
-        correct: 0,
-        explanation: 'Find two numbers that multiply to +20 and add to -9. The numbers are -4 and -5: (x - 4)(x - 5).'
-      },
-      {
-        module: 'Module 7',
-        question: 'Using the Discriminant (b² - 4ac), how many real solutions does 2x² + 3x + 5 = 0 have?',
-        options: ['2 Real Solutions', '1 Real Solution', 'No Real Solutions', 'Infinite Solutions'],
-        correct: 2,
-        explanation: 'b² - 4ac = (3)² - 4(2)(5) = 9 - 40 = -31. Since the discriminant is negative, there are 0 real solutions.'
-      },
-      {
-        module: 'Module 8',
-        question: 'Simplify the radical expression: √(72x⁴)',
-        options: ['6x² √2', '12x² √2', '36x² √2', '6x √2'],
-        correct: 0,
-        explanation: '√(72x⁴) = √(36 · 2 · x⁴) = √36 · √x⁴ · √2 = 6x² √2.'
-      },
-      {
-        module: 'Module 9',
-        question: 'If a dataset contains extreme high outliers, which measure of center is best to represent typical data?',
-        options: ['Mean', 'Median', 'Range', 'Standard Deviation'],
-        correct: 1,
-        explanation: 'The median is resistant to extreme outliers, whereas the mean is heavily pulled by extreme high values.'
-      }
-    ];
+/* ============ graph grid ============ */
+let GID=0;
+function grid(o){
+ const {x0=-6,x1=6,y0=-6,y1=6,u=30,lab=2,xl='',yl=''}=o;const pad=28;
+ const W=(x1-x0)*u+pad*2,H=(y1-y0)*u+pad*2;const X=x=>pad+(x-x0)*u,Y=y=>pad+(y1-y)*u;const id='clp'+(++GID);
+ let s=`<defs><clipPath id="${id}"><rect x="${X(x0)}" y="${Y(y1)}" width="${(x1-x0)*u}" height="${(y1-y0)*u}"/></clipPath></defs>`;
+ for(let x=x0;x<=x1;x++)s+=`<line x1="${X(x)}" y1="${Y(y0)}" x2="${X(x)}" y2="${Y(y1)}" class="gl"/>`;
+ for(let y=y0;y<=y1;y++)s+=`<line x1="${X(x0)}" y1="${Y(y)}" x2="${X(x1)}" y2="${Y(y)}" class="gl"/>`;
+ const ay=(y0<=0&&y1>=0)?Y(0):Y(y0),axx=(x0<=0&&x1>=0)?X(0):X(x0);
+ s+=`<line x1="${X(x0)}" y1="${ay}" x2="${X(x1)}" y2="${ay}" class="ax"/><line x1="${axx}" y1="${Y(y0)}" x2="${axx}" y2="${Y(y1)}" class="ax"/>`;
+ for(let x=x0;x<=x1;x++)if(x!==0&&x%lab===0)s+=`<text x="${X(x)}" y="${ay+16}" text-anchor="middle" class="tl">${fmtNeg(x)}</text>`;
+ for(let y=y0;y<=y1;y++)if(y!==0&&y%lab===0)s+=`<text x="${axx-6}" y="${Y(y)+4}" text-anchor="end" class="tl">${fmtNeg(y)}</text>`;
+ if(xl)s+=`<text x="${X(x1)}" y="${ay-8}" text-anchor="end" class="tl" font-weight="700">${xl}</text>`;
+ if(yl)s+=`<text x="${axx+6}" y="${Y(y1)-8}" class="tl" font-weight="700">${yl}</text>`;
+ return {W,H,X,Y,x0,x1,y0,y1,u,clip:id,base:s,svg:inner=>`<svg viewBox="0 0 ${W} ${H}" class="fig" style="max-width:${Math.min(W,480)}px">${s}${inner}</svg>`};
+}
+function gline(g,m,b,cls='ln',extra=''){const a=g.x0-1,z=g.x1+1;return `<line clip-path="url(#${g.clip})" x1="${g.X(a)}" y1="${g.Y(m*a+b)}" x2="${g.X(z)}" y2="${g.Y(m*z+b)}" class="${cls}" ${extra}/>`;}
+function gdot(g,x,y,col='#1f2937',r=6,label=''){return `<circle cx="${g.X(x)}" cy="${g.Y(y)}" r="${r}" fill="${col}" stroke="#fff" stroke-width="2"/>`+(label?`<text x="${g.X(x)+9}" y="${g.Y(y)-9}" font-size="13" font-weight="700" fill="${col}" paint-order="stroke" stroke="#fff" stroke-width="4">${label}</text>`:'');}
 
-    function App() {
-      const [activeModuleId, setActiveModuleId] = useState('all');
-      const [activeCategory, setActiveCategory] = useState('all');
-      const [searchQuery, setSearchQuery] = useState('');
-      const [activeTab, setActiveTab] = useState('canvas');
+/* ============ diagrams / widgets ============ */
+// Balance scale
+function scaleSVG(L,R,a){
+ const r=a*Math.PI/180,cx=280,cy=110,len=190;
+ const lx=cx-len*Math.cos(r),ly=cy-len*Math.sin(r),rx=cx+len*Math.cos(r),ry=cy+len*Math.sin(r);
+ let s=`<path d="M${cx} ${cy} L${cx} 262" stroke="#9ca3af" stroke-width="10"/><path d="M${cx-70} 290 L${cx+70} 290 L${cx+34} 262 L${cx-34} 262Z" fill="#9ca3af"/>`;
+ s+=`<line x1="${lx}" y1="${ly}" x2="${rx}" y2="${ry}" stroke="#4b5563" stroke-width="9" stroke-linecap="round"/><circle cx="${cx}" cy="${cy}" r="10" fill="#374151"/>`;
+ return s+pan(lx,ly,L)+pan(rx,ry,R);
+}
+function pan(x,y,c){
+ const py=y+100;let s=`<line x1="${x}" y1="${y}" x2="${x-72}" y2="${py}" stroke="#9ca3af" stroke-width="2"/><line x1="${x}" y1="${y}" x2="${x+72}" y2="${py}" stroke="#9ca3af" stroke-width="2"/><path d="M${x-86} ${py} Q${x} ${py+30} ${x+86} ${py}Z" fill="#e5e7eb" stroke="#6b7280" stroke-width="2"/>`;
+ const base=py-1,left=x-80;
+ for(let i=0;i<(c.x||0);i++){const bx=left+i*40;s+=`<rect x="${bx}" y="${base-36}" width="36" height="36" rx="5" fill="#dbeafe" stroke="#2563eb" stroke-width="2.5"/><text x="${bx+18}" y="${base-11}" text-anchor="middle" font-size="22" font-style="italic" font-weight="700" fill="#2563eb" font-family="Georgia,serif">x</text>`;}
+ const x0=left+(c.x||0)*40,w=160-(c.x||0)*40,cols=Math.max(1,Math.floor(w/18));
+ for(let i=0;i<(c.k||0);i++){const col=i%cols,row=Math.floor(i/cols);s+=`<rect x="${x0+col*18}" y="${base-16-row*18}" width="16" height="16" rx="2" fill="#fed7aa" stroke="#ea580c" stroke-width="1.5"/>`;}
+ const lbl=[(c.x?T(c.x,'x'):''),(c.k?String(c.k):'')].filter(Boolean).join(' + ');
+ s+=`<text x="${x}" y="${py+40}" text-anchor="middle" font-size="18" font-weight="700" fill="#374151">${lbl}</text>`;
+ return s;
+}
+function mountBalance(el){
+ const SS=[{L:{x:2,k:3},R:{k:11},eq:'2x + 3 = 11',a:0,note:'Balanced. The left pan (2 tickets + $3) weighs the same as the right pan ($11).'},
+ {L:{x:2},R:{k:8},eq:'2x = 8',a:0,note:'<b>Subtraction Property of Equality:</b> you took $3 off <b>both</b> pans, so it is still balanced. Two tickets cost $8.'},
+ {L:{x:1},R:{k:4},eq:'x = 4',a:0,note:'<b>Division Property of Equality:</b> you split <b>both</b> pans into 2 equal groups and kept one. <span class="good">One ticket costs $4.</span>'}];
+ const WR={L:{x:2},R:{k:11},eq:'2x  ?  11',a:9,note:'<span class="bad">Unbalanced!</span> You took $3 off the left pan only. Whatever you do to one side, you must do to the other side.'};
+ let st=0,wrong=false;
+ el.innerHTML=`<svg viewBox="0 60 560 240" class="fig" style="max-width:560px"></svg><div class="eqline math"></div><div class="note"></div>
+ <div class="row"><button data-a="sub">− 3 from both sides</button><button data-a="div">÷ 2 on both sides</button><button data-a="wrong">− 3 from left side only?</button><button data-a="reset">↺ Reset</button></div>`;
+ const draw=()=>{const s=wrong?WR:SS[st];$('svg',el).innerHTML=scaleSVG(s.L,s.R,s.a);$('.eqline',el).innerHTML=mx(s.eq);$('.note',el).innerHTML=s.note;
+  $('[data-a=sub]',el).disabled=!(st===0&&!wrong);$('[data-a=div]',el).disabled=!(st===1&&!wrong);$('[data-a=wrong]',el).disabled=!(st===0&&!wrong);};
+ el.addEventListener('click',e=>{const a=e.target.closest('button')?.dataset.a;if(!a)return;if(a==='sub')st=1;if(a==='div')st=2;if(a==='wrong')wrong=true;if(a==='reset'){st=0;wrong=false;}draw();});
+ draw();
+}
+// Dartboards
+function board(darts){let s=`<svg viewBox="0 0 160 160" class="fig" style="max-width:150px">`;
+ [[70,'#fff'],[52,'#e5e7eb'],[34,'#fff'],[17,'#fecaca'],[6,'#dc2626']].forEach(([r,f])=>s+=`<circle cx="80" cy="80" r="${r}" fill="${f}" stroke="#9ca3af"/>`);
+ darts.forEach(([x,y])=>s+=`<circle cx="${80+x}" cy="${80+y}" r="5" fill="#1f2937" stroke="#fff" stroke-width="1.5"/>`);return s+'</svg>';}
+function mountDarts(el){
+ const B=[[[[2,-3],[-3,2],[4,3],[-1,-4],[1,1]],'Precise ✓','Accurate ✓'],[[[-38,-34],[-33,-39],[-36,-29],[-42,-31],[-31,-33]],'Precise ✓','Accurate ✗'],[[[-40,10],[36,-25],[8,44],[-22,-38],[30,28]],'Precise ✗','Accurate ✓ (on average)'],[[[-48,30],[18,52],[52,8],[-8,60],[40,46]],'Precise ✗','Accurate ✗']];
+ el.innerHTML=`<div class="darts">${B.map(b=>`<div>${board(b[0])}<b>${b[1]}</b>${b[2]}</div>`).join('')}</div>
+ <div class="readout"><b>Precision</b> = how close the darts are to <u>each other</u>.<br><b>Accuracy</b> = how close the darts are to the <u>bullseye</u> (the actual value).<br>Goal: be precise <i>and</i> accurate, like the first board.</div>`;
+}
+// Ruler
+function fmtMixed(v,den){const n=Math.round(v*den);const w=Math.floor(n/den),r=n%den;if(!r)return w+' in';const g=gcd(r,den);return (w?w+' ':'')+(r/g)+'/'+(den/g)+' in';}
+function mountRuler(el){
+ el.innerHTML=`<svg viewBox="0 0 560 120" class="fig" style="max-width:560px"></svg><div class="ctrl"><label>Pencil length <input type="range" min="8" max="62" value="35"></label></div><div class="readout"></div>`;
+ const draw=()=>{const L=+$('input',el).value/16,x0=30,I=120;let s=`<rect x="${x0-6}" y="48" width="${4*I+12}" height="62" fill="#fef3c7" stroke="#d97706" rx="4"/>`;
+  for(let i=0;i<=64;i++){const h=i%16===0?34:i%8===0?26:i%4===0?20:i%2===0?14:9;s+=`<line x1="${x0+i*I/16}" y1="48" x2="${x0+i*I/16}" y2="${48+h}" stroke="#92400e" stroke-width="${i%16===0?2:1}"/>`;if(i%16===0)s+=`<text x="${x0+i*I/16}" y="100" text-anchor="middle" font-size="15" font-weight="700" fill="#92400e">${i/16}</text>`;}
+  const e=x0+L*I;s+=`<rect x="${x0}" y="14" width="${Math.max(0,e-x0-14)}" height="20" fill="#fb923c" stroke="#c2410c"/><path d="M${e-14} 14 L${e} 24 L${e-14} 34Z" fill="#fde68a" stroke="#c2410c"/><line x1="${e}" y1="24" x2="${e}" y2="52" stroke="#c2410c" stroke-dasharray="3 3"/>`;
+  $('svg',el).innerHTML=s;
+  $('.readout',el).innerHTML=`Ruler marked only in whole inches: <b>${fmtMixed(L,1)}</b><br>Ruler marked in 1/4 inches: <b>${fmtMixed(L,4)}</b><br>Ruler marked in 1/16 inches: <b class="good">${fmtMixed(L,16)}</b> ← most precise<br><span class="mute">Same pencil, three tools. The smaller the marks on the tool, the more precise your measurement.</span>`;};
+ $('input',el).addEventListener('input',draw);draw();
+}
+// Tickets
+function mountTickets(el){
+ let a=2,c=3;
+ el.innerHTML=`<div class="anat"><div class="term"><div class="tbox"><span class="k">60</span><i class="v">a</i></div><div class="tl">term: total cost for adults</div></div><div class="op">+</div><div class="term"><div class="tbox"><span class="k">30</span><i class="v">c</i></div><div class="tl">term: total cost for children</div></div></div>
+ <div class="legend"><span><b class="k">60, 30</b> = coefficients (price per ticket)</span><span><b class="v">a, c</b> = variables (how many people)</span></div>
+ <div class="ctrl" style="justify-content:center;margin-top:12px"><span class="stepper2">Adults <i class="v">a</i>: <button data-d="a-">−</button><b id="va"></b><button data-d="a+">+</button></span><span class="stepper2">Children <i class="v">c</i>: <button data-d="c-">−</button><b id="vc"></b><button data-d="c+">+</button></span></div>
+ <svg class="fig" viewBox="0 0 560 110" style="max-width:560px"></svg><div class="readout math" style="text-align:center"></div>`;
+ const draw=()=>{$('#va',el).textContent=a;$('#vc',el).textContent=c;let s='';
+  for(let i=0;i<a;i++)s+=`<g transform="translate(${10+i*62},8)"><rect width="56" height="34" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><text x="28" y="23" text-anchor="middle" font-size="14" font-weight="700" fill="#1e40af">$60</text></g>`;
+  for(let i=0;i<c;i++)s+=`<g transform="translate(${10+i*62},62)"><rect width="56" height="34" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/><text x="28" y="23" text-anchor="middle" font-size="14" font-weight="700" fill="#5b21b6">$30</text></g>`;
+  if(!a)s+=`<text x="10" y="30" class="tl">no adult tickets</text>`;if(!c)s+=`<text x="10" y="84" class="tl">no child tickets</text>`;
+  $('svg',el).innerHTML=s;
+  $('.readout',el).innerHTML=`<span class="k">60</span>(${a}) + <span class="k">30</span>(${c}) = ${60*a} + ${30*c} = <b>$${60*a+30*c}</b>`;};
+ el.addEventListener('click',e=>{const d=e.target.dataset.d;if(!d)return;if(d==='a+')a=Math.min(8,a+1);if(d==='a-')a=Math.max(0,a-1);if(d==='c+')c=Math.min(8,c+1);if(d==='c-')c=Math.max(0,c-1);draw();});
+ draw();
+}
+// Plumber bar model
+function mountBar(el){
+ el.innerHTML=`<svg viewBox="0 0 600 170" class="fig" style="max-width:600px"></svg><div class="ctrl"><label>Hours worked <i class="v">h</i> <input type="range" min="0" max="8" step="0.5" value="2"></label></div><div class="readout"></div>`;
+ const sc=520/480,x0=30,X=v=>x0+v*sc;
+ const draw=()=>{const h=+$('input',el).value,tot=40+50*h;let s=`<line x1="${X(315)}" y1="22" x2="${X(315)}" y2="120" stroke="#b91c1c" stroke-width="2.5" stroke-dasharray="6 4"/><text x="${X(315)}" y="16" text-anchor="middle" font-size="14" font-weight="800" fill="#b91c1c">Bill: $315</text>`;
+  s+=`<rect x="${X(0)}" y="40" width="${40*sc}" height="56" fill="#fed7aa" stroke="#ea580c" stroke-width="2"/><text x="${X(20)}" y="73" text-anchor="middle" font-size="13" font-weight="700" fill="#9a3412">$40</text>`;
+  let pos=40;for(let i=0;i<Math.ceil(h);i++){const part=Math.min(1,h-i),w=50*part;s+=`<rect x="${X(pos)}" y="40" width="${w*sc}" height="56" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><text x="${X(pos+w/2)}" y="73" text-anchor="middle" font-size="13" font-weight="700" fill="#1e40af">$${w}</text>`;pos+=w;}
+  for(let v=0;v<=400;v+=100)s+=`<line x1="${X(v)}" y1="100" x2="${X(v)}" y2="108" stroke="#6b7280"/><text x="${X(v)}" y="124" text-anchor="middle" class="tl">$${v}</text>`;
+  s+=`<text x="${X(0)}" y="152" font-size="13" fill="#9a3412" font-weight="700">■ $40 house call (starting amount)</text><text x="${X(250)}" y="152" font-size="13" fill="#1e40af" font-weight="700">■ $50 for each hour (rate)</text>`;
+  $('svg',el).innerHTML=s;
+  const msg=tot<315?'<span class="mute">Too low — slide to more hours.</span>':tot>315?'<span class="bad">Too high — slide back.</span>':'<span class="good">✓ Matches the bill! The plumber worked 5.5 hours.</span>';
+  $('.readout',el).innerHTML=`<span class="math"><span class="k">40</span> + <span class="k">50</span>${mx('h')} = 40 + 50(${h}) = <b>$${tot}</b></span><br>${msg}`;};
+ $('input',el).addEventListener('input',draw);draw();
+}
+// Formula triangle
+function mountTriangle(el){
+ let solve='t';
+ el.innerHTML=`<div class="row tri-btns" style="justify-content:center"><button data-v="d">Find d (distance)</button><button data-v="r">Find r (rate)</button><button data-v="t">Find t (time)</button></div>
+ <svg viewBox="0 0 300 215" class="fig" style="max-width:300px"></svg><div class="eqline math"></div><div class="readout"></div>`;
+ const reg={d:'150,12 85.8,110 214.2,110',r:'85.8,110 23,205 150,205 150,110',t:'150,110 150,205 277,205 214.2,110'};
+ const pos={d:[150,88],r:[108,172],t:[192,172]};
+ const F={d:['d = r · t','Cover <b>d</b>: you see <b>r</b> next to <b>t</b> → multiply.'],r:['r = d ÷ t','Cover <b>r</b>: you see <b>d</b> over <b>t</b> → divide.'],t:['t = d ÷ r','Cover <b>t</b>: you see <b>d</b> over <b>r</b> → divide.']};
+ const draw=()=>{let s='';for(const v of ['d','r','t'])s+=`<polygon points="${reg[v]}" fill="${v===solve?'#fef08a':'#fff'}" stroke="#374151" stroke-width="2.5"/><text x="${pos[v][0]}" y="${pos[v][1]}" text-anchor="middle" font-size="40" font-style="italic" font-weight="700" fill="${v===solve?'#a16207':'#2563eb'}" font-family="Georgia,serif">${v===solve?'?':v}</text>`;
+  $('svg',el).innerHTML=s;$$('.tri-btns button',el).forEach(b=>b.classList.toggle('on',b.dataset.v===solve));
+  $('.eqline',el).innerHTML=mx(F[solve][0]);
+  const ex={t:'Road trip: 270 miles at 60 mph → t = 270 ÷ 60 = <b>4.5 hours</b>',r:'You drove 270 miles in 4.5 hours → r = 270 ÷ 4.5 = <b>60 mph</b>',d:'60 mph for 4.5 hours → d = 60 × 4.5 = <b>270 miles</b>'};
+  $('.readout',el).innerHTML=F[solve][1]+'<br>'+ex[solve];};
+ el.addEventListener('click',e=>{const v=e.target.closest('button')?.dataset.v;if(v){solve=v;draw();}});draw();
+}
+function undoMachine(){
+ const box=(x,y,t,c)=>`<rect x="${x}" y="${y}" width="74" height="44" rx="10" fill="${c}" stroke="#374151" stroke-width="2"/><text x="${x+37}" y="${y+29}" text-anchor="middle" font-size="20" font-weight="700" font-family="Georgia,serif">${t}</text>`;
+ const arr=(x,y,t,col)=>`<line x1="${x}" y1="${y}" x2="${x+62}" y2="${y}" stroke="${col}" stroke-width="3" marker-end="url(#ah${col.slice(1)})"/><text x="${x+31}" y="${y-8}" text-anchor="middle" font-size="16" font-weight="800" fill="${col}">${t}</text>`;
+ let s=`<defs>${['2563eb','15803d'].map(c=>`<marker id="ah${c}" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="#${c}"/></marker>`).join('')}</defs>`;
+ s+=`<text x="10" y="22" font-size="14" font-weight="700" fill="#2563eb">Building A = ½bh (what happens to h):</text>`;
+ s+=box(10,34,'h','#dbeafe')+arr(90,56,'× b','#2563eb')+box(160,34,'bh','#fff')+arr(240,56,'× ½','#2563eb')+box(310,34,'A','#fed7aa');
+ s+=`<text x="10" y="122" font-size="14" font-weight="700" fill="#15803d">Solving for h (undo in REVERSE order):</text>`;
+ s+=box(10,134,'A','#fed7aa')+arr(90,156,'× 2','#15803d')+box(160,134,'2A','#fff')+arr(240,156,'÷ b','#15803d')+box(310,134,'h','#dbeafe');
+ s+=`<text x="400" y="162" font-size="18" font-weight="700" font-family="Georgia,serif" fill="#15803d">h = 2A ÷ b</text>`;
+ return `<svg viewBox="0 0 520 190" class="fig" style="max-width:520px">${s}</svg><p class="mute" style="text-align:center">Like taking off shoes and socks: you put socks on first, so you take them off last.</p>`;
+}
+// Slope explorer
+function mountSlope(el){
+ const g=grid({u:32});let A={x:-3,y:-2},B={x:3,y:2},drag=null;
+ el.innerHTML=`<svg viewBox="0 0 ${g.W} ${g.H}" class="fig touch" style="max-width:480px"></svg><div class="readout"></div>
+ <div class="row"><button data-p="up">Goes up ↗</button><button data-p="down">Goes down ↘</button><button data-p="flat">Flat →</button><button data-p="vert">Vertical ↑</button></div>`;
+ const svg=$('svg',el);
+ const draw=()=>{const rise=B.y-A.y,run=B.x-A.x;let s='';
+  if(run===0)s+=`<line x1="${g.X(A.x)}" y1="${g.Y(g.y0)}" x2="${g.X(A.x)}" y2="${g.Y(g.y1)}" class="ln"/>`;else s+=gline(g,rise/run,A.y-rise/run*A.x);
+  if(run!==0){s+=`<line x1="${g.X(A.x)}" y1="${g.Y(A.y)}" x2="${g.X(B.x)}" y2="${g.Y(A.y)}" stroke="#059669" stroke-width="4"/>`;const ly=g.Y(A.y)+(rise>0?20:-10);s+=`<text x="${g.X((A.x+B.x)/2)}" y="${ly}" text-anchor="middle" font-size="15" font-weight="800" fill="#059669" paint-order="stroke" stroke="#fff" stroke-width="5">run ${fmtNeg(run)}</text>`;}
+  if(rise!==0){s+=`<line x1="${g.X(B.x)}" y1="${g.Y(A.y)}" x2="${g.X(B.x)}" y2="${g.Y(B.y)}" stroke="#7c3aed" stroke-width="4"/>`;const right=B.x<4;s+=`<text x="${g.X(B.x)+(right?8:-8)}" y="${g.Y((A.y+B.y)/2)+5}" text-anchor="${right?'start':'end'}" font-size="15" font-weight="800" fill="#7c3aed" paint-order="stroke" stroke="#fff" stroke-width="5">rise ${fmtNeg(rise)}</text>`;}
+  for(const [k,p] of [['A',A],['B',B]])s+=`<circle data-pt="${k}" cx="${g.X(p.x)}" cy="${g.Y(p.y)}" r="13" fill="${k==='A'?'#ea580c':'#1f2937'}" stroke="#fff" stroke-width="3" style="cursor:grab"/><text x="${g.X(p.x)}" y="${g.Y(p.y)+5}" text-anchor="middle" font-size="13" font-weight="800" fill="#fff" pointer-events="none">${k}</text>`;
+  svg.innerHTML=g.base+s;
+  const sl=run===0?'<b class="bad">undefined</b> (you can’t divide by 0)':`<b>${frac(rise,run)}</b>`;
+  const d=run===0?'Vertical line → slope is <b>undefined</b>.':rise===0?'Horizontal line → slope is <b>0</b>.':(rise/run>0?'Slope is <b>positive</b>: the line goes UP as you read left to right.':'Slope is <b>negative</b>: the line goes DOWN as you read left to right.');
+  $('.readout',el).innerHTML=`<span class="mute">Drag point A or B.</span> A(${fmtNeg(A.x)}, ${fmtNeg(A.y)}) &nbsp; B(${fmtNeg(B.x)}, ${fmtNeg(B.y)})<br><span style="color:#7c3aed;font-weight:700">rise = ${fmtNeg(B.y)} − ${P(A.y)} = ${fmtNeg(rise)}</span> &nbsp; <span style="color:#059669;font-weight:700">run = ${fmtNeg(B.x)} − ${P(A.x)} = ${fmtNeg(run)}</span><br>slope = rise ÷ run = ${sl}<br>${d}`;};
+ const toG=e=>{const pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const p=pt.matrixTransform(svg.getScreenCTM().inverse());return {x:Math.max(g.x0,Math.min(g.x1,Math.round((p.x-28)/g.u+g.x0))),y:Math.max(g.y0,Math.min(g.y1,Math.round(g.y1-(p.y-28)/g.u)))};};
+ svg.addEventListener('pointerdown',e=>{const t=e.target.closest('[data-pt]');if(!t)return;drag=t.dataset.pt;svg.setPointerCapture(e.pointerId);e.preventDefault();});
+ svg.addEventListener('pointermove',e=>{if(!drag)return;const p=toG(e),o=drag==='A'?B:A;if(p.x===o.x&&p.y===o.y)return;const c=drag==='A'?A:B;if(c.x===p.x&&c.y===p.y)return;c.x=p.x;c.y=p.y;draw();});
+ svg.addEventListener('pointerup',()=>drag=null);svg.addEventListener('pointercancel',()=>drag=null);
+ el.addEventListener('click',e=>{const p=e.target.closest('button')?.dataset.p;if(!p)return;({up:()=>{A={x:-3,y:-2};B={x:3,y:2}},down:()=>{A={x:-4,y:3};B={x:2,y:-1}},flat:()=>{A={x:-4,y:2};B={x:3,y:2}},vert:()=>{A={x:2,y:-3};B={x:2,y:4}}})[p]();draw();});
+ draw();
+}
+// Slope-intercept explorer
+const MS=[[-3,1],[-2,1],[-3,2],[-1,1],[-2,3],[-1,2],[-1,3],[0,1],[1,3],[1,2],[2,3],[3,4],[1,1],[3,2],[2,1],[3,1]];
+function mEq(num,den){if(num===0)return '';if(den===1)return num===1?'':num===-1?MINUS:fmtNeg(num);return '('+frac(num,den)+')';}
+function eqStr(num,den,b){const m=mEq(num,den);if(num===0)return 'y = '+fmtNeg(b);return `y = ${m}x`+(b?S(b):'');}
+function mountSI(el){
+ let mi=11,b=-2,story=false;
+ el.innerHTML=`<div class="ctrl"><label>slope <i class="v">m</i> <input type="range" id="ms" min="0" max="${MS.length-1}" value="${mi}"></label><label>y-intercept <i class="v">b</i> <input type="range" id="bs" min="-5" max="5" value="${b}"></label></div>
+ <div class="eqline math" id="eqsi"></div><svg class="fig" style="max-width:480px"></svg><div class="readout"></div>
+ <div class="row"><button data-q="ex">Example A: y = (3/4)x − 2</button><button data-q="taxi">🚕 Taxi: y = 2x + 3</button></div>`;
+ const draw=()=>{const [num,den]=MS[mi];const g=story?grid({x0:0,x1:8,y0:0,y1:20,u:24,lab:2,xl:'miles',yl:'cost ($)'}):grid({u:32});
+  const svg=$('svg',el);svg.setAttribute('viewBox',`0 0 ${g.W} ${g.H}`);
+  let s=gline(g,num/den,b);let x=0,y=b;
+  for(let k=0;k<3;k++){const ny=y+num,nx=x+den;if(nx>g.x1||ny>g.y1||ny<g.y0)break;
+   if(num)s+=`<line x1="${g.X(x)}" y1="${g.Y(y)}" x2="${g.X(x)}" y2="${g.Y(ny)}" stroke="#7c3aed" stroke-width="4"/>`;
+   s+=`<line x1="${g.X(x)}" y1="${g.Y(ny)}" x2="${g.X(nx)}" y2="${g.Y(ny)}" stroke="#059669" stroke-width="4"/>`+gdot(g,nx,ny,'#1f2937',5);x=nx;y=ny;}
+  s+=gdot(g,0,b,'#ea580c',8,story?`start $${b}`:`(0, ${fmtNeg(b)})`);
+  svg.innerHTML=g.base+s;
+  $('#eqsi',el).innerHTML=`<i class="v">y</i> = <span style="color:#7c3aed;font-weight:700">${num===0?'0':mEq(num,den)||'1'}</span><i class="v">x</i> ${b<0?MINUS:'+'} <span class="k">${Math.abs(b)}</span>`;
+  const mv=num===0?'flat — no rise':`${num>0?'up':'down'} ${Math.abs(num)}, right ${den}`;
+  $('.readout',el).innerHTML=story?`<b>Taxi:</b> $3 just to get in (that’s <span class="k">b = 3</span>, the starting point). Each mile adds $2 (that’s <b style="color:#7c3aed">m = 2</b>: up 2 dollars, right 1 mile). A 6-mile ride costs 2(6) + 3 = <b>$15</b>.`:
+   `<b>Step 1:</b> Start at the y-intercept <span class="k">(0, ${fmtNeg(b)})</span>.<br><b>Step 2:</b> Use the slope ${num===0?'0':frac(num,den)} = rise/run → <b style="color:#7c3aed">${num?(num>0?'up ':'down ')+Math.abs(num):'no rise'}</b>, <b style="color:#059669">right ${den}</b>.<br><b>Step 3:</b> Repeat, then connect the points with a line.`;
+  $('#ms',el).value=mi;$('#bs',el).value=b;};
+ $('#ms',el).addEventListener('input',e=>{mi=+e.target.value;story=false;draw();});
+ $('#bs',el).addEventListener('input',e=>{b=+e.target.value;story=false;draw();});
+ el.addEventListener('click',e=>{const q=e.target.closest('button')?.dataset.q;if(!q)return;if(q==='ex'){mi=11;b=-2;story=false;}else{mi=14;b=3;story=true;}draw();});
+ draw();
+}
 
-      const [selectedModule, setSelectedModule] = useState(MODULES_DATA[0]);
+/* ============ lessons ============ */
+const L={};
 
-      const [zoomLevel, setZoomLevel] = useState(1);
-      const [panPosition, setPanPosition] = useState({ x: 0, y: 0 });
-      const [isDragging, setIsDragging] = useState(false);
-      const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+L['1A-1-1']={
+ goal:'I can explain and justify each step for solving multi-step linear equations.',
+ life:{title:'Splitting a movie bill',html:'Two movie tickets plus one <b>$3</b> popcorn cost <b>$11</b>. How much is one ticket?<br>That story <i>is</i> an equation: <span class="math">'+mx('2x + 3 = 11')+'</span>, where <i class="v">x</i> = the price of one ticket.'},
+ see:[{title:'An equation is a balanced scale',hint:'Blue box = one ticket (x). Orange block = $1. Press the buttons in order — then try the “left side only” button to see what goes wrong.',mount:mountBalance}],
+ vocab:[['Equation','Two expressions with an equal sign between them — like a balanced scale.'],['Solution','The value of the variable that makes the equation true (it balances the scale).'],['Like terms','Terms with the same variable part, like 3x and 2x. Combine them: 5x.'],['Properties of Equality','Whatever you add, subtract, multiply, or divide on one side, do the same to the other side.']],
+ examples:[
+  {title:'Example 1',prob:'Solve <span class="math">'+mx('3x + 2x − 4 = 21')+'</span> and justify each step.',lines:[
+   ['3x + 2x − 4 = 21','Original equation.'],['5x − 4 = 21','Combine like terms: 3x + 2x = 5x.'],['5x − 4 + 4 = 21 + 4','Addition Property of Equality: add 4 to both sides to undo “− 4”.'],['5x = 25','Simplify.'],['5x ÷ 5 = 25 ÷ 5','Division Property of Equality: divide both sides by 5.'],['x = 5','Check: 3(5) + 2(5) − 4 = 15 + 10 − 4 = 21 ✓']]},
+  {title:'Example 2',prob:'Solve <span class="math">'+mx('x ÷ 3 + 7 = 12')+'</span>.',lines:[
+   ['x ÷ 3 + 7 = 12','Original equation.'],['x ÷ 3 = 5','Subtraction Property of Equality: subtract 7 from both sides.'],['x = 15','Multiplication Property of Equality: multiply both sides by 3 to undo “÷ 3”.'],['x = 15','Check: 15 ÷ 3 + 7 = 5 + 7 = 12 ✓']]}],
+ mistake:{bad:'5x − 4 = 21 → 5x = 17',good:'5x − 4 = 21 → 5x = 25',why:'To undo “− 4” you <b>add</b> 4 to both sides. Use the opposite (inverse) operation.'},
+ practice(){const a=rand(2,9);let x=rand(-6,12);if(!x)x=4;let b=rand(-15,15);if(!b)b=7;const c=a*x+b;let first,sol=[];
+  if(a>=3&&Math.random()<.45){const p=rand(1,a-1),q=a-p;first=`${T(p,'x')} + ${T(q,'x')}${S(b)} = ${fmtNeg(c)}`;sol.push([first,'Original equation.'],[`${a}x${S(b)} = ${fmtNeg(c)}`,`Combine like terms: ${T(p,'x')} + ${T(q,'x')} = ${a}x.`]);}
+  else{first=`${a}x${S(b)} = ${fmtNeg(c)}`;sol.push([first,'Original equation.']);}
+  sol.push([`${a}x = ${fmtNeg(c-b)}`,b>0?`Subtraction Property: subtract ${b} from both sides.`:`Addition Property: add ${-b} to both sides.`],[`x = ${fmtNeg(x)}`,`Division Property: divide both sides by ${a}. Check: both sides equal ${fmtNeg(c)} ✓`]);
+  return {q:`Solve for <i class="v">x</i>. Write each step and its reason on paper.<div class="math big" style="margin-top:6px">${mx(first)}</div>`,fields:[{label:'x =',answer:x}],hint:b>0?`First undo “+ ${b}”: subtract ${b} from both sides.`:`First undo “− ${-b}”: add ${-b} to both sides.`,sol};},
+ check:[
+  {q:'To solve 4x + 7 = 31, what is a good first step that keeps the scale balanced?',o:['Subtract 7 from both sides','Subtract 7 from the left side only','Divide only the left side by 4','Add 7 to both sides'],a:0,why:'Undo “+ 7” by subtracting 7 from BOTH sides: 4x = 24.'},
+  {q:'Which property justifies going from x ÷ 3 = 6 to x = 18?',o:['Addition Property of Equality','Division Property of Equality','Multiplication Property of Equality','Combining like terms'],a:2,why:'You multiplied both sides by 3 — the Multiplication Property of Equality.'},
+  {q:'Solve 6x − 2x + 5 = 29.',o:['x = 8.5','x = 6','x = 24','x = 3'],a:1,why:'6x − 2x = 4x, so 4x + 5 = 29 → 4x = 24 → x = 6.'}]
+};
 
-      const [graphType, setGraphType] = useState('linear');
-      const [paramA, setParamA] = useState(1);
-      const [paramB, setParamB] = useState(0);
-      const [paramC, setParamC] = useState(0);
+L['1A-1-2']={
+ goal:'I can record data with an appropriate level of accuracy for different measuring tools, and calculate using an appropriate level of accuracy.',
+ life:{title:'“A liter is about a quarter gallon”',html:'Your aunt says <b>1 liter ≈ 0.25 gallons</b>. Your science book says <b>1 liter = 0.264 gallons</b>. Close enough to buy soda? Yes. Close enough for a science lab? Not really. <br>A doctor could measure a newborn as “half a yard long” — true, but the unit is too big to be useful. The right tool and the right unit matter.'},
+ see:[{title:'Precision vs. accuracy',hint:'Each board shows 5 darts. The bullseye is the actual value.',mount:mountDarts},{title:'Precision depends on the tool',hint:'Slide to change the pencil length. Watch how each ruler reports it.',mount:mountRuler}],
+ vocab:[['Precision','How close measurements are to each other; also the level of detail a tool can show (1/16 in is more precise than 1 in).'],['Accuracy','How close a measurement is to the actual (true) value.'],['Percent error','|approximate − exact| ÷ exact × 100. Smaller is better.']],
+ examples:[
+  {title:'Example 1 — Percent error',prob:'Your aunt’s estimate is 0.25 gallons. The exact value is 0.264 gallons. Find the percent error to the nearest hundredth of a percent.',raw:true,lines:[
+   ['|approx − exact| ÷ exact × 100','Percent Error Formula.'],['|0.25 − 0.264| ÷ 0.264 × 100','Substitute the approximate value and the exact value.'],['|−0.014| ÷ 0.264 × 100','Subtract.'],['0.014 ÷ 0.264 × 100','Take the absolute value — error is a distance, never negative.'],['0.05303 × 100','Divide by the EXACT value.'],['≈ 5.30%','Multiply by 100. Small enough for shopping, too big for a lab.']]},
+  {title:'Example 2 — Converting with the right precision',prob:'A recipe needs 2 liters of water, but your measuring cup is in quarts (1 L ≈ 1.057 qt). The cup is marked every 0.1 qt.',raw:true,lines:[
+   ['2 L × (1.057 qt ÷ 1 L)','Multiply by a conversion factor that equals 1.'],['= 2.114 qt','Liters cancel; quarts remain.'],['≈ 2.1 qt','Report only what your tool can measure: nearest 0.1 qt.']]}],
+ mistake:{bad:'Dividing by your estimate',good:'Divide by the exact (actual) value',why:'Percent error compares your error to the <b>true</b> value.'},
+ practice(){
+  if(Math.random()<.6){const C=pick([{w:'the length of your bedroom',u:'ft',e:[10,18]},{w:'the weight of your backpack',u:'lb',e:[8,20]},{w:'your walk to school',u:'min',e:[12,30]},{w:'the height of a door',u:'in',e:[78,84]},{w:'the distance to the store',u:'mi',e:[4,9]}]);
+   const E=rand(C.e[0],C.e[1]);let A=E+pick([-3,-2,-1,1,2,3]);if(A<=0)A=E+1;const ans=Math.round(Math.abs(A-E)/E*1000)/10;
+   return {q:`You estimate ${C.w} is <b>${A} ${C.u}</b>. You measure it, and the actual value is <b>${E} ${C.u}</b>. What is your percent error? <span class="mute">(nearest tenth of a percent)</span>`,fields:[{label:'Percent error =',answer:ans,unit:'%',tol:.11}],raw:true,
+    hint:'Percent error = |approximate − exact| ÷ exact × 100. Divide by the ACTUAL value.',sol:[[`|${A} − ${E}| ÷ ${E} × 100`,'Substitute your estimate and the actual value.'],[`${Math.abs(A-E)} ÷ ${E} × 100`,'Subtract; take the absolute value.'],[`${(Math.abs(A-E)/E).toFixed(4)} × 100`,'Divide.'],[`≈ ${ans}%`,'Multiply by 100 and round.']]};}
+  const it=pick([['a bee’s wingspan','millimeter'],['the thickness of a phone','millimeter'],['the length of a pet lizard','centimeter'],['the width of a textbook','centimeter'],['the height of a classroom door','foot'],['the length of a whiteboard','foot'],['the length of a football field','yard'],['the distance between two cities','mile']]);
+  const m=mcFrom(it[1],shuffle(['millimeter','centimeter','foot','yard','mile'].filter(u=>u!==it[1])).slice(0,3));
+  return {type:'mc',q:`Which unit is the BEST choice for measuring <b>${it[0]}</b>?`,opts:m.opts,a:m.a,why:`A ${it[1]} is the right size: small enough to be precise, big enough to be practical.`};},
+ check:[
+  {q:'All 5 darts land close together in the top-left corner, far from the bullseye. This is…',o:['High precision, high accuracy','High precision, low accuracy','Low precision, high accuracy','Low precision, low accuracy'],a:1,why:'Close together = precise. Far from the bullseye = not accurate.'},
+  {q:'Which measurement of a pencil is the most precise?',o:['3 in','3 1/4 in','3 3/16 in','about 3 in'],a:2,why:'1/16 inch is the smallest unit, so it gives the most detail.'},
+  {q:'You estimate 50 people at a party. There were actually 40. What is the percent error?',o:['10%','20%','25%','80%'],a:2,why:'|50 − 40| ÷ 40 × 100 = 10 ÷ 40 × 100 = 25%.'}]
+};
 
-      const [calcType, setCalcType] = useState('system');
-      const [sysA1, setSysA1] = useState(2);
-      const [sysB1, setSysB1] = useState(1);
-      const [sysC1, setSysC1] = useState(7);
-      const [sysA2, setSysA2] = useState(1);
-      const [sysB2, setSysB2] = useState(-1);
-      const [sysC2, setSysC2] = useState(2);
-      const [statsInput, setStatsInput] = useState('10, 15, 20, 25, 30, 100');
+L['1A-1-3']={
+ goal:'I can create and interpret algebraic expressions to describe real-world scenarios.',
+ life:{title:'Family day at an amusement park',html:'Adult tickets cost <b>$60</b> and child tickets cost <b>$30</b>. If <i class="v">a</i> adults and <i class="v">c</i> children go, the total cost is <span class="math">'+mx('60a + 30c')+'</span>.<br>Same idea with a phone plan: $25 a month + $10 per GB of extra data → <span class="math">'+mx('25 + 10g')+'</span>.'},
+ see:[{title:'Every part of an expression has a meaning',hint:'Change the number of adults and children. Watch which part of the expression changes.',mount:mountTickets}],
+ vocab:[['Expression','A math phrase with numbers, variables, and operations — no equal sign.'],['Term','A part of an expression separated by + or −. In 8p − 2q + 7 the terms are 8p, −2q, 7.'],['Coefficient','The number multiplying a variable (8 and −2 above). In a story it is often a rate: “$ per item”.'],['Constant','A term with no variable (7 above). In a story it is often a one-time fee or a starting amount.']],
+ examples:[
+  {title:'Example 1 — Write and use an expression',prob:'A gym charges a <b>$25</b> sign-up fee plus <b>$15 per month</b>. Write an expression for <i class="v">m</i> months. Then find the cost of 6 months.',lines:[
+   ['15m','$15 for every month → coefficient 15 times the variable m.'],['15m + 25','Add the one-time $25 fee (a constant term).'],['15(6) + 25','Substitute m = 6.'],['90 + 25','Multiply first (order of operations).'],['115','Six months cost $115.']]},
+  {title:'Example 2 — Name the parts',prob:'Identify the terms, coefficients, and constant of <span class="math">'+mx('8p − 2q + 7')+'</span>.',raw:true,lines:[
+   ['Terms: 8<i class="v">p</i>, −2<i class="v">q</i>, +7','Terms are separated by + and − signs. Keep the sign with the term.'],['Coefficients: 8 and −2','The numbers multiplying the variables (the − sign belongs to 2).'],['Constant: 7','The term with no variable.']]}],
+ mistake:{bad:'In 8p − 2q + 7, the coefficient of q is 2',good:'The coefficient of q is −2',why:'The sign in front of a term belongs to that term.'},
+ practice(){
+  const r=rand(2,12);let f=rand(3,25);if(f===r)f++;
+  const C=pick([{t:`A bowling alley charges <b>$${r}</b> per game plus <b>$${f}</b> for shoe rental.`,v:'g',n:'games'},{t:`A rideshare charges a <b>$${f}</b> booking fee plus <b>$${r}</b> per mile.`,v:'d',n:'miles'},{t:`A school club sells T-shirts for <b>$${r}</b> each and already has <b>$${f}</b> in its account.`,v:'s',n:'shirts sold'},{t:`A phone plan costs <b>$${f}</b> a month plus <b>$${r}</b> for each GB of extra data.`,v:'x',n:'GB of extra data'}]);
+  const v=C.v,ty=pick(['mc','eval','coef']);
+  if(ty==='mc'){const m=mcFrom(mx(`${r}${v} + ${f}`),[mx(`${f}${v} + ${r}`),mx(`${r+f}${v}`),mx(`${r}(${v} + ${f})`)]);
+   return {type:'mc',q:`${C.t} Let <i class="v">${v}</i> = number of ${C.n}. Which expression gives the total?`,opts:m.opts,a:m.a,why:`The rate $${r} multiplies ${v} (it changes with each one); the $${f} is added once.`};}
+  if(ty==='eval'){const n=rand(2,9);return {q:`${C.t} Let <i class="v">${v}</i> = number of ${C.n}. The total is <span class="math">${mx(`${r}${v} + ${f}`)}</span>. What is the total when <i class="v">${v}</i> = ${n}?`,fields:[{label:'Total = $',answer:r*n+f}],hint:`Substitute ${v} = ${n}, multiply, then add.`,sol:[[`${r}(${n}) + ${f}`,`Substitute ${v} = ${n}.`],[`${r*n} + ${f}`,'Multiply first.'],[`${r*n+f}`,`The total is $${r*n+f}.`]]};}
+  return {q:`${C.t} Let <i class="v">${v}</i> = number of ${C.n}. The total is <span class="math">${mx(`${r}${v} + ${f}`)}</span>. What is the <b>coefficient</b>?`,fields:[{label:'Coefficient =',answer:r}],hint:'The coefficient is the number multiplying the variable.',sol:[[`${r}${v}`,`${r} multiplies ${v}, so the coefficient is ${r}. It means $${r} for each one of the ${C.n}.`]]};},
+ check:[
+  {q:'In 8p − 2q + 7, what is the coefficient of q?',o:['2','−2','7','q'],a:1,why:'The minus sign belongs to the term: −2q.'},
+  {q:'Pizzas cost $12 each plus a $5 delivery fee. Which expression gives the cost of n pizzas?',o:['5n + 12','17n','12n + 5','12(n + 5)'],a:2,why:'$12 for each pizza → 12n. The $5 fee is added once.'},
+  {q:'In 60a + 30c (adult and child tickets), what does 30c represent?',o:['The number of children','The total cost for the children','The price of one adult ticket','The total cost for everyone'],a:1,why:'30 dollars × c children = the total cost for the children.'}]
+};
 
-      const [quizIndex, setQuizIndex] = useState(0);
-      const [selectedAnswer, setSelectedAnswer] = useState(null);
-      const [quizScore, setQuizScore] = useState(0);
-      const [quizSubmitted, setQuizSubmitted] = useState(false);
+L['1A-1-4']={
+ goal:'I can write, solve, and interpret linear equations.',
+ life:{title:'The plumber’s bill',html:'A plumber charges <b>$40</b> for a house call plus <b>$50 for each hour</b>. The bill was <b>$315</b>. How many hours did he work?<br>Many stories work the same way: <b>starting amount + rate × time = total</b> (savings, phone plans, taxi rides, gym memberships).'},
+ see:[{title:'Build the bill with a bar model',hint:'Slide the hours until the bar reaches the red $315 line.',mount:mountBar}],
+ vocab:[['Initial value','The starting amount — it doesn’t change (the $40 house call).'],['Rate of change','How much the total changes for each unit (the $50 per hour). It becomes the coefficient.'],['Total value','The final amount (the $315 bill). It goes on the other side of the equal sign.']],
+ examples:[
+  {title:'Example 1 — The 4-step method',prob:'Elijah has <b>$50</b>. He gets <b>$10 per week</b> for allowance. A new bike costs <b>$120</b>. How many weeks must he save?',lines:[
+   ['50 + 10w = 120','Steps 1–2: Translate and write. Initial value 50 + rate 10w = total 120.'],['10w = 70','Step 3: Solve. Subtraction Property — subtract 50 from both sides.'],['w = 7','Division Property — divide both sides by 10.'],['w = 7','Step 4: Interpret. Elijah must save for 7 weeks. Check: 50 + 70 = 120 ✓']]},
+  {title:'Example 2 — Distributive property',prob:'3 friends each buy a concert ticket plus a <b>$6</b> snack combo. Together they pay <b>$93</b>. How much is one ticket?',lines:[
+   ['3(t + 6) = 93','Each friend pays (t + 6); there are 3 friends.'],['3t + 18 = 93','Distribute the 3 to both terms.'],['3t = 75','Subtract 18 from both sides.'],['t = 25','Divide both sides by 3. One ticket costs $25.']]},
+  {title:'Example 3 — Variables on both sides',prob:'Gym A: <b>$40</b> sign-up + <b>$20</b>/month. Gym B: <b>$10</b> sign-up + <b>$30</b>/month. After how many months do they cost the same?',lines:[
+   ['40 + 20m = 10 + 30m','Set the two costs equal.'],['40 = 10 + 10m','Subtract 20m from both sides — collect the variables on one side.'],['30 = 10m','Subtract 10 from both sides.'],['m = 3','Divide by 10. After 3 months both gyms cost $100.']]}],
+ mistake:{bad:'Plumber: 50 + 40h = 315',good:'40 + 50h = 315',why:'The <b>rate</b> (what you pay each hour) multiplies the variable. The one-time fee stands alone.'},
+ practice(){
+  const k=pick(['plumber','save','taxi','share']);
+  if(k==='share'){const n=rand(2,5),s=rand(3,8),t=rand(12,40),Tt=n*(t+s);
+   return {q:`${n} friends each buy a concert ticket plus a <b>$${s}</b> snack combo. Together they pay <b>$${Tt}</b>. How much is one ticket?`,fields:[{label:'One ticket = $',answer:t}],hint:`Write ${n}(t + ${s}) = ${Tt}. Distribute first, or divide both sides by ${n}.`,sol:[[`${n}(t + ${s}) = ${Tt}`,'Each friend pays (t + snack).'],[`${n}t + ${n*s} = ${Tt}`,`Distribute the ${n}.`],[`${n}t = ${Tt-n*s}`,`Subtract ${n*s} from both sides.`],[`t = ${t}`,`Divide by ${n}. One ticket costs $${t}.`]]};}
+  let S0,r,n,v,q,unit;
+  if(k==='plumber'){S0=pick([35,40,45,50,60]);r=pick([40,45,50,60,65,75]);n=pick([2,2.5,3,3.5,4,4.5,5,6]);v='h';unit='hours';q=`A plumber charges <b>$${S0}</b> for a house call plus <b>$${r}</b> per hour. The bill was <b>$${S0+r*n}</b>. How many hours did the plumber work?`;}
+  if(k==='save'){S0=rand(1,8)*10;r=pick([5,10,15,20,25]);n=rand(3,12);v='w';unit='weeks';q=`Maya has <b>$${S0}</b> saved. She adds <b>$${r}</b> each week. How many weeks until she has <b>$${S0+r*n}</b>?`;}
+  if(k==='taxi'){S0=pick([2,3,4,5]);r=pick([2,3]);n=rand(3,15);v='m';unit='miles';q=`A taxi charges <b>$${S0}</b> to start plus <b>$${r}</b> per mile. The ride cost <b>$${S0+r*n}</b>. How many miles was the ride?`;}
+  const Tt=S0+r*n;
+  return {q,fields:[{label:`${v} =`,answer:n,unit}],hint:`Starting amount + rate × ${v} = total → ${S0} + ${r}${v} = ${Tt}.`,sol:[[`${S0} + ${r}${v} = ${Tt}`,'Initial value + rate of change = total.'],[`${r}${v} = ${Tt-S0}`,`Subtract ${S0} from both sides.`],[`${v} = ${fmtNeg(n)}`,`Divide both sides by ${r}. Answer: ${fmtNeg(n)} ${unit}.`]]};},
+ check:[
+  {q:'A taxi charges $3 plus $2 per mile. The ride cost $19. Which equation fits?',o:['2 + 3m = 19','3 + 2m = 19','5m = 19','3m + 2m = 19'],a:1,why:'Start $3 + $2 for each mile (2m) = $19 total.'},
+  {q:'Solve 2(x + 4) = 18.',o:['x = 7','x = 5','x = 11','x = 9'],a:1,why:'2x + 8 = 18 → 2x = 10 → x = 5.'},
+  {q:'In 50 + 10w = 120 (Elijah’s bike), what does 10 represent?',o:['The cost of the bike','The money he starts with','The money he saves each week','The number of weeks'],a:2,why:'10 is the rate of change: $10 added every week.'}]
+};
 
-      const filteredModules = useMemo(() => {
-        return MODULES_DATA.filter(mod => {
-          const matchesCategory = activeCategory === 'all' || mod.category === activeCategory;
-          const matchesModule = activeModuleId === 'all' || mod.id === activeModuleId;
-          const matchesSearch = !searchQuery || 
-            mod.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            mod.summary.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            mod.children.some(c => c.title.toLowerCase().includes(searchQuery.toLowerCase()));
-          return matchesCategory && matchesModule && matchesSearch;
-        });
-      }, [activeCategory, activeModuleId, searchQuery]);
+L['1A-1-5']={
+ goal:'I can solve formulas for a particular variable of interest.',
+ life:{title:'Planning a road trip',html:'A road trip is <b>270 miles</b> and you’ll drive about <b>60 mph</b>. How long will it take? The formula <span class="math">'+mx('d = rt')+'</span> (distance = rate × time) is solved for <i class="v">d</i>, but you need <i class="v">t</i>.<br>Rearranging the formula once lets you answer every “how long?” question fast.'},
+ see:[{title:'The d-r-t triangle',hint:'Tap what you want to find. Cover it, and the triangle shows what to do with the others.',mount:mountTriangle},{title:'Undo in reverse order',hint:'Solving a formula for a variable means undoing what was done to it — last thing first.',mount:el=>el.innerHTML=undoMachine()}],
+ vocab:[['Literal equation','An equation with several variables, like a formula (V = lwh).'],['Solve for a variable','Get that variable alone on one side.'],['Inverse operations','Operations that undo each other: + and −, × and ÷.']],
+ examples:[
+  {title:'Example 1',prob:'Solve <span class="math">'+mx('A = ½bh')+'</span> for <i class="v">h</i>. Then find the height of a triangular sail with area 30 ft² and base 6 ft.',lines:[
+   ['A = ½bh','Original formula.'],['2A = bh','Multiplication Property: multiply both sides by 2 to undo ½.'],['2A ÷ b = h','Division Property: divide both sides by b.'],['h = 2A ÷ b','Solved for h.'],['h = 2(30) ÷ 6 = 10','Substitute: the sail is 10 ft tall.']]},
+  {title:'Example 2 — Two-variable equation',prob:'Solve <span class="math">'+mx('2x + 3y = 12')+'</span> for <i class="v">y</i>.',lines:[
+   ['2x + 3y = 12','Original equation.'],['3y = 12 − 2x','Subtraction Property: subtract 2x from both sides.'],['y = (12 − 2x) ÷ 3','Division Property: divide both sides by 3.'],['y = −(2/3)x + 4','Simplify. (You’ll use this form again in slope-intercept form!)']]}],
+ mistake:{bad:'d = rt → t = d − r',good:'d = rt → t = d ÷ r',why:'r is <b>multiplied</b> by t, so undo it by <b>dividing</b>.'},
+ practice(){
+  if(Math.random()<.5){const F=pick([['d = rt','t','t = d/r',['t = dr','t = r/d','t = d − r']],['V = lwh','w','w = V/(lh)',['w = Vlh','w = lh/V','w = V − lh']],['P = 2l + 2w','l','l = (P − 2w)/2',['l = P − 2w','l = P/2 − 2w','l = (P + 2w)/2']],['A = ½bh','h','h = 2A/b',['h = A/(2b)','h = 2Ab','h = A − ½b']],['C = 2πr','r','r = C/(2π)',['r = 2πC','r = C − 2π','r = 2π/C']],['I = Prt','r','r = I/(Pt)',['r = IPt','r = Pt/I','r = I − Pt']],['y = mx + b','x','x = (y − b)/m',['x = y/m − b','x = (y + b)/m','x = m(y − b)']],['F = 1.8C + 32','C','C = (F − 32)/1.8',['C = F/1.8 − 32','C = 1.8(F − 32)','C = (F + 32)/1.8']]]);
+   const m=mcFrom(mx(F[2]),F[3].map(mx));return {type:'mc',q:`Solve <span class="math">${mx(F[0])}</span> for <i class="v">${F[1]}</i>.`,opts:m.opts,a:m.a,why:`Undo each operation on ${F[1]} with its inverse, in reverse order: ${F[2]}.`};}
+  const k=pick(['trip','temp','garden']);
+  if(k==='trip'){const r=pick([50,55,60,65,70]),t=pick([2,2.5,3,4,4.5,5]),d=r*t;return {q:`A road trip is <b>${d} miles</b>. You drive at an average of <b>${r} mph</b>. Use <span class="math">${mx('d = rt')}</span>. How many hours will it take?`,fields:[{label:'t =',answer:t,unit:'hours'}],hint:'Solve for t first: t = d ÷ r.',sol:[['t = d ÷ r','Divide both sides of d = rt by r.'],[`t = ${d} ÷ ${r}`,'Substitute.'],[`t = ${t}`,`${t} hours.`]]};}
+  if(k==='temp'){const C=pick([-10,-5,0,5,10,15,20,25,30,35,40]),F=Math.round(1.8*C+32);return {q:`The weather app shows <b>${F}°F</b>. Use <span class="math">${mx('F = 1.8C + 32')}</span>. What is the temperature in °C?`,fields:[{label:'C =',answer:C,unit:'°C'}],hint:'Undo + 32 first, then undo × 1.8.',sol:[['F − 32 = 1.8C','Subtract 32 from both sides.'],['C = (F − 32) ÷ 1.8','Divide both sides by 1.8.'],[`C = (${F} − 32) ÷ 1.8 = ${fmtNeg(C)}`,'Substitute and compute.']]};}
+  const w=rand(3,12),l=rand(5,20);return {q:`A rectangular garden has an area of <b>${l*w} ft²</b> and a length of <b>${l} ft</b>. Use <span class="math">${mx('A = lw')}</span>. How wide is it?`,fields:[{label:'w =',answer:w,unit:'ft'}],hint:'Solve for w: w = A ÷ l.',sol:[['w = A ÷ l','Divide both sides by l.'],[`w = ${l*w} ÷ ${l} = ${w}`,`The garden is ${w} ft wide.`]]};},
+ check:[
+  {q:'Solve P = mgh for m.',o:['m = Pgh','m = P/(gh)','m = gh/P','m = P − gh'],a:1,why:'m is multiplied by g and h, so divide both sides by gh.'},
+  {q:'Solve y − 3 = 2x for x.',o:['x = (y − 3)/2','x = 2(y − 3)','x = y/2 − 3','x = (y + 3)/2'],a:0,why:'Divide both sides by 2: x = (y − 3) ÷ 2.'},
+  {q:'You drive 150 miles at 50 mph. Using t = d ÷ r, how long does it take?',o:['7,500 hours','100 hours','3 hours','0.33 hours'],a:2,why:'t = 150 ÷ 50 = 3 hours.'}]
+};
 
-      const handleMouseDown = (e) => {
-        if (e.target.closest('.interactive-node')) return;
-        setIsDragging(true);
-        setDragStart({ x: e.clientX - panPosition.x, y: e.clientY - panPosition.y });
-      };
+L['1A-2-3']={
+ goal:'I can calculate and interpret the average rate of change from an equation, a table, or a graph.',
+ life:{title:'Ramps and paychecks',html:'<svg viewBox="0 0 520 120" class="fig" style="max-width:520px"><path d="M30 95 L430 95 L430 62Z" fill="#e0e7ff" stroke="#4f46e5" stroke-width="2.5"/><line x1="30" y1="105" x2="430" y2="105" stroke="#059669" stroke-width="3"/><text x="230" y="120" text-anchor="middle" font-size="14" font-weight="800" fill="#059669">run = 12 ft</text><line x1="442" y1="62" x2="442" y2="95" stroke="#7c3aed" stroke-width="3"/><text x="450" y="84" font-size="14" font-weight="800" fill="#7c3aed">rise = 1 ft</text><circle cx="140" cy="78" r="9" fill="#374151"/><text x="140" y="40" font-size="14" text-anchor="middle" fill="#374151">wheelchair ramp: slope = 1/12</text></svg>A wheelchair ramp may rise at most <b>1 foot for every 12 feet</b> of length — that’s a slope of 1/12. Too steep is dangerous.<br>A job that pays <b>$15 per hour</b> has a rate of change of 15: every extra hour adds $15.'},
+ see:[{title:'Slope = rise ÷ run',hint:'Drag points A and B anywhere. The purple arrow is the rise; the green arrow is the run.',mount:mountSlope}],
+ vocab:[['Slope (m)','A number that tells the steepness and direction of a line: rise ÷ run.'],['Rise','The vertical change (change in y). Up is +, down is −.'],['Run','The horizontal change (change in x). Read left to right.'],['Rate of change','Slope in a real situation: change in output ÷ change in input ($ per hour, miles per gallon).']],
+ examples:[
+  {title:'Example 1 — From two points',prob:'Find the slope of the line through (1, 2) and (5, 8).',lines:[
+   ['m = (y₂ − y₁) ÷ (x₂ − x₁)','Slope formula: change in y over change in x.'],['m = (8 − 2) ÷ (5 − 1)','Substitute (x₁, y₁) = (1, 2) and (x₂, y₂) = (5, 8).'],['m = 6 ÷ 4','Rise 6, run 4.'],['m = 3/2','Simplify. Positive: the line goes up from left to right.']]},
+  {title:'Example 2 — From a table',prob:'<table class="t"><tr><th>Hours worked</th><td>2</td><td>5</td></tr><tr><th>Pay ($)</th><td>30</td><td>75</td></tr></table>Find and interpret the rate of change.',raw:true,lines:[
+   ['(75 − 30) ÷ (5 − 2)','Change in pay ÷ change in hours.'],['= 45 ÷ 3','Subtract.'],['= 15','Divide.'],['$15 per hour','Interpret: each extra hour of work adds $15.']]}],
+ mistake:{bad:'m = (5 − 1) ÷ (8 − 2)',good:'m = (8 − 2) ÷ (5 − 1)',why:'Slope is <b>y</b> change on top, <b>x</b> change on the bottom — “rise over run”.'},
+ practice(){
+  if(Math.random()<.65){let x1,y1,x2,y2;do{x1=rand(-5,5);y1=rand(-5,5);x2=rand(-5,5);y2=rand(-5,5);}while(x1===x2||(Math.abs(x2-x1)<2&&Math.abs(y2-y1)<2));
+   const g=grid({u:24});const m=(y2-y1)/(x2-x1);
+   const fig=g.svg(gline(g,m,y1-m*x1)+gdot(g,x1,y1,'#ea580c',7,`(${fmtNeg(x1)}, ${fmtNeg(y1)})`)+gdot(g,x2,y2,'#1f2937',7,`(${fmtNeg(x2)}, ${fmtNeg(y2)})`));
+   return {q:`Find the slope of the line through <b>(${fmtNeg(x1)}, ${fmtNeg(y1)})</b> and <b>(${fmtNeg(x2)}, ${fmtNeg(y2)})</b>. <span class="mute">Fractions like −3/4 are OK.</span>`,fig,fields:[{label:'m =',answer:m}],hint:'Count the rise (up/down) and the run (right) between the points, or use (y₂ − y₁) ÷ (x₂ − x₁).',
+    sol:[[`m = (${fmtNeg(y2)} − ${P(y1)}) ÷ (${fmtNeg(x2)} − ${P(x1)})`,'Substitute into the slope formula.'],[`m = ${fmtNeg(y2-y1)} ÷ ${fmtNeg(x2-x1)}`,'Subtract.'],[`m = ${frac(y2-y1,x2-x1)}`,'Simplify.']],raw:true};}
+  const k=pick(['pay','tank','phone']);
+  if(k==='pay'){const r=pick([12,14,15,16,18,20]),a=rand(1,4),b=a+rand(2,5);return {q:`<table class="t"><tr><th>Hours worked</th><td>${a}</td><td>${b}</td></tr><tr><th>Pay ($)</th><td>${a*r}</td><td>${b*r}</td></tr></table>What is the rate of change (dollars per hour)?`,fields:[{label:'Rate =',answer:r,unit:'$ per hour'}],raw:true,hint:'Change in pay ÷ change in hours.',sol:[[`(${b*r} − ${a*r}) ÷ (${b} − ${a})`,'Change in pay ÷ change in hours.'],[`${(b-a)*r} ÷ ${b-a} = ${r}`,`$${r} per hour.`]]};}
+  if(k==='tank'){const r=pick([2,3,4,5,6]),s=rand(60,90),a=rand(1,4),b=a+rand(3,6);return {q:`A water tank is draining. <table class="t"><tr><th>Minutes</th><td>${a}</td><td>${b}</td></tr><tr><th>Liters left</th><td>${s-a*r}</td><td>${s-b*r}</td></tr></table>What is the rate of change (liters per minute)?`,fields:[{label:'Rate =',answer:-r,unit:'L per minute'}],raw:true,hint:'The amount is going DOWN, so the rate is negative.',sol:[[`(${s-b*r} − ${s-a*r}) ÷ (${b} − ${a})`,'Change in liters ÷ change in minutes.'],[`${fmtNeg(-(b-a)*r)} ÷ ${b-a} = ${fmtNeg(-r)}`,`The tank loses ${r} liters each minute.`]]};}
+  const r=pick([2,4,5,8,10]),a=rand(1,3),b=a+rand(2,4);return {q:`Your phone battery while gaming: <table class="t"><tr><th>Hours</th><td>${a}</td><td>${b}</td></tr><tr><th>Battery (%)</th><td>${100-a*r*2}</td><td>${100-b*r*2}</td></tr></table>What is the rate of change (% per hour)?`,fields:[{label:'Rate =',answer:-2*r,unit:'% per hour'}],raw:true,hint:'Change in battery ÷ change in hours. Going down → negative.',sol:[[`(${100-b*r*2} − ${100-a*r*2}) ÷ (${b} − ${a})`,'Change in % ÷ change in hours.'],[`${fmtNeg(-(b-a)*r*2)} ÷ ${b-a} = ${fmtNeg(-2*r)}`,`The battery drops ${2*r}% each hour.`]]};},
+ check:[
+  {q:'A line slants DOWN as you read from left to right. Its slope is…',o:['positive','negative','zero','undefined'],a:1,why:'Going down from left to right means a negative rise for a positive run.'},
+  {q:'What is the slope of the line through (1, 2) and (3, 8)?',o:['1/3','6','3','4'],a:2,why:'(8 − 2) ÷ (3 − 1) = 6 ÷ 2 = 3.'},
+  {q:'What is the slope of a vertical line?',o:['0','1','undefined','infinite and positive'],a:2,why:'The run is 0, and you can’t divide by 0.'}]
+};
 
-      const handleMouseMove = (e) => {
-        if (!isDragging) return;
-        setPanPosition({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y });
-      };
+L['1A-2-4']={
+ goal:'I can graph linear equations written in slope-intercept form, y = mx + b.',
+ life:{title:'A taxi ride',html:'A taxi charges <b>$3</b> as soon as you get in, plus <b>$2 per mile</b>. Cost: <span class="math">'+mx('y = 2x + 3')+'</span>.<br>The <span class="k">$3</span> is where the graph <b>starts</b> (the y-intercept, b). The <b style="color:#7c3aed">$2 per mile</b> is how steeply it <b>climbs</b> (the slope, m). Tap the 🚕 button below to see it.'},
+ see:[{title:'Start at b, then step with m',hint:'Move the sliders. Orange dot = y-intercept. Purple = rise, green = run.',mount:mountSI}],
+ vocab:[['Slope-intercept form','y = mx + b'],['m (slope)','The rise over run — how the line moves for each step.'],['b (y-intercept)','Where the line crosses the y-axis: the point (0, b). In a story, the starting amount.']],
+ examples:[
+  {title:'Example A — Graph y = (3/4)x − 2',prob:'Graph <span class="math">'+mx('y = (3/4)x − 2')+'</span> using the slope and the y-intercept.',lines:[
+   ['m = 3/4, b = −2','Step 1: Identify the slope and the y-intercept.'],['(0, −2)','Step 2: Plot the y-intercept first.'],['(0, −2) → (4, 1)','Step 3: Use the slope: up 3, right 4. Plot the new point.'],['y = (3/4)x − 2','Step 4: Connect the points with a straight line.']]},
+  {title:'Example B — Rewrite first',prob:'Graph <span class="math">'+mx('x + 3y = 6')+'</span>.',lines:[
+   ['x + 3y = 6','Not in slope-intercept form yet.'],['3y = −x + 6','Subtract x from both sides.'],['y = −(1/3)x + 2','Divide every term by 3.'],['m = −1/3, b = 2','Start at (0, 2), then down 1, right 3 → (3, 1).']]}],
+ mistake:{bad:'y = 2x + 3: start at (0, 2)',good:'Start at (0, 3)',why:'b is the number <b>added</b> at the end. The coefficient of x is the slope.'},
+ practice(){
+  if(Math.random()<.6){let num,den,b;do{[num,den]=pick(MS.filter(m=>m[0]!==0));b=rand(-4,4);}while(b+num>6||b+num<-6||den>6);
+   const g=grid({u:24});const fig=g.svg(gline(g,num/den,b)+gdot(g,0,b,'#1f2937',6)+gdot(g,den,b+num,'#1f2937',6));
+   return {q:'Look at the graph. What are the slope <i class="v">m</i> and the y-intercept <i class="v">b</i>? <span class="mute">Fractions like 2/3 are OK.</span>',fig,fields:[{label:'m =',answer:num/den},{label:'b =',answer:b}],hint:'b: where does the line cross the y-axis? m: from that point, count up/down (rise) and right (run) to the next dot.',
+    sol:[[`b = ${fmtNeg(b)}`,`The line crosses the y-axis at (0, ${fmtNeg(b)}).`],[`m = ${frac(num,den)}`,`From (0, ${fmtNeg(b)}) to (${den}, ${fmtNeg(b+num)}): ${num>0?'up':'down'} ${Math.abs(num)}, right ${den}.`],[eqStr(num,den,b),'The equation of the line.']]};}
+  let m=rand(-3,3);if(!m)m=2;const b=rand(-5,5),B=pick([1,2,3]),A=-m*B,C=b*B;
+  const eq=`${T(A,'x')} ${B>0?'+':MINUS} ${T(Math.abs(B),'y')} = ${fmtNeg(C)}`;
+  return {q:`Rewrite <span class="math">${mx(eq)}</span> in slope-intercept form. What are <i class="v">m</i> and <i class="v">b</i>?`,fields:[{label:'m =',answer:m},{label:'b =',answer:b}],hint:'Move the x-term to the right side, then divide every term by the number in front of y.',
+   sol:[[`${T(B,'y')} = ${T(-A,'x')}${S(C)}`,`Subtract ${T(A,'x')} from both sides.`],[eqStr(m,1,b),B===1?'Already solved for y.':`Divide every term by ${B}.`],[`m = ${fmtNeg(m)}, b = ${fmtNeg(b)}`,'Read the slope and the y-intercept.']]};},
+ check:[
+  {q:'For y = −2x + 5, what are the slope and y-intercept?',o:['m = 5, b = −2','m = −2, b = 5','m = 2, b = 5','m = −2, b = −5'],a:1,why:'y = mx + b: m is the coefficient of x (−2), b is the constant (5).'},
+  {q:'Rewrite 2x + y = 7 in slope-intercept form.',o:['y = 2x + 7','y = −2x + 7','y = 7x − 2','y = −2x − 7'],a:1,why:'Subtract 2x from both sides: y = −2x + 7.'},
+  {q:'A taxi charges $3 plus $2 per mile. Which equation gives the cost y for x miles?',o:['y = 3x + 2','y = 5x','y = 2x + 3','y = 2x − 3'],a:2,why:'The rate $2 per mile is the slope; the $3 start is the y-intercept.'}]
+};
 
-      const handleMouseUp = () => setIsDragging(false);
+/* ============ views ============ */
+const STAGES=[{k:'pic',n:'Picture',i:'🖼'},{k:'steps',n:'Steps',i:'🪜'},{k:'pencil',n:'Pencil',i:'✏️'},{k:'check',n:'Check',i:'✅'}];
+const app=$('#app');
+const avail=ORDER.filter(id=>L[id]);
+function nextLesson(id){const i=avail.indexOf(id);return avail[i+1];}
+function topProg(){$('#topprog').textContent=`${avail.filter(isDone).length} of ${ORDER.length} lessons done`;}
 
-      const resetView = () => {
-        setZoomLevel(1);
-        setPanPosition({ x: 0, y: 0 });
-      };
+function renderHome(){
+ const nid=avail.find(id=>!isDone(id))||avail[0],anyDone=avail.some(isDone),done=avail.filter(isDone).length;
+ app.innerHTML=`<div class="wrap"><div class="card hero"><h1>Algebra 1 Visual Lab</h1><p style="margin:4px 0">See the idea first. Then do it with your pencil.</p>
+ <div class="flow"><span>🖼 1. Picture</span><span>🪜 2. Steps</span><span>✏️ 3. Pencil</span><span>✅ 4. Check</span></div>
+ <a class="btn primary" href="#/l/${nid}/0">${anyDone?'Continue':'Start'}: ${META[nid].title} ▶</a>
+ <div class="bar"><i style="width:${done/ORDER.length*100}%"></i></div><div class="mute" style="font-size:14px">${done} of ${ORDER.length} lessons complete · ${avail.length} lessons open now, more coming soon</div></div>
+ ${COURSE.map(c=>`<h2>Algebra ${c.id}</h2><div class="mods">${c.modules.map(m=>`<div class="mod" style="--mc:${m.color}"><span class="mn">Module ${m.n}</span><b>${m.title}</b><ol>${m.lessons.map((t,i)=>{const id=`${c.id}-${m.n}-${i+1}`;return L[id]?`<li><a href="#/l/${id}/0"><span class="st ${isDone(id)?'d':''}">${isDone(id)?'✓':'○'}</span>${i+1}. ${t}</a></li>`:`<li class="soon"><span class="st">·</span>${i+1}. ${t}<small>soon</small></li>`;}).join('')}</ol></div>`).join('')}</div>`).join('')}</div>`;
+}
 
-      const solveSystem = () => {
-        const det = sysA1 * sysB2 - sysA2 * sysB1;
-        if (det === 0) {
-          return { status: 'No unique solution (Parallel or Identical)' };
-        }
-        const x = (sysC1 * sysB2 - sysC2 * sysB1) / det;
-        const y = (sysA1 * sysC2 - sysA2 * sysC1) / det;
-        return { status: 'Success', x: x.toFixed(2), y: y.toFixed(2) };
-      };
+function renderLesson(id,stage){
+ const M=META[id],D=L[id],pr=prog(id);document.documentElement.style.setProperty('--acc',M.color);
+ const nx=nextLesson(id);
+ app.innerHTML=`<div class="wrap"><a href="#/">← All lessons</a><div class="crumb">Algebra ${M.c} · Module ${M.m}: ${M.mt} · Lesson ${M.n}</div><h1>${M.title}</h1><div class="goal">🎯 ${D.goal}</div>
+ <nav class="stepper">${STAGES.map((s,i)=>`<a class="pill ${i===stage?'on':''} ${pr[s.k]?'done':''}" data-k="${s.k}" href="#/l/${id}/${i}"><span class="ic">${s.i} </span>${s.n}</a>`).join('')}</nav>
+ <section id="stage"></section>
+ <div class="navrow">${stage>0?`<a class="btn" href="#/l/${id}/${stage-1}">◀ ${STAGES[stage-1].n}</a>`:'<span></span>'}${stage<3?`<a class="btn primary" href="#/l/${id}/${stage+1}">Next: ${STAGES[stage+1].n} ▶</a>`:(nx?`<a class="btn" href="#/l/${nx}/0">Next lesson ▶</a>`:'<a class="btn" href="#/">All lessons</a>')}</div></div>`;
+ const el=$('#stage');[stPicture,stSteps,stPencil,stCheck][stage](el,id,D,pr);
+}
+function markStage(id,k){const pr=prog(id);if(!pr[k]){pr[k]=true;save();}const p=$(`.pill[data-k="${k}"]`);if(p)p.classList.add('done');}
 
-      const computeStats = () => {
-        const nums = statsInput
-          .split(',')
-          .map(n => parseFloat(n.trim()))
-          .filter(n => !isNaN(n))
-          .sort((a, b) => a - b);
+function stPicture(el,id,D){
+ el.innerHTML=`<div class="card life"><div class="tag">Real life</div><h3>${D.life.title}</h3><div>${D.life.html}</div></div>
+ ${D.see.map((s,i)=>`<div class="card"><div class="tag">See it</div><h3>${s.title}</h3><p class="mute" style="margin-top:0">${s.hint}</p><div id="see${i}"></div></div>`).join('')}
+ <div class="card"><div class="tag">Key words</div><dl class="vocab">${D.vocab.map(v=>`<dt>${v[0]}</dt><dd>${v[1]}</dd>`).join('')}</dl></div>`;
+ D.see.forEach((s,i)=>s.mount($('#see'+i)));markStage(id,'pic');
+}
+function lineHTML(l,raw,hide){return `<div class="ln-step ${hide?'hide':''}"><div class="m math">${raw?l[0]:mx(l[0])}</div><div class="why">${l[1]}</div></div>`;}
+function stSteps(el,id,D){
+ el.innerHTML=D.examples.map((e,i)=>`<div class="card ex" data-i="${i}"><div class="tag">${e.title}</div><div class="prob">${e.prob}</div><div class="lines">${e.lines.map((l,j)=>lineHTML(l,e.raw,j>0)).join('')}</div>
+ <div class="row"><button class="primary" data-a="next">Next step ▼</button><button data-a="all">Show all</button></div></div>`).join('')+
+ `<div class="card mistake"><div class="tag">⚠ Common mistake</div><div class="mk"><div class="x"><span class="bad">✗</span> <span class="math">${D.mistake.bad}</span></div><div class="o"><span class="good">✓</span> <span class="math">${D.mistake.good}</span></div></div><p style="margin-bottom:0">${D.mistake.why}</p></div>`;
+ const chk=()=>{if(!$$('.ln-step.hide',el).length)markStage(id,'steps');};
+ el.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const card=b.closest('.ex');const hidden=$$('.ln-step.hide',card);
+  if(b.dataset.a==='next'&&hidden.length)hidden[0].classList.remove('hide');if(b.dataset.a==='all')hidden.forEach(h=>h.classList.remove('hide'));
+  if(!$$('.ln-step.hide',card).length){$('[data-a=next]',card).disabled=true;$('[data-a=all]',card).disabled=true;}chk();});
+}
+function stPencil(el,id,D,pr){
+ let p,counted,shown;
+ const status=()=>`Correct answers: <b>${pr.pc||0}</b> · ${pr.pencil?'<span class="good">✓ Pencil step complete</span> — keep practicing or move on to Check.':'Get 2 correct to complete this step.'}`;
+ const fresh=()=>{p=D.practice();counted=false;shown=false;draw();};
+ const draw=()=>{el.innerHTML=`<div class="card"><div class="tag">Your turn</div><div class="pencilnote">✏️ <b>Pencil first:</b> work it out on paper — write each step and why. Then enter your answer.</div>
+  <div class="prob">${p.q}</div>${p.fig||''}
+  <div style="margin-top:8px">${p.type==='mc'?p.opts.map((o,i)=>`<button class="opt" data-o="${i}">${o}</button>`).join(''):p.fields.map((f,i)=>`<label class="fld">${f.label} <input data-f="${i}" autocomplete="off" inputmode="decimal"> ${f.unit||''}</label>`).join('')}</div>
+  <div class="row">${p.type==='mc'?'':'<button class="primary" data-a="check">Check</button>'}${p.hint?'<button data-a="hint">💡 Hint</button>':''}${p.sol?'<button data-a="sol">Show solution</button>':''}<button data-a="new">New problem ↻</button></div>
+  <div class="fb"></div>${p.sol?`<div class="solbox" hidden>${p.sol.map(l=>lineHTML(l,p.raw,false)).join('')}</div>`:''}<div class="streak">${status()}</div></div>`;
+  const inp=$('input',el);if(inp)inp.focus({preventScroll:true});};
+ const win=()=>{if(!counted&&!shown){counted=true;pr.pc=(pr.pc||0)+1;save();if(pr.pc>=2)markStage(id,'pencil');}$('.streak',el).innerHTML=status();};
+ el.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const fb=$('.fb',el);
+  if(b.dataset.o!==undefined){const i=+b.dataset.o;if(i===p.a){b.classList.add('right');fb.className='fb okk';fb.innerHTML='✓ Correct! '+(p.why||'');$$('.opt',el).forEach(x=>x.disabled=true);win();}else{b.classList.add('wrong');b.disabled=true;fb.className='fb no';fb.textContent='Not quite — look at the picture again and try another choice.';}return;}
+  const a=b.dataset.a;
+  if(a==='new')fresh();
+  if(a==='hint'){fb.className='fb';fb.innerHTML='💡 '+p.hint;}
+  if(a==='sol'){shown=true;$('.solbox',el).hidden=false;}
+  if(a==='check'){const res=p.fields.map((f,i)=>{const v=parseAns($(`[data-f="${i}"]`,el).value);return !isNaN(v)&&Math.abs(v-f.answer)<=(f.tol||0.011);});
+   const blank=p.fields.some((f,i)=>!$(`[data-f="${i}"]`,el).value.trim());
+   if(blank){fb.className='fb no';fb.textContent='Enter an answer in every box first.';return;}
+   p.fields.forEach((f,i)=>$(`[data-f="${i}"]`,el).style.borderColor=res[i]?'#15803d':'#b91c1c');
+   if(res.every(Boolean)){fb.className='fb okk';fb.innerHTML='✓ Correct! Nice pencil work. Try another one with “New problem”.';win();}
+   else{fb.className='fb no';fb.textContent='Not yet. Check your work step by step, or tap 💡 Hint.';}}});
+ el.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('input')){const c=$('[data-a=check]',el);if(c)c.click();}});
+ fresh();
+}
+function stCheck(el,id,D,pr){
+ const sel=[];
+ const draw=()=>{el.innerHTML=`<div class="card"><div class="tag">Quick check</div><p class="mute" style="margin-top:0">Answer all 3. Get at least 2 right to complete the lesson.</p>
+  ${D.check.map((c,i)=>`<div class="qq" data-q="${i}"><b>${i+1}. ${c.q}</b>${c.o.map((o,j)=>`<button class="opt" data-q="${i}" data-j="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}<div class="why">${c.why}</div></div>`).join('')}
+  <div class="row"><button class="primary" data-a="submit">Submit</button></div><div id="res"></div></div>`;};
+ draw();
+ el.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.j!==undefined){const q=+b.dataset.q;if(el.dataset.locked)return;sel[q]=+b.dataset.j;$$(`.opt[data-q="${q}"]`,el).forEach(x=>x.classList.toggle('sel',+x.dataset.j===sel[q]));return;}
+  if(b.dataset.a==='submit'){if(D.check.some((c,i)=>sel[i]===undefined)){$('#res',el).innerHTML='<p class="bad">Answer all 3 questions first.</p>';return;}
+   el.dataset.locked=1;let score=0;
+   D.check.forEach((c,i)=>{const ok=sel[i]===c.a;if(ok)score++;$(`.qq[data-q="${i}"]`,el).classList.add('shown');$$(`.opt[data-q="${i}"]`,el).forEach(x=>{const j=+x.dataset.j;x.classList.remove('sel');if(j===c.a)x.classList.add('right');else if(j===sel[i])x.classList.add('wrong');x.disabled=true;});});
+   b.disabled=true;
+   if(score>=2){pr.check=score;pr.done=true;save();markStage(id,'check');topProg();const nx=nextLesson(id);
+    $('#res',el).innerHTML=`<div class="done-banner">🎉 ${score}/3 — Lesson complete!${nx?` <a class="btn primary" href="#/l/${nx}/0" style="margin-left:8px">Next lesson: ${META[nx].title} ▶</a>`:''}</div>`;}
+   else $('#res',el).innerHTML=`<p class="bad">${score}/3. Read the explanations, review the Steps, then try again.</p><div class="row"><a class="btn" href="#/l/${id}/1">◀ Review Steps</a><button data-a="retry">Try again</button></div>`;}
+  if(b.dataset.a==='retry'){delete el.dataset.locked;sel.length=0;draw();}});
+}
 
-        if (nums.length === 0) return null;
-
-        const sum = nums.reduce((acc, v) => acc + v, 0);
-        const mean = sum / nums.length;
-        
-        const mid = Math.floor(nums.length / 2);
-        const median = nums.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
-        
-        const variance = nums.reduce((acc, v) => acc + Math.pow(v - mean, 2), 0) / nums.length;
-        const stdDev = Math.sqrt(variance);
-
-        return {
-          count: nums.length,
-          sum: sum.toFixed(2),
-          mean: mean.toFixed(2),
-          median: median.toFixed(2),
-          stdDev: stdDev.toFixed(2),
-          min: nums[0],
-          max: nums[nums.length - 1]
-        };
-      };
-
-      return (
-        <div className="flex flex-col h-screen bg-slate-950 text-slate-100 font-sans overflow-hidden select-none">
-          <header className="h-16 border-b border-slate-800 bg-slate-900/90 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between shrink-0 z-30">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 rounded-xl text-white shadow-lg">
-                <Icon name="sparkles" size={20} />
-              </div>
-              <div>
-                <h1 className="font-black text-base sm:text-lg bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">
-                  Algebra 1 Master Curriculum Lab
-                </h1>
-                <p className="text-[11px] text-slate-400 hidden sm:block">Modules 1–9 Visual Mind Map & Interactive Hub</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-1.5 bg-slate-800/80 p-1 rounded-xl border border-slate-700/60 text-xs">
-              {[
-                { id: 'canvas', label: 'Mind Map', icon: 'layers' },
-                { id: 'grapher', label: 'Function Grapher', icon: 'activity' },
-                { id: 'calculators', label: 'Calculators', icon: 'calculator' },
-                { id: 'quiz', label: 'Master Quiz', icon: 'help-circle' }
-              ].map(tab => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`px-3 py-1.5 rounded-lg transition-all font-semibold flex items-center gap-1.5 ${
-                    activeTab === tab.id 
-                      ? 'bg-indigo-600 text-white shadow-md' 
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
-                  }`}
-                >
-                  <Icon name={tab.icon} size={14} />
-                  <span className="hidden md:inline">{tab.label}</span>
-                </button>
-              ))}
-            </div>
-          </header>
-
-          <div className="h-12 border-b border-slate-800/80 bg-slate-900/50 px-4 flex items-center justify-between text-xs overflow-x-auto gap-4 shrink-0">
-            <div className="flex items-center gap-1 shrink-0">
-              <span className="text-slate-400 text-[11px] font-bold uppercase tracking-wider mr-2">Category:</span>
-              {['all', 'Foundations', 'Linear', 'Non-Linear', 'Polynomials', 'Advanced'].map(cat => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className={`px-2.5 py-1 rounded-md transition-all text-[11px] font-medium ${
-                    activeCategory === cat 
-                      ? 'bg-slate-700 text-indigo-300 border border-indigo-500/40 font-bold' 
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
-                  }`}
-                >
-                  {cat === 'all' ? 'All Categories' : cat}
-                </button>
-              ))}
-            </div>
-
-            <div className="flex items-center gap-2 shrink-0">
-              <span className="text-slate-400 text-[11px] font-bold uppercase tracking-wider">Module:</span>
-              <select 
-                value={activeModuleId} 
-                onChange={(e) => setActiveModuleId(e.target.value)}
-                className="bg-slate-800 text-slate-200 text-xs px-2.5 py-1 rounded-md border border-slate-700 focus:outline-none focus:border-indigo-500"
-              >
-                <option value="all">All Modules (1 - 9)</option>
-                {MODULES_DATA.map(m => (
-                  <option key={m.id} value={m.id}>{m.title}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
-            <div className="flex-1 flex flex-col relative bg-slate-950 overflow-hidden">
-              {activeTab === 'canvas' && (
-                <div className="flex-1 flex flex-col relative overflow-hidden">
-                  <div className="absolute top-4 left-4 z-20 flex items-center gap-2 bg-slate-900/90 p-2 rounded-xl border border-slate-800 backdrop-blur-md shadow-xl">
-                    <div className="relative flex items-center">
-                      <input 
-                        type="text" 
-                        placeholder="Search topics..." 
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="bg-slate-800 text-xs text-slate-200 pl-3 pr-3 py-1.5 rounded-lg border border-slate-700 focus:outline-none focus:border-indigo-500 w-36 sm:w-48"
-                      />
-                    </div>
-                    <div className="h-4 w-px bg-slate-800 mx-1"></div>
-                    <button onClick={() => setZoomLevel(prev => Math.min(prev + 0.15, 1.8))} className="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg">
-                      <Icon name="zoom-in" size={16} />
-                    </button>
-                    <button onClick={() => setZoomLevel(prev => Math.max(prev - 0.15, 0.5))} className="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg">
-                      <Icon name="zoom-out" size={16} />
-                    </button>
-                    <button onClick={resetView} className="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg">
-                      <Icon name="rotate-ccw" size={16} />
-                    </button>
-                  </div>
-
-                  <div 
-                    onMouseDown={handleMouseDown}
-                    onMouseMove={handleMouseMove}
-                    onMouseUp={handleMouseUp}
-                    onMouseLeave={handleMouseUp}
-                    className={`flex-1 w-full h-full cursor-grab active:cursor-grabbing overflow-hidden flex items-center justify-center p-8 ${
-                      isDragging ? 'cursor-grabbing' : ''
-                    }`}
-                    style={{
-                      backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px)',
-                      backgroundSize: '24px 24px'
-                    }}
-                  >
-                    <div 
-                      className="transition-transform duration-75 origin-center flex flex-wrap justify-center gap-8 max-w-6xl"
-                      style={{
-                        transform: `translate(${panPosition.x}px, ${panPosition.y}px) scale(${zoomLevel})`
-                      }}
-                    >
-                      {filteredModules.map(mod => {
-                        const isSelected = selectedModule.id === mod.id;
-                        return (
-                          <div 
-                            key={mod.id}
-                            onClick={() => setSelectedModule(mod)}
-                            className={`interactive-node cursor-pointer p-4 rounded-2xl border-2 shadow-xl transition-all transform hover:scale-105 flex flex-col gap-3 w-72 backdrop-blur-md ${mod.color} ${
-                              isSelected ? 'ring-4 ring-yellow-400 scale-105 z-20 shadow-indigo-500/30' : 'opacity-95 hover:opacity-100'
-                            }`}
-                          >
-                            <div className="flex items-center justify-between">
-                              <span className="text-[10px] uppercase tracking-wider font-extrabold bg-black/30 px-2 py-0.5 rounded text-white">
-                                {mod.category}
-                              </span>
-                              <span className="text-xs font-mono opacity-80">{mod.id.toUpperCase()}</span>
-                            </div>
-
-                            <div>
-                              <h3 className="font-bold text-base leading-tight">{mod.title}</h3>
-                              <p className="text-xs opacity-90 mt-1 line-clamp-2">{mod.summary}</p>
-                            </div>
-
-                            <div className="border-t border-white/20 pt-2 space-y-1">
-                              {mod.children.map(child => (
-                                <div key={child.id} className="text-[11px] bg-black/20 px-2 py-1 rounded flex items-center gap-1.5">
-                                  <Icon name="chevron-right" size={12} className="shrink-0 opacity-70" />
-                                  <span className="truncate">{child.title}</span>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {activeTab === 'grapher' && (
-                <div className="flex-1 p-6 overflow-y-auto max-w-5xl mx-auto w-full space-y-6">
-                  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl">
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="flex items-center gap-2 text-indigo-400">
-                        <Icon name="activity" size={22} />
-                        <h2 className="text-lg font-bold">Interactive Function Plotter & Analyzer</h2>
-                      </div>
-
-                      <div className="flex bg-slate-800 p-1 rounded-lg border border-slate-700 text-xs font-semibold">
-                        {[
-                          { id: 'linear', label: 'Linear (y=mx+b)' },
-                          { id: 'quadratic', label: 'Quadratic (y=ax²+bx+c)' },
-                          { id: 'exponential', label: 'Exponential (y=a·bˣ)' }
-                        ].map(type => (
-                          <button
-                            key={type.id}
-                            onClick={() => setGraphType(type.id)}
-                            className={`px-3 py-1.5 rounded-md transition-all ${
-                              graphType === type.id ? 'bg-indigo-600 text-white shadow' : 'text-slate-400 hover:text-slate-200'
-                            }`}
-                          >
-                            {type.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-5 text-xs">
-                        <h4 className="font-bold text-slate-300 uppercase tracking-wider text-[11px]">Parameter Sliders</h4>
-                        
-                        {graphType === 'linear' && (
-                          <>
-                            <div>
-                              <div className="flex justify-between font-mono mb-1">
-                                <span>Slope (m): {paramA}</span>
-                              </div>
-                              <input 
-                                type="range" min="-5" max="5" step="0.5" value={paramA} 
-                                onChange={(e) => setParamA(parseFloat(e.target.value))}
-                                className="w-full accent-indigo-500"
-                              />
-                            </div>
-                            <div>
-                              <div className="flex justify-between font-mono mb-1">
-                                <span>Y-Intercept (b): {paramB}</span>
-                              </div>
-                              <input 
-                                type="range" min="-10" max="10" value={paramB} 
-                                onChange={(e) => setParamB(parseFloat(e.target.value))}
-                                className="w-full accent-indigo-500"
-                              />
-                            </div>
-                          </>
-                        )}
-
-                        {graphType === 'quadratic' && (
-                          <>
-                            <div>
-                              <div className="flex justify-between font-mono mb-1">
-                                <span>a (Curvature): {paramA}</span>
-                              </div>
-                              <input 
-                                type="range" min="-3" max="3" step="0.5" value={paramA} 
-                                onChange={(e) => setParamA(parseFloat(e.target.value))}
-                                className="w-full accent-rose-500"
-                              />
-                            </div>
-                            <div>
-                              <div className="flex justify-between font-mono mb-1">
-                                <span>b (Linear shift): {paramB}</span>
-                              </div>
-                              <input 
-                                type="range" min="-6" max="6" value={paramB} 
-                                onChange={(e) => setParamB(parseFloat(e.target.value))}
-                                className="w-full accent-rose-500"
-                              />
-                            </div>
-                            <div>
-                              <div className="flex justify-between font-mono mb-1">
-                                <span>c (Y-Intercept): {paramC}</span>
-                              </div>
-                              <input 
-                                type="range" min="-10" max="10" value={paramC} 
-                                onChange={(e) => setParamC(parseFloat(e.target.value))}
-                                className="w-full accent-rose-500"
-                              />
-                            </div>
-                          </>
-                        )}
-
-                        {graphType === 'exponential' && (
-                          <>
-                            <div>
-                              <div className="flex justify-between font-mono mb-1">
-                                <span>Initial Value (a): {paramA}</span>
-                              </div>
-                              <input 
-                                type="range" min="1" max="10" value={paramA} 
-                                onChange={(e) => setParamA(parseFloat(e.target.value))}
-                                className="w-full accent-purple-500"
-                              />
-                            </div>
-                            <div>
-                              <div className="flex justify-between font-mono mb-1">
-                                <span>Base Growth Factor (b): {paramB || 1.5}</span>
-                              </div>
-                              <input 
-                                type="range" min="0.2" max="3" step="0.1" value={paramB || 1.5} 
-                                onChange={(e) => setParamB(parseFloat(e.target.value))}
-                                className="w-full accent-purple-500"
-                              />
-                            </div>
-                          </>
-                        )}
-
-                        <div className="p-3 bg-slate-900 rounded-lg border border-slate-800 font-mono text-center text-sm font-bold text-indigo-300">
-                          {graphType === 'linear' && `f(x) = ${paramA}x ${paramB >= 0 ? '+' : ''} ${paramB}`}
-                          {graphType === 'quadratic' && `f(x) = ${paramA}x² ${paramB >= 0 ? '+' : ''} ${paramB}x ${paramC >= 0 ? '+' : ''} ${paramC}`}
-                          {graphType === 'exponential' && `f(x) = ${paramA} · (${paramB || 1.5})ˣ`}
-                        </div>
-                      </div>
-
-                      <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col items-center justify-center relative min-h-[260px]">
-                        <svg className="w-full h-64 overflow-visible" viewBox="-100 -100 200 200">
-                          {[-80, -60, -40, -20, 20, 40, 60, 80].map(val => (
-                            <React.Fragment key={val}>
-                              <line x1={val} y1="-100" x2={val} y2="100" stroke="#334155" strokeWidth="0.5" strokeDasharray="2,2" />
-                              <line x1="-100" y1={val} x2="100" y2={val} stroke="#334155" strokeWidth="0.5" strokeDasharray="2,2" />
-                            </React.Fragment>
-                          ))}
-
-                          <line x1="-100" y1="0" x2="100" y2="0" stroke="#94a3b8" strokeWidth="1.5" />
-                          <line x1="0" y1="-100" x2="0" y2="100" stroke="#94a3b8" strokeWidth="1.5" />
-
-                          {(() => {
-                            const points = [];
-                            for (let x = -10; x <= 10; x += 0.2) {
-                              let y = 0;
-                              if (graphType === 'linear') {
-                                y = paramA * x + paramB;
-                              } else if (graphType === 'quadratic') {
-                                y = paramA * (x ** 2) + paramB * x + paramC;
-                              } else if (graphType === 'exponential') {
-                                const bVal = paramB || 1.5;
-                                y = paramA * Math.pow(bVal, x);
-                              }
-
-                              const svgX = x * 8;
-                              const svgY = -y * 8;
-
-                              if (svgY >= -100 && svgY <= 100) {
-                                points.push(`${svgX},${svgY}`);
-                              }
-                            }
-
-                            let color = '#818cf8';
-                            if (graphType === 'quadratic') color = '#f43f5e';
-                            if (graphType === 'exponential') color = '#c084fc';
-
-                            return (
-                              <polyline 
-                                fill="none" 
-                                stroke={color} 
-                                strokeWidth="3" 
-                                points={points.join(' ')} 
-                              />
-                            );
-                          })()}
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {activeTab === 'calculators' && (
-                <div className="flex-1 p-6 overflow-y-auto max-w-5xl mx-auto w-full space-y-6">
-                  <div className="flex gap-2 bg-slate-900 p-1.5 rounded-xl border border-slate-800 text-xs font-semibold w-fit">
-                    <button 
-                      onClick={() => setCalcType('system')}
-                      className={`px-4 py-2 rounded-lg transition-all ${calcType === 'system' ? 'bg-amber-600 text-white' : 'text-slate-400'}`}
-                    >
-                      Systems Solver (2x2)
-                    </button>
-                    <button 
-                      onClick={() => setCalcType('stats')}
-                      className={`px-4 py-2 rounded-lg transition-all ${calcType === 'stats' ? 'bg-teal-600 text-white' : 'text-slate-400'}`}
-                    >
-                      Statistics Engine
-                    </button>
-                  </div>
-
-                  {calcType === 'system' && (
-                    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
-                      <div className="flex items-center gap-2 text-amber-400">
-                        <Icon name="sliders" size={20} />
-                        <h3 className="text-base font-bold">2x2 System of Linear Equations Solver</h3>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
-                        <div className="space-y-3 bg-slate-950 p-4 rounded-xl border border-slate-800">
-                          <div className="font-semibold text-slate-300">Equation 1: A₁x + B₁y = C₁</div>
-                          <div className="grid grid-cols-3 gap-2 font-mono">
-                            <input type="number" value={sysA1} onChange={e => setSysA1(Number(e.target.value))} className="bg-slate-800 p-2 rounded border border-slate-700 text-slate-100" />
-                            <input type="number" value={sysB1} onChange={e => setSysB1(Number(e.target.value))} className="bg-slate-800 p-2 rounded border border-slate-700 text-slate-100" />
-                            <input type="number" value={sysC1} onChange={e => setSysC1(Number(e.target.value))} className="bg-slate-800 p-2 rounded border border-slate-700 text-slate-100" />
-                          </div>
-
-                          <div className="font-semibold text-slate-300 pt-2">Equation 2: A₂x + B₂y = C₂</div>
-                          <div className="grid grid-cols-3 gap-2 font-mono">
-                            <input type="number" value={sysA2} onChange={e => setSysA2(Number(e.target.value))} className="bg-slate-800 p-2 rounded border border-slate-700 text-slate-100" />
-                            <input type="number" value={sysB2} onChange={e => setSysB2(Number(e.target.value))} className="bg-slate-800 p-2 rounded border border-slate-700 text-slate-100" />
-                            <input type="number" value={sysC2} onChange={e => setSysC2(Number(e.target.value))} className="bg-slate-800 p-2 rounded border border-slate-700 text-slate-100" />
-                          </div>
-                        </div>
-
-                        <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col justify-center space-y-3 font-mono">
-                          <div className="text-slate-400 text-xs">Solution Output:</div>
-                          {(() => {
-                            const sol = solveSystem();
-                            if (sol.status !== 'Success') {
-                              return <div className="text-rose-400 font-bold">{sol.status}</div>;
-                            }
-                            return (
-                              <div className="space-y-2">
-                                <div className="text-xl font-bold text-amber-400">Intersection: ({sol.x}, {sol.y})</div>
-                                <div className="text-xs text-slate-400">x = {sol.x}, y = {sol.y}</div>
-                              </div>
-                            );
-                          })()}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {calcType === 'stats' && (
-                    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
-                      <div className="flex items-center gap-2 text-teal-400">
-                        <Icon name="bar-chart-2" size={20} />
-                        <h3 className="text-base font-bold">1-Variable Statistics Calculator</h3>
-                      </div>
-
-                      <div className="space-y-4 text-xs">
-                        <div>
-                          <label className="block text-slate-300 mb-2 font-medium">Enter comma-separated numbers:</label>
-                          <input 
-                            type="text" 
-                            value={statsInput} 
-                            onChange={(e) => setStatsInput(e.target.value)}
-                            className="w-full bg-slate-950 p-3 rounded-xl border border-slate-800 font-mono text-slate-100 focus:outline-none focus:border-teal-500"
-                          />
-                        </div>
-
-                        {(() => {
-                          const stats = computeStats();
-                          if (!stats) return null;
-                          return (
-                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono pt-2">
-                              <div className="bg-slate-950 p-3 rounded-lg border border-slate-800">
-                                <div className="text-slate-500 text-[10px]">MEAN (x̄)</div>
-                                <div className="text-teal-400 text-lg font-bold">{stats.mean}</div>
-                              </div>
-                              <div className="bg-slate-950 p-3 rounded-lg border border-slate-800">
-                                <div className="text-slate-500 text-[10px]">MEDIAN</div>
-                                <div className="text-teal-400 text-lg font-bold">{stats.median}</div>
-                              </div>
-                              <div className="bg-slate-950 p-3 rounded-lg border border-slate-800">
-                                <div className="text-slate-500 text-[10px]">STD DEV (σ)</div>
-                                <div className="text-teal-400 text-lg font-bold">{stats.stdDev}</div>
-                              </div>
-                              <div className="bg-slate-950 p-3 rounded-lg border border-slate-800">
-                                <div className="text-slate-500 text-[10px]">COUNT (n)</div>
-                                <div className="text-teal-400 text-lg font-bold">{stats.count}</div>
-                              </div>
-                            </div>
-                          );
-                        })()}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {activeTab === 'quiz' && (
-                <div className="flex-1 p-6 overflow-y-auto flex flex-col items-center justify-center max-w-2xl mx-auto w-full">
-                  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 w-full shadow-2xl relative">
-                    <div className="flex justify-between items-center mb-6">
-                      <span className="px-2.5 py-1 bg-purple-500/20 text-purple-300 rounded text-xs font-bold border border-purple-500/30">
-                        {MASTER_QUIZ_BANK[quizIndex].module}
-                      </span>
-                      <span className="text-xs bg-slate-800 px-3 py-1 rounded-full text-slate-300 font-mono">
-                        Question {quizIndex + 1} of {MASTER_QUIZ_BANK.length}
-                      </span>
-                    </div>
-
-                    <h3 className="text-lg font-bold mb-6 text-slate-100 leading-snug">
-                      {MASTER_QUIZ_BANK[quizIndex].question}
-                    </h3>
-
-                    <div className="space-y-3 mb-6">
-                      {MASTER_QUIZ_BANK[quizIndex].options.map((opt, idx) => {
-                        let btnStyle = 'bg-slate-800/80 border-slate-700 text-slate-200 hover:bg-slate-700';
-                        if (quizSubmitted) {
-                          if (idx === MASTER_QUIZ_BANK[quizIndex].correct) {
-                            btnStyle = 'bg-emerald-600/30 border-emerald-500 text-emerald-200 font-bold';
-                          } else if (idx === selectedAnswer) {
-                            btnStyle = 'bg-rose-600/30 border-rose-500 text-rose-200';
-                          }
-                        } else if (selectedAnswer === idx) {
-                          btnStyle = 'bg-indigo-600 border-indigo-400 text-white font-bold';
-                        }
-
-                        return (
-                          <button
-                            key={idx}
-                            onClick={() => !quizSubmitted && setSelectedAnswer(idx)}
-                            className={`w-full text-left p-3.5 rounded-xl border transition-all text-xs sm:text-sm flex items-center justify-between ${btnStyle}`}
-                          >
-                            <span>{opt}</span>
-                            {quizSubmitted && idx === MASTER_QUIZ_BANK[quizIndex].correct && (
-                              <Icon name="check-circle" size={18} className="text-emerald-400 shrink-0" />
-                            )}
-                          </button>
-                        );
-                      })}
-                    </div>
-
-                    {quizSubmitted && (
-                      <div className="p-4 bg-slate-950 rounded-xl border border-slate-800 text-xs text-slate-300 mb-6">
-                        <span className="font-bold text-indigo-400">Explanation: </span>
-                        {MASTER_QUIZ_BANK[quizIndex].explanation}
-                      </div>
-                    )}
-
-                    <div className="flex justify-between items-center pt-2">
-                      <div className="text-xs text-slate-400">
-                        Current Score: <span className="text-purple-400 font-bold">{quizScore}</span> / {MASTER_QUIZ_BANK.length}
-                      </div>
-
-                      {!quizSubmitted ? (
-                        <button
-                          disabled={selectedAnswer === null}
-                          onClick={() => {
-                            if (selectedAnswer === MASTER_QUIZ_BANK[quizIndex].correct) {
-                              setQuizScore(prev => prev + 1);
-                            }
-                            setQuizSubmitted(true);
-                          }}
-                          className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-xs font-bold rounded-xl transition-all shadow-lg"
-                        >
-                          Submit Answer
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => {
-                            if (quizIndex < MASTER_QUIZ_BANK.length - 1) {
-                              setQuizIndex(prev => prev + 1);
-                              setSelectedAnswer(null);
-                              setQuizSubmitted(false);
-                            } else {
-                              setQuizIndex(0);
-                              setSelectedAnswer(null);
-                              setQuizSubmitted(false);
-                              setQuizScore(0);
-                            }
-                          }}
-                          className="px-5 py-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold rounded-xl transition-all shadow-lg flex items-center gap-1.5"
-                        >
-                          <span>{quizIndex < MASTER_QUIZ_BANK.length - 1 ? 'Next Question' : 'Restart Quiz'}</span>
-                          <Icon name="arrow-right" size={14} />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="w-full md:w-96 border-t md:border-t-0 md:border-l border-slate-800 bg-slate-900/95 backdrop-blur-lg flex flex-col h-1/2 md:h-full shrink-0 z-20 overflow-hidden shadow-2xl">
-              <div className="p-5 border-b border-slate-800 bg-slate-950/40">
-                <div className="flex items-center gap-2 mb-1.5">
-                  <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-                    {selectedModule.category}
-                  </span>
-                  <span className="text-xs text-slate-400 font-mono">{selectedModule.id.toUpperCase()}</span>
-                </div>
-                <h2 className="text-lg font-black text-slate-100">{selectedModule.title}</h2>
-                <p className="text-xs text-slate-400 mt-1 leading-relaxed">{selectedModule.summary}</p>
-              </div>
-
-              <div className="flex-1 overflow-y-auto p-5 space-y-6 text-xs text-slate-300">
-                {selectedModule.details?.formulas && (
-                  <div>
-                    <h4 className="font-bold text-slate-200 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5 text-indigo-400">
-                      <Icon name="code" size={14} /> Formula Cheat Sheet
-                    </h4>
-                    <div className="space-y-1.5">
-                      {selectedModule.details.formulas.map((formula, idx) => (
-                        <div key={idx} className="bg-slate-950 px-3 py-2 rounded-lg border border-slate-800 font-mono text-indigo-300">
-                          {formula}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {selectedModule.details?.keyConcepts && (
-                  <div>
-                    <h4 className="font-bold text-slate-200 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5 text-emerald-400">
-                      <Icon name="book-open" size={14} /> Critical Principles
-                    </h4>
-                    <ul className="space-y-2">
-                      {selectedModule.details.keyConcepts.map((concept, idx) => (
-                        <li key={idx} className="flex gap-2 items-start bg-slate-950/50 p-2.5 rounded-lg border border-slate-800/80">
-                          <span className="text-emerald-400 font-bold">•</span>
-                          <span>{concept}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {selectedModule.details?.vocab && (
-                  <div>
-                    <h4 className="font-bold text-slate-200 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5 text-purple-400">
-                      <Icon name="layers" size={14} /> Module Vocabulary
-                    </h4>
-                    <div className="space-y-2">
-                      {selectedModule.details.vocab.map((v, idx) => (
-                        <div key={idx} className="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
-                          <span className="font-bold text-purple-300">{v.term}: </span>
-                          <span className="text-slate-400">{v.def}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {selectedModule.details?.example && (
-                  <div>
-                    <h4 className="font-bold text-slate-200 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5 text-amber-400">
-                      <Icon name="zap" size={14} /> Worked Example
-                    </h4>
-                    <div className="p-3.5 rounded-xl bg-amber-950/20 border border-amber-800/40 space-y-2">
-                      <div className="font-semibold text-amber-200">Problem:</div>
-                      <div className="text-slate-300 italic">{selectedModule.details.example.problem}</div>
-                      <div className="border-t border-amber-800/30 pt-2 font-semibold text-amber-300">Solution:</div>
-                      <div className="font-mono text-slate-200 bg-slate-950/60 p-2 rounded border border-slate-800">
-                        {selectedModule.details.example.solution}
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="p-4 border-t border-slate-800 bg-slate-950 text-center text-[11px] text-slate-500">
-                Algebra 1 Full Curriculum • Modules 1–9 Master Hub
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
-
+function route(){const h=location.hash.replace(/^#\/?/,'').split('/');
+ if(h[0]==='l'&&L[h[1]]){const s=Math.max(0,Math.min(3,+h[2]||0));renderLesson(h[1],s);}else{document.documentElement.style.setProperty('--acc','#2563eb');renderHome();}
+ topProg();window.scrollTo(0,0);}
+window.addEventListener('hashchange',route);route();
 </script>
 </body>
 </html>
