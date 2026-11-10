@@ -128,6 +128,13 @@ input[type=range]{width:200px;accent-color:var(--acc)}
  .tbox{font-size:32px}.op{font-size:32px}
  input[type=range]{width:150px}
 }
+.sys{display:inline-block;border-left:3px solid #374151;border-radius:12px 0 0 12px;padding:2px 14px;margin:6px 0;font-family:"Cambria Math","Times New Roman",serif;font-size:1.25em;line-height:1.5;text-align:left}
+.tile{background:#fef08a;border-radius:6px;padding:0 5px;box-shadow:0 0 0 2px #eab308 inset}
+.gone{text-decoration:line-through;text-decoration-thickness:3px;text-decoration-color:#b91c1c;opacity:.55}
+table.eqt{border-collapse:collapse;margin:8px auto;font-family:"Cambria Math","Times New Roman",serif;font-size:1.3em}
+table.eqt td{padding:4px 10px;text-align:right}
+table.eqt tr.sum td{border-top:3px solid #374151;font-weight:700}
+.sel{border:2px solid var(--acc)!important;background:#eff6ff!important}
 footer{text-align:center;font-size:13px;color:var(--mute);padding:20px}
 </style>
 </head>
@@ -1041,7 +1048,12 @@ L['1A-3-6']={
 /* ============ views ============ */
 const STAGES=[{k:'pic',n:'Picture',i:'🖼'},{k:'steps',n:'Steps',i:'🪜'},{k:'pencil',n:'Pencil',i:'✏️'},{k:'check',n:'Check',i:'✅'}];
 const app=$('#app');
-const avail=ORDER.filter(id=>L[id]);
+const MODFILES={'1A-4':'js/1a-m4.js','1A-5':'js/1a-m5.js','1B-1':'js/1b-m1.js','1B-2':'js/1b-m2.js','1B-3':'js/1b-m3.js','1B-4':'js/1b-m4.js','1B-5':'js/1b-m5.js'};
+const modKey=id=>id.split('-').slice(0,2).join('-');
+const hasLesson=id=>!!L[id]||!!MODFILES[modKey(id)];
+const LOADED={};
+function loadMod(k){if(!MODFILES[k])return Promise.resolve();return LOADED[k]||(LOADED[k]=new Promise((res,rej)=>{const sc=document.createElement('script');sc.src=MODFILES[k];sc.onload=res;sc.onerror=()=>{delete LOADED[k];rej();};document.head.appendChild(sc);}));}
+const avail=ORDER.filter(hasLesson);
 function nextLesson(id){const i=avail.indexOf(id);return avail[i+1];}
 function topProg(){$('#topprog').textContent=`${avail.filter(isDone).length} of ${ORDER.length} lessons done`;}
 
@@ -1051,7 +1063,7 @@ function renderHome(){
  <div class="flow"><span>🖼 1. Picture</span><span>🪜 2. Steps</span><span>✏️ 3. Pencil</span><span>✅ 4. Check</span></div>
  <a class="btn primary" href="#/l/${nid}/0">${anyDone?'Continue':'Start'}: ${META[nid].title} ▶</a>
  <div class="bar"><i style="width:${done/ORDER.length*100}%"></i></div><div class="mute" style="font-size:14px">${done} of ${ORDER.length} lessons complete · ${avail.length} lessons open now, more coming soon</div></div>
- ${COURSE.map(c=>`<h2>Algebra ${c.id}</h2><div class="mods">${c.modules.map(m=>`<div class="mod" style="--mc:${m.color}"><span class="mn">Module ${m.n}</span><b>${m.title}</b><ol>${m.lessons.map((t,i)=>{const id=`${c.id}-${m.n}-${i+1}`;return L[id]?`<li><a href="#/l/${id}/0"><span class="st ${isDone(id)?'d':''}">${isDone(id)?'✓':'○'}</span>${i+1}. ${t}</a></li>`:`<li class="soon"><span class="st">·</span>${i+1}. ${t}<small>soon</small></li>`;}).join('')}</ol></div>`).join('')}</div>`).join('')}</div>`;
+ ${COURSE.map(c=>`<h2>Algebra ${c.id}</h2><div class="mods">${c.modules.map(m=>`<div class="mod" style="--mc:${m.color}"><span class="mn">Module ${m.n}</span><b>${m.title}</b><ol>${m.lessons.map((t,i)=>{const id=`${c.id}-${m.n}-${i+1}`;return hasLesson(id)?`<li><a href="#/l/${id}/0"><span class="st ${isDone(id)?'d':''}">${isDone(id)?'✓':'○'}</span>${i+1}. ${t}</a></li>`:`<li class="soon"><span class="st">·</span>${i+1}. ${t}<small>soon</small></li>`;}).join('')}</ol></div>`).join('')}</div>`).join('')}</div>`;
 }
 
 function renderLesson(id,stage){
@@ -1126,7 +1138,7 @@ function stCheck(el,id,D,pr){
 }
 
 function route(){const h=location.hash.replace(/^#\/?/,'').split('/');
- if(h[0]==='l'&&L[h[1]]){const s=Math.max(0,Math.min(3,+h[2]||0));renderLesson(h[1],s);}else{document.documentElement.style.setProperty('--acc','#2563eb');renderHome();}
+ if(h[0]==='l'&&hasLesson(h[1])){const s=Math.max(0,Math.min(3,+h[2]||0));if(L[h[1]])renderLesson(h[1],s);else{app.innerHTML='<div class="wrap"><p class="mute">Loading lesson…</p></div>';loadMod(modKey(h[1])).then(()=>{if(L[h[1]])renderLesson(h[1],s);else renderHome();topProg();}).catch(()=>{app.innerHTML='<div class="wrap"><p class="bad">Could not load this lesson. Check your internet connection and refresh.</p></div>';});}}else{document.documentElement.style.setProperty('--acc','#2563eb');renderHome();}
  topProg();window.scrollTo(0,0);}
 window.addEventListener('hashchange',route);route();
 </script>
