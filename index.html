@@ -184,16 +184,16 @@ COURSE.forEach(c=>c.modules.forEach(m=>m.lessons.forEach((t,i)=>{const id=`${c.i
 /* ============ graph grid ============ */
 let GID=0;
 function grid(o){
- const {x0=-6,x1=6,y0=-6,y1=6,u=30,lab=2,xl='',yl=''}=o;const pad=28;
- const W=(x1-x0)*u+pad*2,H=(y1-y0)*u+pad*2;const X=x=>pad+(x-x0)*u,Y=y=>pad+(y1-y)*u;const id='clp'+(++GID);
+ const {x0=-6,x1=6,y0=-6,y1=6,u=30,lab=2,xl='',yl='',gs=1}=o;const pad=28;
+ const W=(x1-x0)*u+pad*2,H=(y1-y0)*u+pad*2+(xl?22:0);const X=x=>pad+(x-x0)*u,Y=y=>pad+(y1-y)*u;const id='clp'+(++GID);
  let s=`<defs><clipPath id="${id}"><rect x="${X(x0)}" y="${Y(y1)}" width="${(x1-x0)*u}" height="${(y1-y0)*u}"/></clipPath></defs>`;
- for(let x=x0;x<=x1;x++)s+=`<line x1="${X(x)}" y1="${Y(y0)}" x2="${X(x)}" y2="${Y(y1)}" class="gl"/>`;
- for(let y=y0;y<=y1;y++)s+=`<line x1="${X(x0)}" y1="${Y(y)}" x2="${X(x1)}" y2="${Y(y)}" class="gl"/>`;
+ for(let x=x0;x<=x1;x++)if(x%gs===0)s+=`<line x1="${X(x)}" y1="${Y(y0)}" x2="${X(x)}" y2="${Y(y1)}" class="gl"/>`;
+ for(let y=y0;y<=y1;y++)if(y%gs===0)s+=`<line x1="${X(x0)}" y1="${Y(y)}" x2="${X(x1)}" y2="${Y(y)}" class="gl"/>`;
  const ay=(y0<=0&&y1>=0)?Y(0):Y(y0),axx=(x0<=0&&x1>=0)?X(0):X(x0);
  s+=`<line x1="${X(x0)}" y1="${ay}" x2="${X(x1)}" y2="${ay}" class="ax"/><line x1="${axx}" y1="${Y(y0)}" x2="${axx}" y2="${Y(y1)}" class="ax"/>`;
  for(let x=x0;x<=x1;x++)if(x!==0&&x%lab===0)s+=`<text x="${X(x)}" y="${ay+16}" text-anchor="middle" class="tl">${fmtNeg(x)}</text>`;
  for(let y=y0;y<=y1;y++)if(y!==0&&y%lab===0)s+=`<text x="${axx-6}" y="${Y(y)+4}" text-anchor="end" class="tl">${fmtNeg(y)}</text>`;
- if(xl)s+=`<text x="${X(x1)}" y="${ay-8}" text-anchor="end" class="tl" font-weight="700">${xl}</text>`;
+ if(xl)s+=`<text x="${X((x0+x1)/2)}" y="${Y(y0)+40}" text-anchor="middle" class="tl" font-weight="700">${xl} →</text>`;
  if(yl)s+=`<text x="${axx+6}" y="${Y(y1)-8}" class="tl" font-weight="700">${yl}</text>`;
  return {W,H,X,Y,x0,x1,y0,y1,u,clip:id,base:s,svg:inner=>`<svg viewBox="0 0 ${W} ${H}" class="fig" style="max-width:${Math.min(W,480)}px">${s}${inner}</svg>`};
 }
@@ -539,6 +539,246 @@ L['1A-2-4']={
   {q:'A taxi charges $3 plus $2 per mile. Which equation gives the cost y for x miles?',o:['y = 3x + 2','y = 5x','y = 2x + 3','y = 2x − 3'],a:2,why:'The rate $2 per mile is the slope; the $3 start is the y-intercept.'}]
 };
 
+/* ============ Module 2 widgets ============ */
+function plotXY(xs,ys,col='#2563eb'){
+ const W=360,H=210,ml=40,mb=26,mt=12,mr=12;const xmin=Math.min(...xs),xmax=Math.max(...xs);let ymin=Math.min(0,...ys),ymax=Math.max(...ys);if(ymax===ymin)ymax=ymin+1;
+ const X=x=>ml+(x-xmin)/(xmax-xmin)*(W-ml-mr),Y=y=>H-mb-(y-ymin)/(ymax-ymin)*(H-mb-mt);
+ let s=`<line x1="${ml}" y1="${Y(ymin)}" x2="${W-mr}" y2="${Y(ymin)}" class="ax"/><line x1="${ml}" y1="${mt}" x2="${ml}" y2="${H-mb}" class="ax"/>`;
+ xs.forEach(x=>s+=`<text x="${X(x)}" y="${H-8}" text-anchor="middle" class="tl">${x}</text>`);
+ [ymin,(ymin+ymax)/2,ymax].forEach(y=>s+=`<text x="${ml-6}" y="${Y(y)+4}" text-anchor="end" class="tl">${Math.round(y)}</text><line x1="${ml}" y1="${Y(y)}" x2="${W-mr}" y2="${Y(y)}" class="gl"/>`);
+ s+=`<polyline points="${xs.map((x,i)=>X(x)+','+Y(ys[i])).join(' ')}" fill="none" stroke="${col}" stroke-width="3"/>`;
+ xs.forEach((x,i)=>s+=`<circle cx="${X(x)}" cy="${Y(ys[i])}" r="5" fill="${col}" stroke="#fff" stroke-width="2"/>`);
+ return `<svg viewBox="0 0 ${W} ${H}" class="fig" style="max-width:420px">${s}</svg>`;
+}
+function diffTable(xs,ys,xl,yl){
+ const d=ys.slice(1).map((y,i)=>+(y-ys[i]).toFixed(2));const same=d.every(v=>v===d[0]);
+ return `<table class="t"><tr><th>${xl}</th>${xs.map(x=>`<td>${x}</td>`).join('')}</tr><tr><th>${yl}</th>${ys.map(y=>`<td>${y}</td>`).join('')}</tr>
+ <tr><th style="background:#fff;border:none"></th><td style="border:none"></td>${d.map(v=>`<td style="border:none;color:${same?'#15803d':'#b91c1c'};font-weight:800">${v>=0?'+':MINUS}${Math.abs(v)}</td>`).join('')}</tr></table>`;
+}
+function mountDiff(el){
+ const SC=[{n:'🚕 Taxi: $3 + $2 per mile',xl:'Miles',yl:'Cost ($)',f:x=>3+2*x,lin:1},{n:'💰 Saving $10 a week',xl:'Week',yl:'Saved ($)',f:x=>20+10*x,lin:1},{n:'🔋 Battery −15% per hour',xl:'Hours',yl:'Battery (%)',f:x=>100-15*x,lin:1},{n:'🦠 Bacteria double each hour',xl:'Hours',yl:'Bacteria',f:x=>2**x,lin:0},{n:'🏀 Ball thrown up',xl:'Seconds',yl:'Height (ft)',f:x=>5+20*x-5*x*x,lin:0}];
+ let k=0;
+ el.innerHTML=`<div class="row">${SC.map((c,i)=>`<button data-s="${i}">${c.n}</button>`).join('')}</div><div id="dt" style="overflow-x:auto"></div><div id="dg"></div><div class="readout" id="dv"></div>`;
+ const draw=()=>{const c=SC[k],xs=[0,1,2,3,4],ys=xs.map(c.f);
+  $$('[data-s]',el).forEach(b=>b.classList.toggle('sel',+b.dataset.s===k));
+  $('#dt',el).innerHTML=diffTable(xs,ys,c.xl,c.yl);$('#dg',el).innerHTML=plotXY(xs,ys,c.lin?'#2563eb':'#b91c1c');
+  $('#dv',el).innerHTML=c.lin?'<span class="good">Same change every step → the points make a straight line → LINEAR.</span>':'<span class="bad">The change is not the same each step → the points curve → NOT linear.</span>';};
+ el.addEventListener('click',e=>{const b=e.target.closest('[data-s]');if(b){k=+b.dataset.s;draw();}});draw();
+}
+function stdForm(A,B,C){return `${T(A,'x')} ${B<0?MINUS:'+'} ${T(Math.abs(B),'y')} = ${fmtNeg(C)}`;}
+function mountIntercepts(el){
+ const PR=[{A:2,B:3,C:24,story:1},{A:3,B:-2,C:6},{A:4,B:-7,C:28},{A:-8,B:-6,C:24},{A:5,B:3,C:-30}];
+ let cur=PR[0];
+ el.innerHTML=`<div class="row"><button data-p="0">🍿 Snack budget</button><button data-p="1">3x − 2y = 6</button><button data-p="2">4x − 7y = 28</button><button data-p="3">−8x − 6y = 24</button><button data-p="r">🎲 Random</button></div>
+ <div class="eqline math" id="ieq"></div><div id="ig"></div><div class="readout" id="ir"></div>`;
+ const draw=()=>{const {A,B,C,story}=cur,xi=C/A,yi=C/B;
+  const g=story?grid({x0:0,x1:14,y0:0,y1:10,u:30,xl:'chips',yl:'drinks'}):grid({x0:-12,x1:12,y0:-12,y1:12,u:18,lab:4});
+  $('#ieq',el).innerHTML=mx(stdForm(A,B,C));
+  $('#ig',el).innerHTML=g.svg(gline(g,-A/B,C/B)+gdot(g,xi,0,'#b91c1c',8,`(${frac(C,A)}, 0)`)+gdot(g,0,yi,'#ea580c',8,`(0, ${frac(C,B)})`));
+  $('#ir',el).innerHTML=`<b style="color:#b91c1c">x-intercept:</b> on the x-axis, <b>y = 0</b>. ${mx(`${T(A,'x')} = ${fmtNeg(C)}`)} → x = ${frac(C,A)} → <b>(${frac(C,A)}, 0)</b><br><b class="k">y-intercept:</b> on the y-axis, <b>x = 0</b>. ${mx(`${T(B,'y')} = ${fmtNeg(C)}`)} → y = ${frac(C,B)} → <b>(0, ${frac(C,B)})</b><br>`+
+   (story?'<b>Story:</b> You have $24. Chips cost $2 (x), drinks cost $3 (y). <b>(12, 0)</b> = spend it all on chips: 12 bags, 0 drinks. <b>(0, 8)</b> = all drinks. Every point on the line between them spends exactly $24.':'Plot the two intercepts, then draw a line through them.');};
+ el.addEventListener('click',e=>{const p=e.target.closest('[data-p]')?.dataset.p;if(p===undefined)return;
+  if(p==='r'){let a,b;do{a=rand(-10,10);b=rand(-10,10);}while(!a||!b);let A=b,B=a,C=a*b;const gg=gcd(gcd(Math.abs(A),Math.abs(B)),Math.abs(C));A/=gg;B/=gg;C/=gg;if(A<0){A=-A;B=-B;C=-C;}cur={A,B,C};}else cur=PR[+p];draw();});
+ draw();
+}
+function mountViable(el){
+ el.innerHTML=`<div class="eqline math">${mx('10x + 12y = 600')}</div><div class="ctrl"><label>Tostada Plates sold <i class="v">x</i> <input type="range" min="0" max="60" value="30"></label></div><div id="vg"></div><div class="readout" id="vr"></div>`;
+ const g=grid({x0:0,x1:60,y0:0,y1:50,u:7,gs:10,lab:10,xl:'tostadas',yl:'enchiladas'});
+ const draw=()=>{const x=+$('input',el).value,y=(600-10*x)/12,ok=Number.isInteger(y)&&y>=0;
+  $('#vg',el).innerHTML=g.svg(gline(g,-10/12,50)+gdot(g,60,0,'#6b7280',5)+gdot(g,0,50,'#6b7280',5)+gdot(g,x,y,ok?'#15803d':'#b91c1c',9,`(${x}, ${+y.toFixed(2)})`));
+  $('#vr',el).innerHTML=`10(${x}) + 12<i class="v">y</i> = 600 → <i class="v">y</i> = (600 − ${10*x}) ÷ 12 = <b>${+y.toFixed(2)}</b><br>`+(ok?`<span class="good">✓ Viable: ${x} Tostada Plates + ${y} Enchilada Specials = $600.</span>`:`<span class="bad">✗ Not viable: the restaurant can’t sell ${+y.toFixed(2)} Enchilada Specials. The point is on the line, but it doesn’t make sense in real life.</span>`);};
+ $('input',el).addEventListener('input',draw);draw();
+}
+function mountMapping(el){
+ const PR=[{n:'🥤 Vending machine',l:'Button',r:'Snack',p:[['A1','Chips'],['A2','Cookies'],['B1','Water'],['B2','Chips']]},{n:'⚠ Broken machine',l:'Button',r:'Snack',p:[['A1','Chips'],['A1','Gum'],['A2','Cookies'],['B1','Water']]},{n:'Numbers 1',l:'x',r:'y',p:[[-1,1],[-2,2],[-3,3]]},{n:'Numbers 2',l:'x',r:'y',p:[[-1,1],[-2,2],[-2,3],[-3,3]]}];
+ let k=0;
+ el.innerHTML=`<div class="row">${PR.map((c,i)=>`<button data-m="${i}">${c.n}</button>`).join('')}</div><div id="mg"></div><div class="readout" id="mr"></div>`;
+ const draw=()=>{const c=PR[k];const ins=[...new Set(c.p.map(q=>String(q[0])))],outs=[...new Set(c.p.map(q=>String(q[1])))];
+  const cnt={};c.p.forEach(q=>cnt[q[0]]=(cnt[q[0]]||0)+1);const bad=ins.filter(i=>cnt[i]>1);
+  const H=Math.max(ins.length,outs.length)*52+70,yi=(i,n)=>60+i*52+(Math.max(ins.length,outs.length)-n)*26;
+  let s=`<defs><marker id="mh" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#374151"/></marker><marker id="mhr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#b91c1c"/></marker></defs>`;
+  s+=`<text x="90" y="22" text-anchor="middle" font-weight="800" fill="#2563eb">Input (${c.l})</text><text x="330" y="22" text-anchor="middle" font-weight="800" fill="#ea580c">Output (${c.r})</text>`;
+  s+=`<ellipse cx="90" cy="${H/2+12}" rx="62" ry="${H/2-24}" fill="#eff6ff" stroke="#2563eb"/><ellipse cx="330" cy="${H/2+12}" rx="72" ry="${H/2-24}" fill="#fff7ed" stroke="#ea580c"/>`;
+  c.p.forEach(q=>{const a=ins.indexOf(String(q[0])),b=outs.indexOf(String(q[1])),r=bad.includes(String(q[0]));s+=`<line x1="118" y1="${yi(a,ins.length)}" x2="${330-62}" y2="${yi(b,outs.length)}" stroke="${r?'#b91c1c':'#374151'}" stroke-width="${r?3:2}" marker-end="url(#${r?'mhr':'mh'})"/>`;});
+  ins.forEach((t,i)=>s+=`<text x="90" y="${yi(i,ins.length)+6}" text-anchor="middle" font-size="18" font-weight="700" fill="${bad.includes(t)?'#b91c1c':'#1f2937'}">${isNaN(t)?t:fmtNeg(+t)}</text>`);
+  outs.forEach((t,i)=>s+=`<text x="330" y="${yi(i,outs.length)+6}" text-anchor="middle" font-size="18" font-weight="700">${isNaN(t)?t:fmtNeg(+t)}</text>`);
+  $('#mg',el).innerHTML=`<svg viewBox="0 0 420 ${H}" class="fig" style="max-width:420px">${s}</svg>`;
+  $$('[data-m]',el).forEach(b=>b.classList.toggle('sel',+b.dataset.m===k));
+  const twoIn=outs.some(o=>c.p.filter(q=>String(q[1])===o).length>1);
+  $('#mr',el).innerHTML=bad.length?`<span class="bad">NOT a function.</span> The input <b>${isNaN(bad[0])?bad[0]:fmtNeg(+bad[0])}</b> has two arrows — two different outputs. You can’t predict what you’ll get.`:
+   `<span class="good">Function ✓</span> Every input has exactly ONE arrow.`+(twoIn?' (Two inputs can share the same output — that’s still OK.)':'');};
+ el.addEventListener('click',e=>{const b=e.target.closest('[data-m]');if(b){k=+b.dataset.m;draw();}});draw();
+}
+function mountVLT(el){
+ const CV=[{n:'Line',f:x=>[0.5*x+1]},{n:'Parabola (U)',f:x=>[x*x/2-3]},{n:'Circle',f:x=>Math.abs(x)<=4?(Math.abs(x)===4?[0]:[Math.sqrt(16-x*x),-Math.sqrt(16-x*x)]):[]},{n:'Sideways U',f:x=>x>=-3?(x===-3?[0]:[Math.sqrt(2*(x+3)),-Math.sqrt(2*(x+3))]):[]}];
+ let k=2;
+ el.innerHTML=`<div class="row">${CV.map((c,i)=>`<button data-c="${i}">${c.n}</button>`).join('')}</div><div class="ctrl"><label>Slide the vertical line <input type="range" min="-6" max="6" step="0.25" value="1"></label></div><div id="vlg"></div><div class="readout" id="vlr"></div>`;
+ const g=grid({u:30});
+ const path=c=>{if(k===2)return `<circle cx="${g.X(0)}" cy="${g.Y(0)}" r="${4*g.u}" fill="none" stroke="#2563eb" stroke-width="3"/>`;if(k===3){let d='';for(let y=-6;y<=6.01;y+=0.2){const x=y*y/2-3;d+=(d?'L':'M')+g.X(x)+' '+g.Y(y);}return `<path clip-path="url(#${g.clip})" d="${d}" fill="none" stroke="#2563eb" stroke-width="3"/>`;}
+  let d='';for(let x=-7;x<=7.01;x+=0.1){d+=(d?'L':'M')+g.X(x)+' '+g.Y(c.f(x)[0]);}return `<path clip-path="url(#${g.clip})" d="${d}" fill="none" stroke="#2563eb" stroke-width="3"/>`;};
+ const fails={0:false,1:false,2:true,3:true};
+ const draw=()=>{const c=CV[k],x=+$('input',el).value,ys=c.f(x).filter(y=>y>=-6&&y<=6);
+  $$('[data-c]',el).forEach(b=>b.classList.toggle('sel',+b.dataset.c===k));
+  $('#vlg',el).innerHTML=g.svg(path(c)+`<line x1="${g.X(x)}" y1="${g.Y(6)}" x2="${g.X(x)}" y2="${g.Y(-6)}" stroke="#b91c1c" stroke-width="3" stroke-dasharray="7 5"/>`+ys.map(y=>gdot(g,x,y,'#b91c1c',8)).join(''));
+  $('#vlr',el).innerHTML=`At x = ${fmtNeg(x)} the vertical line touches the graph <b>${ys.length}</b> time${ys.length===1?'':'s'}.<br>`+(fails[k]?'<span class="bad">Somewhere the line touches TWICE → NOT a function</span> (one input x has two outputs y).':'<span class="good">The line never touches more than once → FUNCTION ✓</span>');};
+ el.addEventListener('click',e=>{const b=e.target.closest('[data-c]');if(b){k=+b.dataset.c;draw();}});$('input',el).addEventListener('input',draw);draw();
+}
+function mountMachine(el){
+ const R=[{f:'f(x) = 3x + 7',fn:x=>3*x+7,show:x=>`3(${P(x)}) + 7`},{f:'f(x) = 2x − 5',fn:x=>2*x-5,show:x=>`2(${P(x)}) − 5`},{f:'f(x) = x² + 1',fn:x=>x*x+1,show:x=>`(${P(x)})² + 1`,nl:1},{f:'C(m) = 2m + 5',fn:x=>2*x+5,show:x=>`2(${P(x)}) + 5`,story:1}];
+ let k=0,x=2,seen=[];
+ el.innerHTML=`<div class="row">${R.map((r,i)=>`<button data-r="${i}">${r.story?'🚗 Rideshare: ':''}${r.f}</button>`).join('')}</div>
+ <div class="ctrl" style="justify-content:center"><span class="stepper2">Input: <button data-d="-">−</button><b id="mx"></b><button data-d="+">+</button></span><button data-d="go" class="primary">Put it in the machine ▶</button></div>
+ <div id="mmg"></div><div class="readout" id="mmr"></div>`;
+ const draw=(fresh)=>{const r=R[k],y=r.fn(x),v=r.story?'m':'x',nm=r.f.split('(')[0];
+  $$('[data-r]',el).forEach(b=>b.classList.toggle('sel',+b.dataset.r===k));$('#mx',el).textContent=fmtNeg(x);
+  let s=`<defs><marker id="ma" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#374151"/></marker></defs>`;
+  s+=`<rect x="10" y="50" width="90" height="60" rx="30" fill="#dbeafe" stroke="#2563eb" stroke-width="2.5"/><text x="55" y="88" text-anchor="middle" font-size="24" font-weight="800" fill="#2563eb">${fmtNeg(x)}</text><text x="55" y="135" text-anchor="middle" class="tl">input (${v})</text>`;
+  s+=`<line x1="104" y1="80" x2="160" y2="80" stroke="#374151" stroke-width="3" marker-end="url(#ma)"/>`;
+  s+=`<rect x="165" y="25" width="190" height="110" rx="14" fill="#f3f4f6" stroke="#374151" stroke-width="3"/><text x="260" y="58" text-anchor="middle" font-size="14" font-weight="700" fill="#6b7280">RULE</text><text x="260" y="92" text-anchor="middle" font-size="22" font-family="Georgia,serif" font-weight="700">${r.f.split('= ')[1]}</text>`;
+  s+=`<line x1="358" y1="80" x2="414" y2="80" stroke="#374151" stroke-width="3" marker-end="url(#ma)"/>`;
+  s+=`<rect x="420" y="50" width="100" height="60" rx="30" fill="#fed7aa" stroke="#ea580c" stroke-width="2.5"/><text x="470" y="88" text-anchor="middle" font-size="24" font-weight="800" fill="#9a3412">${fresh?fmtNeg(y):'?'}</text><text x="470" y="135" text-anchor="middle" class="tl">output ${nm}(${v})</text>`;
+  $('#mmg',el).innerHTML=`<svg viewBox="0 0 530 150" class="fig" style="max-width:530px">${s}</svg>`;
+  if(fresh&&!seen.some(p=>p[0]===x))seen.push([x,y]);seen.sort((a,b)=>a[0]-b[0]);
+  $('#mmr',el).innerHTML=(fresh?`<span class="math">${mx(`${nm}(`)}${fmtNeg(x)}) = ${r.show(x)} = <b>${fmtNeg(y)}</b></span>`+(r.story?`<br>Meaning: a <b>${fmtNeg(x)}-mile</b> ride costs <b>$${fmtNeg(y)}</b>. Miles (input) = independent variable; cost (output) = dependent variable.`:''):'Pick an input, then press the button.')+
+   (seen.length?`<br><b>Domain</b> (inputs you tried): {${seen.map(p=>fmtNeg(p[0])).join(', ')}} &nbsp; <b>Range</b> (outputs): {${[...new Set(seen.map(p=>p[1]))].sort((a,b)=>a-b).map(fmtNeg).join(', ')}}`:'')+(r.nl?'<br><span class="mute">x² → this rule is <b>non-linear</b> (x has an exponent of 2).</span>':'');};
+ el.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.r!==undefined){k=+b.dataset.r;seen=[];x=2;draw(false);}
+  if(b.dataset.d==='-'){x=Math.max(-5,x-1);draw(false);}if(b.dataset.d==='+'){x=Math.min(10,x+1);draw(false);}if(b.dataset.d==='go')draw(true);});
+ draw(false);
+}
+
+/* ============ Module 2 lessons ============ */
+function tableHTML(rows){return `<table class="t">${rows.map(r=>`<tr><th>${r[0]}</th>${r[1].map(v=>`<td>${typeof v==='number'?fmtNeg(v):v}</td>`).join('')}</tr>`).join('')}</table>`;}
+
+L['1A-2-1']={
+ goal:'I can analyze a given situation to determine whether it can be modeled with a linear equation.',
+ life:{title:'Steady change vs. fast growth',html:'A taxi adds <b>$2 every mile</b> — the same amount each time. A viral video’s views <b>double</b> every hour — the change keeps getting bigger.<br>Only the first one is <b>linear</b>. Linear means: <b>equal steps in x give equal steps in y</b>, and the graph is a straight line.'},
+ see:[{title:'The equal-steps test',hint:'Pick a story. Look at the green or red numbers under the table — the change from one column to the next.',mount:mountDiff}],
+ vocab:[['Relation','Any set of input–output pairs (ordered pairs).'],['Domain','All the inputs (x-values).'],['Range','All the outputs (y-values).'],['Linear equation','An equation whose graph is a straight line. y changes by the same amount for each equal step in x.'],['Standard form','Ax + By = C, like 2x + 3y = 12.']],
+ examples:[
+  {title:'Example 1 — Is the table linear?',prob:tableHTML([['x',[2,5,8,11]],['y',[14,23,32,41]]]),raw:true,lines:[
+   ['x: 2 → 5 → 8 → 11','x goes up by 3 each time (equal steps).'],['y: 14 → 23 → 32 → 41','y goes up by 9 each time.'],['+9 every +3','Equal change for equal steps → LINEAR.'],['rate = 9 ÷ 3 = 3','Bonus: y grows 3 for each 1 in x.']]},
+  {title:'Example 2 — Graph an equation in standard form',prob:'Graph <span class="math">'+mx('2x + 3y = 12')+'</span> by making a table.',lines:[
+   ['x = 0: 3y = 12 → y = 4','Pick easy x-values and solve for y. Point (0, 4).'],['x = 3: 6 + 3y = 12 → y = 2','Point (3, 2).'],['x = 6: 12 + 3y = 12 → y = 0','Point (6, 0).'],['(0, 4), (3, 2), (6, 0)','The points line up → draw one straight line through them.']]}],
+ mistake:{bad:'y goes 1, 2, 4, 8 → “it always goes up, so it’s linear”',good:'Changes are +1, +2, +4 → NOT linear',why:'Going up isn’t enough. The <b>change</b> must be the same every step.'},
+ practice(){
+  if(Math.random()<.55){const s=rand(0,3),d=rand(1,3),xs=[0,1,2,3].map(i=>s+i*d);const lin=Math.random()<.5;let ys;
+   if(lin){const m=pick([-4,-3,-2,2,3,4,5]),b=rand(-5,10);ys=xs.map(x=>m*x+b);}else{const t=pick(['sq','exp']);ys=t==='sq'?xs.map(x=>x*x+rand(0,0)+1):xs.map(x=>2**x);}
+   const df=ys.slice(1).map((y,i)=>y-ys[i]);
+   return {type:'mc',q:`Is this relation linear?${tableHTML([['x',xs],['y',ys]])}`,opts:['Linear','Not linear'],a:lin?0:1,why:`x goes up by ${d} each time; y changes by ${df.map(fmtNeg).join(', ')}. ${lin?'Same change every step → linear.':'The change is not constant → not linear.'}`};}
+  const B=pick([1,2,3,4]),A=pick([-3,-2,-1,1,2,3,4,5]),x=rand(-4,6),y=rand(-5,6),C=A*x+B*y;
+  return {q:`For <span class="math">${mx(stdForm(A,B,C))}</span>, find <i class="v">y</i> when <i class="v">x</i> = ${fmtNeg(x)}.`,fields:[{label:'y =',answer:y}],hint:`Replace x with ${fmtNeg(x)}, then solve for y.`,
+   sol:[[`${A}(${fmtNeg(x)})${B<0?' − ':' + '}${T(Math.abs(B),'y')} = ${fmtNeg(C)}`,`Substitute x = ${fmtNeg(x)}.`],[`${fmtNeg(A*x)} + ${T(B,'y')} = ${fmtNeg(C)}`,'Multiply.'],[`${T(B,'y')} = ${fmtNeg(C-A*x)}`,`Subtract ${P(A*x)} from both sides.`],[`y = ${fmtNeg(y)}`,B===1?'Done.':`Divide by ${B}.`]]};},
+ check:[
+  {q:'Which situation is linear?',o:['A plant doubles in height every week','A gym charges $20 every month','A ball is thrown up and falls back down','Bacteria triple every hour'],a:1,why:'$20 every month is the same change each step → linear.'},
+  {q:'In the relation {(7, 41), (8, 45), (9, 49)}, what is the domain?',o:['{41, 45, 49}','{7, 8, 9}','{7, 41}','{4}'],a:1,why:'The domain is the set of inputs (x-values): {7, 8, 9}.'},
+  {q:'A table has x = 1, 2, 3, 4 and y = 5, 8, 11, 14. Is it linear?',o:['Yes — y goes up 3 each time','No — y is not a multiple of x','Yes — x goes up 1','No — it does not start at 0'],a:0,why:'Equal steps in x (+1) give equal steps in y (+3) → linear.'}]
+};
+
+L['1A-2-2']={
+ goal:'I can graph linear equations using their intercepts.',
+ life:{title:'The snack budget',html:'You have <b>$24</b>. Chips cost <b>$2</b> a bag, drinks cost <b>$3</b> each: <span class="math">'+mx('2x + 3y = 24')+'</span>.<br>The two “extreme” plans are the <b>intercepts</b>: all chips (12 bags, 0 drinks) or all drinks (0 chips, 8 drinks). Connect them and you see every plan that spends exactly $24.'},
+ see:[{title:'Where the line crosses the axes',hint:'Choose an equation. Red dot = x-intercept (y is 0). Orange dot = y-intercept (x is 0).',mount:mountIntercepts}],
+ vocab:[['x-intercept','Where the line crosses the x-axis. The point (x, 0) — y is always 0 there.'],['y-intercept','Where the line crosses the y-axis. The point (0, y) — x is always 0 there.'],['Standard form','Ax + By = C. Intercepts are the fastest way to graph it.']],
+ examples:[
+  {title:'Example 1',prob:'Find the x- and y-intercepts of <span class="math">'+mx('3x − 2y = 6')+'</span>.',lines:[
+   ['3x − 2(0) = 6','x-intercept: replace y with 0.'],['3x = 6 → x = 2','Solve. The x-intercept is (2, 0).'],['3(0) − 2y = 6','y-intercept: replace x with 0.'],['−2y = 6 → y = −3','Solve. The y-intercept is (0, −3).'],['(2, 0) and (0, −3)','Plot both points and draw the line.']]},
+  {title:'Example 2',prob:'Use intercepts to graph <span class="math">'+mx('18y = 12x + 108')+'</span>.',lines:[
+   ['18(0) = 12x + 108','x-intercept: y = 0.'],['−108 = 12x → x = −9','Subtract 108, divide by 12. Point (−9, 0).'],['18y = 12(0) + 108','y-intercept: x = 0.'],['18y = 108 → y = 6','Divide by 18. Point (0, 6).']]}],
+ mistake:{bad:'x-intercept of 3x − 2y = 6 is (0, 2)',good:'It is (2, 0)',why:'The x-intercept is <b>on the x-axis</b>, so its y-coordinate is 0: write (x, 0).'},
+ practice(){
+  if(Math.random()<.7){let a,b;do{a=rand(-8,8);b=rand(-8,8);}while(!a||!b);let A=b,B=a,C=a*b;const gg=gcd(gcd(Math.abs(A),Math.abs(B)),Math.abs(C));A/=gg;B/=gg;C/=gg;if(A<0){A=-A;B=-B;C=-C;}
+   return {q:`Find the intercepts of <span class="math">${mx(stdForm(A,B,C))}</span>.`,fields:[{label:'x-intercept: (',answer:a,unit:', 0)'},{label:'y-intercept: (0,',answer:b,unit:')'}],hint:'For the x-intercept, let y = 0. For the y-intercept, let x = 0.',
+    sol:[[`${T(A,'x')} = ${fmtNeg(C)}`,'Let y = 0.'],[`x = ${fmtNeg(a)}`,`x-intercept (${fmtNeg(a)}, 0).`],[`${T(B,'y')} = ${fmtNeg(C)}`,'Let x = 0.'],[`y = ${fmtNeg(b)}`,`y-intercept (0, ${fmtNeg(b)}).`]]};}
+  const p=pick([2,3,4,5]);let q=pick([2,3,4,5,6]);if(q===p)q++;const k=rand(1,4),Bd=p*q*k;
+  return {q:`You have <b>$${Bd}</b>. Pizza slices cost <b>$${p}</b> (x) and smoothies cost <b>$${q}</b> (y): <span class="math">${mx(`${p}x + ${q}y = ${Bd}`)}</span>. Find both intercepts.`,fields:[{label:'Only pizza: x =',answer:Bd/p},{label:'Only smoothies: y =',answer:Bd/q}],hint:'Only pizza means y = 0. Only smoothies means x = 0.',
+   sol:[[`${p}x = ${Bd} → x = ${Bd/p}`,`(${Bd/p}, 0): all pizza, no smoothies.`],[`${q}y = ${Bd} → y = ${Bd/q}`,`(0, ${Bd/q}): all smoothies, no pizza.`]]};},
+ check:[
+  {q:'What is the y-intercept of 4x − 7y = 28?',o:['(0, 7)','(7, 0)','(0, −4)','(−4, 0)'],a:2,why:'Let x = 0: −7y = 28 → y = −4. The point is (0, −4).'},
+  {q:'To find the x-intercept, you…',o:['let x = 0','let y = 0','set x = y','divide by the slope'],a:1,why:'On the x-axis every point has y = 0.'},
+  {q:'2x + 3y = 24 (chips and drinks). What does the point (12, 0) mean?',o:['12 drinks, no chips','12 bags of chips, no drinks','$12 left over','Each chip bag costs $12'],a:1,why:'x = chips = 12, y = drinks = 0: all the money goes to chips.'}]
+};
+
+L['1A-2-5']={
+ goal:'I can represent constraints with linear equations and decide whether solutions are viable in a real-world context.',
+ life:{title:'The gym and the restaurant',html:'<b>Gym:</b> a monthly fee of $20, and 1 month costs $55 in total. Where did the other $35 come from? A one-time sign-up fee → <span class="math">'+mx('y = 20x + 35')+'</span> (slope-intercept form).<br><b>Restaurant:</b> Tostada Plates cost $10, Enchilada Specials cost $12, and the goal is $600 in sales → <span class="math">'+mx('10x + 12y = 600')+'</span> (standard form: two different items).'},
+ see:[{title:'Viable or not viable?',hint:'Slide the number of Tostada Plates. Every point on the line makes $600 — but can you really sell that many enchiladas?',mount:mountViable}],
+ vocab:[['Constraint','A limit or rule in the situation (a $600 goal, whole plates only, no negatives).'],['Viable solution','A solution that makes sense in real life (whole numbers of plates, not negative).'],['Non-viable solution','It solves the equation but makes no sense (2.5 enchiladas, −3 hours).'],['Which form?','One rate + a starting amount → y = mx + b. Two items that add to a total → Ax + By = C.']],
+ examples:[
+  {title:'Example A — Slope-intercept model',prob:'A gym charges a one-time fee and <b>$20 per month</b>. 1 month costs <b>$55</b>. Write an equation for the total charge y for x months.',lines:[
+   ['m = 20','The monthly fee is a rate → slope.'],['(1, 55)','1 month, $55 total → a point on the line.'],['b = 55 − 20 = 35','Take off one month’s fee: the one-time fee is $35.'],['y = 20x + 35','Total = monthly rate · months + one-time fee.']]},
+  {title:'Example B — Standard-form model',prob:'Tostada Plate $10, Enchilada Special $12, goal $600. If 30 Tostada Plates are sold, how many Enchilada Specials are needed?',lines:[
+   ['10x + 12y = 600','Price × items + price × items = goal.'],['10(30) + 12y = 600','Substitute x = 30.'],['12y = 300','Subtract 300 from both sides.'],['y = 25','25 Enchilada Specials — a whole number, so it’s viable.']]}],
+ mistake:{bad:'Answer: 12.5 enchiladas',good:'Not viable — choose a different x',why:'Check that the answer makes sense in the story: whole items, no negatives.'},
+ practice(){
+  const k=pick(['fee','std','via']);
+  if(k==='fee'){const C=pick([{w:'A gym charges a one-time fee plus',u:'per month',t:'1 month'},{w:'A photographer charges a booking fee plus',u:'per hour',t:'a 1-hour session'},{w:'A bike rental charges a helmet fee plus',u:'per hour',t:'1 hour'}]);const r=pick([15,20,25,30,45,50]),b=pick([10,15,25,35,40,60]);
+   return {q:`${C.w} <b>$${r} ${C.u}</b>. ${C.t[0].toUpperCase()+C.t.slice(1)} costs <b>$${r+b}</b>. Write y = mx + b for the total cost.`,fields:[{label:'m =',answer:r},{label:'b =',answer:b}],hint:`The rate is the slope. Subtract one ${C.u.replace('per ','')} of the rate from $${r+b} to find the fixed fee.`,
+    sol:[[`m = ${r}`,'The rate is the slope.'],[`b = ${r+b} − ${r} = ${b}`,'Remove one unit of the rate to get the one-time fee.'],[`y = ${r}x + ${b}`,'The model.']]};}
+  const p=pick([4,5,6,8,10]);let q=pick([3,5,6,9,12]);if(q===p)q+=1;const y0=rand(4,20),x0=rand(4,20),G=p*x0+q*y0;
+  if(k==='std')return {q:`A school store sells pens for <b>$${p}</b> and notebooks for <b>$${q}</b>. Goal: <b>$${G}</b> in sales: <span class="math">${mx(`${p}x + ${q}y = ${G}`)}</span>. If ${x0} pens are sold, how many notebooks are needed?`,fields:[{label:'y =',answer:y0,unit:'notebooks'}],hint:`Substitute x = ${x0} and solve for y.`,
+   sol:[[`${p}(${x0}) + ${q}y = ${G}`,`Substitute x = ${x0}.`],[`${q}y = ${G-p*x0}`,`Subtract ${p*x0}.`],[`y = ${y0}`,`Divide by ${q}. A whole number → viable.`]]};
+  let x1=x0+1;if(Number.isInteger((G-p*x1)/q))x1=x0+2;const bad=Number.isInteger((G-p*x1)/q)?false:true;const tryX=Math.random()<.5?x0:x1,yy=(G-p*tryX)/q,ok=Number.isInteger(yy)&&yy>=0;
+  return {type:'mc',q:`Pens <b>$${p}</b>, notebooks <b>$${q}</b>, goal <b>$${G}</b>: <span class="math">${mx(`${p}x + ${q}y = ${G}`)}</span>. If the store sells <b>${tryX} pens</b>, is there a viable number of notebooks?`,opts:['Viable','Not viable'],a:ok?0:1,why:`y = (${G} − ${p*tryX}) ÷ ${q} = ${+yy.toFixed(2)}. ${ok?'A whole number → viable.':'You can’t sell part of a notebook → not viable.'}`};},
+ check:[
+  {q:'A photographer charges a booking fee plus $50 per hour. A 1-hour session costs $95. Which equation fits?',o:['t = 95h','t = 50h + 45','t = 45h + 50','t = 50h + 95'],a:1,why:'Rate 50 is the slope; 95 − 50 = 45 is the booking fee.'},
+  {q:'Movie tickets $8 (x) and popcorn $5 (y), total $40. Which point is NOT viable?',o:['(5, 0)','(0, 8)','(2.5, 4)','none of these'],a:2,why:'8(2.5) + 5(4) = 40 works in the equation, but you can’t buy 2.5 tickets.'},
+  {q:'Which situation is best modeled with standard form Ax + By = C?',o:['$30 a month plus a $10 fee','Two kinds of tickets adding up to $500','A taxi: $3 plus $2 per mile','Saving $15 every week'],a:1,why:'Two different items that add up to a total → Ax + By = C.'}]
+};
+
+L['1A-2-6']={
+ goal:'I can determine if a relation is a function, and represent a function with a graph, a table, and an equation.',
+ life:{title:'The vending machine',html:'Press <b>A1</b> and you get chips — every single time. That machine works like a <b>function</b>: each button (input) gives exactly <b>one</b> snack (output).<br>If A1 sometimes gave chips and sometimes gum, the machine would be broken — that’s <b>not</b> a function. (Two buttons giving the same snack is fine.)'},
+ see:[{title:'Mapping diagrams',hint:'Each arrow goes from an input to an output. Look for an input with two arrows.',mount:mountMapping},{title:'The vertical line test',hint:'Choose a graph and slide the red line. If it ever touches the graph twice, it’s not a function.',mount:mountVLT}],
+ vocab:[['Function','A relation where every input has exactly ONE output.'],['Mapping diagram','Arrows from each input to its output.'],['Vertical line test','If any vertical line touches a graph more than once, the graph is not a function.'],['One-to-one','Every input has its own output and no outputs are shared — linear equations (not horizontal) work this way.']],
+ examples:[
+  {title:'Example 1 — Tables and ordered pairs',prob:'Is { (7, 0), (7, 1), (9, −7), (12, −1), (15, 0) } a function?',raw:true,lines:[
+   ['x-values: 7, 7, 9, 12, 15','List the inputs and look for repeats.'],['(7, 0) and (7, 1)','The input 7 appears twice with different outputs.'],['NOT a function','One input → two outputs. (15, 0) sharing 0 with (7, 0) would be fine.']]},
+  {title:'Example 2 — Graphs',prob:'Use the vertical line test on a circle and on a line.',raw:true,lines:[
+   ['Circle: touches 2 times','A vertical line through the middle hits the top and the bottom → NOT a function.'],['Non-vertical line: touches 1 time','Any vertical line hits it once → function.'],['Vertical line x = 2: NOT a function','One input (x = 2) has infinitely many outputs.']]}],
+ mistake:{bad:'{(1, 5), (2, 5), (3, 5)} is not a function because 5 repeats',good:'It IS a function',why:'Repeated <b>outputs</b> are OK. Only a repeated <b>input</b> with different outputs breaks the rule.'},
+ practice(){
+  const isF=Math.random()<.5;let xs=shuffle([-3,-2,-1,0,1,2,3,4,5]).slice(0,4);let pairs=xs.map(x=>[x,rand(-6,9)]);
+  if(Math.random()<.4)pairs[1][1]=pairs[0][1];
+  if(!isF){const d=pairs[rand(0,3)];let y2=d[1]+pick([-3,-2,2,3]);pairs.push([d[0],y2]);pairs=shuffle(pairs);}
+  const asTable=Math.random()<.5;const show=asTable?tableHTML([['x',pairs.map(p=>p[0])],['y',pairs.map(p=>p[1])]]):`<div class="math">{ ${pairs.map(p=>`(${fmtNeg(p[0])}, ${fmtNeg(p[1])})`).join(', ')} }</div>`;
+  const dup=pairs.find((p,i)=>pairs.some((q,j)=>j!==i&&q[0]===p[0]));
+  return {type:'mc',q:`Is this relation a function?${show}`,opts:['Function','Not a function'],a:isF?0:1,why:isF?'No input repeats, so every input has exactly one output.'+(pairs.some((p,i)=>pairs.some((q,j)=>j!==i&&q[1]===p[1]))?' (A repeated output is fine.)':''):`The input ${fmtNeg(dup[0])} has two different outputs.`};},
+ check:[
+  {q:'Which relation is a function?',o:['{(1, 3), (2, 1), (3, 5), (1, −3)}','{(0, 0), (2, 4), (2, −4), (3, 9)}','{(−1, 1), (0, 0), (1, 1), (−2, 2)}','{(5, 1), (5, 2)}'],a:2,why:'No x-value repeats in {(−1, 1), (0, 0), (1, 1), (−2, 2)}. Repeated outputs are OK.'},
+  {q:'A vertical line touches a graph in two places. The graph is…',o:['a function','not a function','linear','one-to-one'],a:1,why:'That x-value has two outputs → not a function.'},
+  {q:'Table: x = −2, 7, 7, 9 and y = 5, −2, 5, 11. Function?',o:['Yes, because 5 repeats','No, because x = 7 has two outputs','Yes, every y is different','No, because there is a negative'],a:1,why:'x = 7 goes to −2 and to 5.'}]
+};
+
+L['1A-2-7']={
+ goal:'I can evaluate a function using function notation, interpret the value in context, and find the domain and range.',
+ life:{title:'A rideshare app',html:'A rideshare costs <b>$5</b> plus <b>$2 per mile</b>. Written as a function: <span class="math">'+mx('C(m) = 2m + 5')+'</span>.<br><span class="math">'+mx('C(10) = 25')+'</span> reads “C of 10 equals 25” and means: <b>a 10-mile ride costs $25</b>. The input (miles) is the independent variable; the output (cost) depends on it.'},
+ see:[{title:'The function machine',hint:'Choose a rule, pick an input, and run the machine. Watch the domain and range build up.',mount:mountMachine}],
+ vocab:[['Function notation','f(x) = 3x + 7 means the same as y = 3x + 7. Read f(x) as “f of x”. It is NOT f times x.'],['Evaluate','Substitute the input and compute: f(5) = 3(5) + 7 = 22.'],['Independent variable','The input (x) — you choose it.'],['Dependent variable','The output f(x) — it depends on the input.'],['Non-linear','x has an exponent other than 1, or is in a denominator, a square root, or an exponent (x², 1/x, √x, 2ˣ).']],
+ examples:[
+  {title:'Example 1 — Evaluate',prob:'For <span class="math">'+mx('g(x) = 3x + 7')+'</span>, find g(5).',lines:[
+   ['g(5) = 3(5) + 7','Replace every x with the input 5.'],['g(5) = 15 + 7','Multiply.'],['g(5) = 22','Input 5 → output 22. The point (5, 22) is on the graph.']]},
+  {title:'Example 2 — Range from a domain',prob:'Find the range of <span class="math">'+mx('f(x) = 3x + 1')+'</span> for the domain {3, 5, 7}.',lines:[
+   ['f(3) = 3(3) + 1 = 10','Substitute each domain value.'],['f(5) = 3(5) + 1 = 16',''],['f(7) = 3(7) + 1 = 22',''],['Range: {10, 16, 22}','The range is the set of outputs.',true]]},
+  {title:'Example 3 — In context',prob:'A bike rental costs <span class="math">'+mx('C(h) = 15h + 20')+'</span> dollars for h hours. Find and interpret C(3).',lines:[
+   ['C(3) = 15(3) + 20','Substitute h = 3.'],['C(3) = 65','Renting a bike for 3 hours costs $65.']]}],
+ mistake:{bad:'f(3) means f × 3',good:'f(3) means “the output when the input is 3”',why:'The parentheses hold the <b>input</b>. Replace x with 3.'},
+ practice(){
+  const k=pick(['eval','range','lin','ctx']);
+  if(k==='eval'){const a=pick([-4,-3,-2,2,3,4,5,6,9]),b=rand(-12,12),x=rand(-4,8),n=pick(['f','g','h']);
+   return {q:`For <span class="math">${mx(`${n}(x) = ${T(a,'x')}${b?S(b):''}`)}</span>, find <span class="math">${mx(n)}(${fmtNeg(x)})</span>.`,fields:[{label:`${n}(${fmtNeg(x)}) =`,answer:a*x+b}],hint:`Replace x with ${fmtNeg(x)}.`,sol:[[`${n}(${fmtNeg(x)}) = ${a}(${fmtNeg(x)})${b?S(b):''}`,'Substitute.'],[`${n}(${fmtNeg(x)}) = ${fmtNeg(a*x)}${b?S(b):''}`,'Multiply.'],[`${n}(${fmtNeg(x)}) = ${fmtNeg(a*x+b)}`,'Add.']]};}
+  if(k==='range'){const a=pick([2,3,4,5,9]),b=rand(-17,10),d=shuffle([-2,-1,0,1,2,3,4,5]).slice(0,3).sort((p,q)=>p-q);
+   return {q:`Find the range of <span class="math">${mx(`f(x) = ${a}x${b?S(b):''}`)}</span> for the domain {${d.map(fmtNeg).join(', ')}}.`,fields:d.map(v=>({label:`f(${fmtNeg(v)}) =`,answer:a*v+b})),hint:'Substitute each domain value, one at a time.',
+    sol:d.map(v=>[`f(${fmtNeg(v)}) = ${a}(${fmtNeg(v)})${b?S(b):''} = ${fmtNeg(a*v+b)}`,'']).concat([[`Range: {${d.map(v=>fmtNeg(a*v+b)).join(', ')}}`,'The set of outputs.',true]])};}
+  if(k==='lin'){const lin=Math.random()<.5;const f=lin?pick(['f(x) = 4x + 10','g(x) = −2x','h(x) = x/3 + 1','f(x) = 7 − x']):pick(['f(x) = x² + 4x + 10','g(x) = 3/x','h(x) = √x + 2','f(x) = 2ˣ']);
+   return {type:'mc',q:`Is <span class="math">${mx(f)}</span> linear or non-linear?`,opts:['Linear','Non-linear'],a:lin?0:1,why:lin?'x has an exponent of 1 and is not in a denominator, root, or exponent.':'x is squared, in a denominator, under a root, or in an exponent → non-linear.'};}
+  const r=pick([10,12,15,20]),b=pick([5,10,20,25]),h=rand(2,6),v=r*h+b;const m=mcFrom(`Renting for ${h} hours costs $${v}.`,[`Renting for ${v} hours costs $${h}.`,`Each hour costs $${v}.`,`You can rent ${h} bikes for $${r}.`]);
+  return {type:'mc',q:`A kayak rental costs <span class="math">${mx(`C(h) = ${r}h + ${b}`)}</span> dollars for h hours. What does <span class="math">${mx('C')}(${h}) = ${v}</span> mean?`,opts:m.opts,a:m.a,why:`The input h = ${h} is hours; the output C = ${v} is the cost in dollars.`};},
+ check:[
+  {q:'If f(x) = 3x + 7, what is f(5)?',o:['15','22','36','8'],a:1,why:'f(5) = 3(5) + 7 = 22.'},
+  {q:'Find the range of f(x) = 9x − 17 for the domain {1, 3, 5}.',o:['{1, 3, 5}','{−8, 10, 28}','{9, 27, 45}','{−17, 9}'],a:1,why:'f(1) = −8, f(3) = 10, f(5) = 28.'},
+  {q:'Which function is non-linear?',o:['f(x) = 4x + 10','f(x) = 7 − x','f(x) = x² + 4x + 10','f(x) = x/3'],a:2,why:'x² has an exponent of 2.'}]
+};
+
 /* ============ views ============ */
 const STAGES=[{k:'pic',n:'Picture',i:'🖼'},{k:'steps',n:'Steps',i:'🪜'},{k:'pencil',n:'Pencil',i:'✏️'},{k:'check',n:'Check',i:'✅'}];
 const app=$('#app');
@@ -572,7 +812,7 @@ function stPicture(el,id,D){
  <div class="card"><div class="tag">Key words</div><dl class="vocab">${D.vocab.map(v=>`<dt>${v[0]}</dt><dd>${v[1]}</dd>`).join('')}</dl></div>`;
  D.see.forEach((s,i)=>s.mount($('#see'+i)));markStage(id,'pic');
 }
-function lineHTML(l,raw,hide){return `<div class="ln-step ${hide?'hide':''}"><div class="m math">${raw?l[0]:mx(l[0])}</div><div class="why">${l[1]}</div></div>`;}
+function lineHTML(l,raw,hide){return `<div class="ln-step ${hide?'hide':''}"><div class="m math">${raw||l[2]?l[0]:mx(l[0])}</div><div class="why">${l[1]}</div></div>`;}
 function stSteps(el,id,D){
  el.innerHTML=D.examples.map((e,i)=>`<div class="card ex" data-i="${i}"><div class="tag">${e.title}</div><div class="prob">${e.prob}</div><div class="lines">${e.lines.map((l,j)=>lineHTML(l,e.raw,j>0)).join('')}</div>
  <div class="row"><button class="primary" data-a="next">Next step ▼</button><button data-a="all">Show all</button></div></div>`).join('')+
