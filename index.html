@@ -184,18 +184,18 @@ COURSE.forEach(c=>c.modules.forEach(m=>m.lessons.forEach((t,i)=>{const id=`${c.i
 /* ============ graph grid ============ */
 let GID=0;
 function grid(o){
- const {x0=-6,x1=6,y0=-6,y1=6,u=30,lab=2,xl='',yl='',gs=1}=o;const pad=28;
- const W=(x1-x0)*u+pad*2,H=(y1-y0)*u+pad*2+(xl?22:0);const X=x=>pad+(x-x0)*u,Y=y=>pad+(y1-y)*u;const id='clp'+(++GID);
- let s=`<defs><clipPath id="${id}"><rect x="${X(x0)}" y="${Y(y1)}" width="${(x1-x0)*u}" height="${(y1-y0)*u}"/></clipPath></defs>`;
+ const {x0=-6,x1=6,y0=-6,y1=6,u=30,lab=2,xl='',yl='',gs=1}=o;const uy=o.uy||u,laby=o.laby||lab,gsy=o.gsy||gs;const pad=28;
+ const W=(x1-x0)*u+pad*2,H=(y1-y0)*uy+pad*2+(xl?22:0);const X=x=>pad+(x-x0)*u,Y=y=>pad+(y1-y)*uy;const id='clp'+(++GID);
+ let s=`<defs><clipPath id="${id}"><rect x="${X(x0)}" y="${Y(y1)}" width="${(x1-x0)*u}" height="${(y1-y0)*uy}"/></clipPath></defs>`;
  for(let x=x0;x<=x1;x++)if(x%gs===0)s+=`<line x1="${X(x)}" y1="${Y(y0)}" x2="${X(x)}" y2="${Y(y1)}" class="gl"/>`;
- for(let y=y0;y<=y1;y++)if(y%gs===0)s+=`<line x1="${X(x0)}" y1="${Y(y)}" x2="${X(x1)}" y2="${Y(y)}" class="gl"/>`;
+ for(let y=y0;y<=y1;y++)if(y%gsy===0)s+=`<line x1="${X(x0)}" y1="${Y(y)}" x2="${X(x1)}" y2="${Y(y)}" class="gl"/>`;
  const ay=(y0<=0&&y1>=0)?Y(0):Y(y0),axx=(x0<=0&&x1>=0)?X(0):X(x0);
  s+=`<line x1="${X(x0)}" y1="${ay}" x2="${X(x1)}" y2="${ay}" class="ax"/><line x1="${axx}" y1="${Y(y0)}" x2="${axx}" y2="${Y(y1)}" class="ax"/>`;
  for(let x=x0;x<=x1;x++)if(x!==0&&x%lab===0)s+=`<text x="${X(x)}" y="${ay+16}" text-anchor="middle" class="tl">${fmtNeg(x)}</text>`;
- for(let y=y0;y<=y1;y++)if(y!==0&&y%lab===0)s+=`<text x="${axx-6}" y="${Y(y)+4}" text-anchor="end" class="tl">${fmtNeg(y)}</text>`;
+ for(let y=y0;y<=y1;y++)if(y!==0&&y%laby===0)s+=`<text x="${axx-6}" y="${Y(y)+4}" text-anchor="end" class="tl">${fmtNeg(y)}</text>`;
  if(xl)s+=`<text x="${X((x0+x1)/2)}" y="${Y(y0)+40}" text-anchor="middle" class="tl" font-weight="700">${xl} →</text>`;
  if(yl)s+=`<text x="${axx+6}" y="${Y(y1)-8}" class="tl" font-weight="700">${yl}</text>`;
- return {W,H,X,Y,x0,x1,y0,y1,u,clip:id,base:s,svg:inner=>`<svg viewBox="0 0 ${W} ${H}" class="fig" style="max-width:${Math.min(W,480)}px">${s}${inner}</svg>`};
+ return {W,H,X,Y,x0,x1,y0,y1,u,uy,clip:id,base:s,svg:inner=>`<svg viewBox="0 0 ${W} ${H}" class="fig" style="max-width:${Math.min(W,480)}px">${s}${inner}</svg>`};
 }
 function gline(g,m,b,cls='ln',extra=''){const a=g.x0-1,z=g.x1+1;return `<line clip-path="url(#${g.clip})" x1="${g.X(a)}" y1="${g.Y(m*a+b)}" x2="${g.X(z)}" y2="${g.Y(m*z+b)}" class="${cls}" ${extra}/>`;}
 function gdot(g,x,y,col='#1f2937',r=6,label=''){return `<circle cx="${g.X(x)}" cy="${g.Y(y)}" r="${r}" fill="${col}" stroke="#fff" stroke-width="2"/>`+(label?`<text x="${g.X(x)+9}" y="${g.Y(y)-9}" font-size="13" font-weight="700" fill="${col}" paint-order="stroke" stroke="#fff" stroke-width="4">${label}</text>`:'');}
@@ -777,6 +777,265 @@ L['1A-2-7']={
   {q:'If f(x) = 3x + 7, what is f(5)?',o:['15','22','36','8'],a:1,why:'f(5) = 3(5) + 7 = 22.'},
   {q:'Find the range of f(x) = 9x − 17 for the domain {1, 3, 5}.',o:['{1, 3, 5}','{−8, 10, 28}','{9, 27, 45}','{−17, 9}'],a:1,why:'f(1) = −8, f(3) = 10, f(5) = 28.'},
   {q:'Which function is non-linear?',o:['f(x) = 4x + 10','f(x) = 7 − x','f(x) = x² + 4x + 10','f(x) = x/3'],a:2,why:'x² has an exponent of 2.'}]
+};
+
+/* ============ Module 3 widgets ============ */
+function lineEq(m,b,v='x',fn='f'){return `${fn}(${v}) = ${T(m,v)}${b?S(b):''}`;}
+function mountRead(el){
+ const PR=[{t:'🎟 Food fair: f(n) = 5n + 10',m:5,b:10,v:'n',g:{x0:0,x1:8,y0:0,y1:60,u:50,uy:6,lab:1,laby:10,gsy:5,xl:'tastings (n)',yl:'cost ($)'},x:3,st:1},
+  {t:'f(x) = 6x',m:6,b:0,v:'x',g:{x0:0,x1:6,y0:0,y1:36,u:60,uy:10,lab:1,laby:6,gsy:3},x:4.5,st:.5},
+  {t:'f(x) = −6 + 3x',m:3,b:-6,v:'x',g:{x0:-1,x1:6,y0:-9,y1:12,u:50,uy:16,lab:1,laby:3,gsy:1},x:2,st:.5}];
+ let k=0;
+ el.innerHTML=`<div class="row">${PR.map((p,i)=>`<button data-k="${i}">${p.t}</button>`).join('')}</div><div class="ctrl"><label>Input <span id="rv"></span> <input type="range"></label></div><div id="rg"></div><div class="readout" id="rr"></div>`;
+ const inp=$('input',el);
+ const setup=()=>{const p=PR[k];inp.min=p.g.x0<0?0:p.g.x0;inp.max=p.g.x1;inp.step=p.st;inp.value=p.x;$$('[data-k]',el).forEach(b=>b.classList.toggle('sel',+b.dataset.k===k));draw();};
+ const draw=()=>{const p=PR[k],g=grid(p.g),x=+inp.value,y=p.m*x+p.b;$('#rv',el).innerHTML=`<i class="v">${p.v}</i> = ${fmtNeg(x)}`;
+  let s=gline(g,p.m,p.b);
+  s+=`<line x1="${g.X(x)}" y1="${g.Y(0)}" x2="${g.X(x)}" y2="${g.Y(y)}" stroke="#7c3aed" stroke-width="3" stroke-dasharray="6 4"/><line x1="${g.X(x)}" y1="${g.Y(y)}" x2="${g.X(0)}" y2="${g.Y(y)}" stroke="#ea580c" stroke-width="3" stroke-dasharray="6 4"/>`;
+  s+=gdot(g,x,0,'#7c3aed',6)+gdot(g,0,y,'#ea580c',7,fmtNeg(y))+gdot(g,x,y,'#1f2937',8,`(${fmtNeg(x)}, ${fmtNeg(y)})`);
+  $('#rg',el).innerHTML=g.svg(s);
+  const fn=p.st===1?'f':'f';$('#rr',el).innerHTML=`<b style="color:#7c3aed">1.</b> Find ${p.v} = ${fmtNeg(x)} on the horizontal axis. <b>2.</b> Go straight up (or down) to the line. <b style="color:#ea580c">3.</b> Go across to the vertical axis and read: <b>f(${fmtNeg(x)}) = ${fmtNeg(y)}</b><br><span class="mute">Check with the rule: ${p.t.split(': ').pop().split(' = ')[1].replace(new RegExp(p.v,'g'),`(${fmtNeg(x)})`)} = ${fmtNeg(y)}</span>`+(p.st===1?`<br>Meaning: <b>${fmtNeg(x)}</b> food tastings cost <b>$${fmtNeg(y)}</b> in total.`:'');};
+ el.addEventListener('click',e=>{const b=e.target.closest('[data-k]');if(b){k=+b.dataset.k;setup();}});inp.addEventListener('input',draw);setup();
+}
+function mountTwo(el){
+ const PR=[{t:'f(x) = −3x + 8 and g(x) = 2x − 2',f:[-3,8],g:[2,-2],G:{x0:-2,x1:6,y0:-8,y1:12,u:40,uy:16,lab:1,laby:2,gsy:1},x:0},
+  {t:'📱 Phone plans',f:[5,30],g:[10,10],G:{x0:0,x1:8,y0:0,y1:100,u:50,uy:3.2,lab:1,laby:10,gsy:10,xl:'GB of data',yl:'cost ($)'},x:1,story:1}];
+ let k=0;
+ el.innerHTML=`<div class="row">${PR.map((p,i)=>`<button data-k="${i}">${p.t}</button>`).join('')}</div><div class="ctrl"><label>Try x = <b id="tv"></b> <input type="range" step="1"></label></div><div id="tg"></div><div id="tt" style="overflow-x:auto"></div><div class="readout" id="tr"></div>`;
+ const inp=$('input',el);
+ const setup=()=>{const p=PR[k];inp.min=p.G.x0;inp.max=p.G.x1;inp.value=p.x;$$('[data-k]',el).forEach(b=>b.classList.toggle('sel',+b.dataset.k===k));draw();};
+ const draw=()=>{const p=PR[k],G=grid(p.G),x=+inp.value,fy=p.f[0]*x+p.f[1],gy=p.g[0]*x+p.g[1];$('#tv',el).textContent=fmtNeg(x);
+  const sx=(p.g[1]-p.f[1])/(p.f[0]-p.g[0]),sy=p.f[0]*sx+p.f[1];
+  let s=gline(G,p.f[0],p.f[1],'',`stroke="#2563eb" stroke-width="3"`)+gline(G,p.g[0],p.g[1],'',`stroke="#ea580c" stroke-width="3"`);
+  s+=`<line x1="${G.X(x)}" y1="${G.Y(G.y0)}" x2="${G.X(x)}" y2="${G.Y(G.y1)}" stroke="#9ca3af" stroke-width="2" stroke-dasharray="5 4"/>`+gdot(G,x,fy,'#2563eb',7)+gdot(G,x,gy,'#ea580c',7);
+  if(x===sx)s+=`<circle cx="${G.X(sx)}" cy="${G.Y(sy)}" r="14" fill="none" stroke="#15803d" stroke-width="4"/>`;
+  $('#tg',el).innerHTML=G.svg(s);
+  const xs=[];for(let i=Math.max(p.G.x0,Math.round(sx)-3);i<=Math.min(p.G.x1,Math.round(sx)+3);i++)xs.push(i);
+  $('#tt',el).innerHTML=`<table class="t"><tr><th>x</th>${xs.map(v=>`<td style="${v===sx?'background:#dcfce7;font-weight:800':''}">${fmtNeg(v)}</td>`).join('')}</tr><tr><th style="color:#2563eb">${p.story?'Plan A':'f(x)'}</th>${xs.map(v=>`<td style="${v===sx?'background:#dcfce7;font-weight:800':''}">${fmtNeg(p.f[0]*v+p.f[1])}</td>`).join('')}</tr><tr><th style="color:#ea580c">${p.story?'Plan B':'g(x)'}</th>${xs.map(v=>`<td style="${v===sx?'background:#dcfce7;font-weight:800':''}">${fmtNeg(p.g[0]*v+p.g[1])}</td>`).join('')}</tr></table>`;
+  const nm=p.story?['Plan A','Plan B']:['f','g'];
+  $('#tr',el).innerHTML=(p.story?'<b style="color:#2563eb">Plan A</b>: $30 a month + $5 per GB. <b style="color:#ea580c">Plan B</b>: $10 a month + $10 per GB.<br>':'')+
+   `At x = ${fmtNeg(x)}: <b style="color:#2563eb">${p.story?'A':'f(x)'} = ${fmtNeg(fy)}</b>, <b style="color:#ea580c">${p.story?'B':'g(x)'} = ${fmtNeg(gy)}</b> → `+
+   (fy===gy?`<span class="good">EQUAL! The lines cross at (${fmtNeg(sx)}, ${fmtNeg(sy)}). The solution of ${p.story?'5x + 30 = 10x + 10':'f(x) = g(x)'} is x = ${fmtNeg(sx)}.</span>`+(p.story?' At 4 GB both plans cost $50.':''):`${fy>gy?nm[0]:nm[1]} is higher. Keep sliding until they are equal.`);};
+ el.addEventListener('click',e=>{const b=e.target.closest('[data-k]');if(b){k=+b.dataset.k;setup();}});inp.addEventListener('input',draw);setup();
+}
+const SYM=['<','≤','>','≥'];
+function mountIneq(el){
+ let mi=MS.findIndex(m=>m[0]===-2&&m[1]===1),b=-4,si=3,story=false,tp={x:0,y:0};
+ el.innerHTML=`<div class="ctrl"><label>symbol <select id="isym" style="font:inherit;font-size:18px;padding:4px 8px;border-radius:8px">${SYM.map((s,i)=>`<option value="${i}">${s}</option>`).join('')}</select></label><label>slope <i class="v">m</i> <input type="range" id="ims" min="0" max="${MS.length-1}"></label><label><i class="v">b</i> <input type="range" id="ibs" min="-5" max="5"></label></div>
+ <div class="eqline math" id="ieq2"></div><svg class="fig" style="max-width:480px;cursor:crosshair"></svg><div class="readout" id="irr"></div>
+ <div class="row"><button data-q="ex">Example: y ≥ −2x − 4</button><button data-q="story">🍿 Snack budget: 2x + 3y ≤ 24</button></div>`;
+ const svg=$('svg',el);let G;
+ const draw=()=>{const [num,den]=MS[mi],m=num/den,sym=SYM[si];G=story?grid({x0:0,x1:14,y0:0,y1:10,u:30,xl:'chips',yl:'drinks'}):grid({u:32});svg.setAttribute('viewBox',`0 0 ${G.W} ${G.H}`);
+  const above=si>=2,solid=si%2===1,a=G.x0-1,z=G.x1+1,top=above?G.y1+50:G.y0-50;
+  let s=`<polygon clip-path="url(#${G.clip})" points="${G.X(a)},${G.Y(m*a+b)} ${G.X(z)},${G.Y(m*z+b)} ${G.X(z)},${G.Y(top)} ${G.X(a)},${G.Y(top)}" fill="rgba(37,99,235,.16)"/>`;
+  s+=gline(G,m,b,'',`stroke="#2563eb" stroke-width="3" ${solid?'':'stroke-dasharray="9 7"'}`);
+  const rhs=m*tp.x+b,ok=sym==='<'?tp.y<rhs:sym==='≤'?tp.y<=rhs+1e-9:sym==='>'?tp.y>rhs:tp.y>=rhs-1e-9;
+  s+=gdot(G,tp.x,tp.y,ok?'#15803d':'#b91c1c',9,`(${fmtNeg(tp.x)}, ${fmtNeg(tp.y)})`);
+  svg.innerHTML=G.base+s;
+  const mtxt=num===0?'':mEq(num,den)||'';
+  $('#ieq2',el).innerHTML=story?mx('2x + 3y ≤ 24')+' &nbsp;→&nbsp; '+mx('y ≤ −(2/3)x + 8'):`${mx('y')} ${sym} ${num===0?'':mx(mtxt+'x')} ${num===0?fmtNeg(b):(b<0?MINUS+' '+(-b):'+ '+b)}`;
+  $('#irr',el).innerHTML=`<b>Line:</b> ${solid?'<b>solid</b> — points on the line count (≤ or ≥)':'<b>dashed</b> — points on the line do NOT count (< or >)'}. <b>Shade:</b> ${above?'<b>above</b> (y is greater)':'<b>below</b> (y is less)'}.<br>
+  <b>Test point</b> <span class="mute">(tap the graph to move it)</span>: is ${fmtNeg(tp.y)} ${sym} ${fmtNeg(+rhs.toFixed(2))}? ${ok?'<span class="good">TRUE → it’s a solution (it’s in the shaded part).</span>':'<span class="bad">FALSE → not a solution.</span>'}`+
+  (story?'<br><b>Story:</b> every shaded point is a plan that spends <b>at most</b> $24 (whole numbers only, no negatives). Points above the line cost too much.':'');
+  $('#isym',el).value=si;$('#ims',el).value=mi;$('#ibs',el).value=b;};
+ $('#isym',el).addEventListener('change',e=>{si=+e.target.value;draw();});
+ $('#ims',el).addEventListener('input',e=>{mi=+e.target.value;story=false;draw();});
+ $('#ibs',el).addEventListener('input',e=>{b=+e.target.value;story=false;draw();});
+ svg.addEventListener('click',e=>{const pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const p=pt.matrixTransform(svg.getScreenCTM().inverse());tp={x:Math.max(G.x0,Math.min(G.x1,Math.round((p.x-28)/G.u+G.x0))),y:Math.max(G.y0,Math.min(G.y1,Math.round(G.y1-(p.y-28)/G.uy)))};draw();});
+ el.addEventListener('click',e=>{const q=e.target.closest('button')?.dataset.q;if(!q)return;if(q==='ex'){mi=MS.findIndex(m=>m[0]===-2&&m[1]===1);b=-4;si=3;story=false;tp={x:0,y:0};}else{mi=MS.findIndex(m=>m[0]===-2&&m[1]===3);b=8;si=1;story=true;tp={x:3,y:4};}draw();});
+ draw();
+}
+function mountMotion(el){
+ const SP={walk:[1,'#2563eb','🚶 walk'],run:[2,'#d97706','🏃 run'],sprint:[3,'#b91c1c','⚡ sprint'],stop:[0,'#6b7280','✋ stop']};
+ let seg=['walk','walk','stop','run','sprint'];
+ el.innerHTML=`<p style="margin:0">Build your trip to school, one minute at a time:</p><div class="row">${Object.keys(SP).map(k=>`<button data-a="${k}">${SP[k][2]}</button>`).join('')}<button data-a="undo">↶ Undo</button><button data-a="clear">Clear</button></div><div id="mg2"></div><div class="readout" id="mr2"></div>`;
+ const draw=()=>{const G=grid({x0:0,x1:8,y0:0,y1:20,u:52,uy:16,lab:1,laby:4,gsy:2,xl:'time (minutes)',yl:'distance (blocks)'});let d=0,s='';
+  seg.forEach((k,i)=>{const nd=d+SP[k][0]*2.5;s+=`<line x1="${G.X(i)}" y1="${G.Y(d)}" x2="${G.X(i+1)}" y2="${G.Y(nd)}" stroke="${SP[k][1]}" stroke-width="5" stroke-linecap="round"/><text x="${G.X(i+.5)}" y="${G.Y((d+nd)/2)-10}" text-anchor="middle" font-size="12" font-weight="800" fill="${SP[k][1]}" paint-order="stroke" stroke="#fff" stroke-width="4">${k}</text>`;d=nd;});
+  $('#mg2',el).innerHTML=G.svg(s);
+  $('#mr2',el).innerHTML=seg.length?`Total: <b>${d} blocks</b> in <b>${seg.length} minutes</b>.<br><b>Steeper</b> segment = faster (more distance in the same time). <b>Flat</b> segment = stopped (time passes, distance doesn’t change). Sprint is the steepest.`:'Add some minutes!';};
+ el.addEventListener('click',e=>{const a=e.target.closest('button')?.dataset.a;if(!a)return;if(SP[a]&&seg.length<8)seg.push(a);if(a==='undo')seg.pop();if(a==='clear')seg=[];draw();});draw();
+}
+function mountDisc(el){
+ let mode=0;
+ el.innerHTML=`<div class="row"><button data-d="0">🍫 Candy bars: $2 each</button><button data-d="1">⛽ Gas: $5 per gallon</button></div><div id="dg2"></div><div class="readout" id="dr2"></div>`;
+ const draw=()=>{const G=grid({x0:0,x1:10,y0:0,y1:mode?50:20,u:40,uy:mode?6:15,lab:1,laby:mode?10:4,gsy:mode?5:2,xl:mode?'gallons':'candy bars',yl:'money ($)'});let s='';
+  if(mode)s+=`<line x1="${G.X(0)}" y1="${G.Y(0)}" x2="${G.X(10)}" y2="${G.Y(50)}" stroke="#2563eb" stroke-width="4"/>`;else for(let n=0;n<=10;n++)s+=gdot(G,n,2*n,'#2563eb',7);
+  $('#dg2',el).innerHTML=G.svg(s);$$('[data-d]',el).forEach(b=>b.classList.toggle('sel',+b.dataset.d===mode));
+  $('#dr2',el).innerHTML=mode?'<b>Continuous</b> — connected line. You can pump 3.7 gallons, so every value in between makes sense.':'<b>Discrete</b> — separate dots. Pete only sells whole candy bars, so 2.5 bars makes no sense. Don’t connect the dots.';};
+ el.addEventListener('click',e=>{const b=e.target.closest('[data-d]');if(b){mode=+b.dataset.d;draw();}});draw();
+}
+function mountSeq(el){
+ const PR=[{t:'🏎 Go-kart: f(n) = 2n + 5',m:2,b:5,w:'laps',c:'$5 for the go-kart + $2 per lap'},{t:'🚕 Taxi: f(n) = 3n + 2',m:3,b:2,w:'miles',c:'$2 per ride + $3 per mile'}];
+ let k=0,N=4;
+ el.innerHTML=`<div class="row">${PR.map((p,i)=>`<button data-k="${i}">${p.t}</button>`).join('')}</div><div class="ctrl" style="justify-content:center"><span class="stepper2">Terms shown: <button data-n="-">−</button><b id="sn"></b><button data-n="+">+</button></span></div><div id="sg" ></div><div id="st2" style="overflow-x:auto"></div><div class="readout" id="sr"></div>`;
+ const draw=()=>{const p=PR[k],G=grid({x0:0,x1:8,y0:0,y1:30,u:48,uy:11,lab:1,laby:5,gsy:5,xl:`term number n (${p.w})`,yl:'f(n)'});let s='';
+  for(let n=1;n<=N;n++)s+=gdot(G,n,p.m*n+p.b,'#2563eb',8,String(p.m*n+p.b));
+  $('#sg',el).innerHTML=G.svg(s);$('#sn',el).textContent=N;$$('[data-k]',el).forEach(b=>b.classList.toggle('sel',+b.dataset.k===k));
+  const ns=[...Array(N)].map((_,i)=>i+1);
+  $('#st2',el).innerHTML=tableHTML([['n',ns],['f(n)',ns.map(n=>`${p.m}(${n}) + ${p.b} = <b>${p.m*n+p.b}</b>`)]]);
+  $('#sr',el).innerHTML=`${p.c}. The sequence is <b>${ns.map(n=>p.m*n+p.b).join(', ')}, …</b><br><b>Domain</b> = term numbers {1, 2, 3, …}. <b>Range</b> = the terms. The dots are <b>not connected</b> — there is no “lap 2.5”.`;};
+ el.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.k!==undefined)k=+b.dataset.k;if(b.dataset.n==='+')N=Math.min(8,N+1);if(b.dataset.n==='-')N=Math.max(1,N-1);draw();});draw();
+}
+function mountArith(el){
+ const PR=[{t:'🎭 Theater rows',a:20,d:2,u:'seats in row n'},{t:'💵 Savings',a:74,d:11,u:'dollars after month n'},{t:'⏬ Countdown',a:100,d:-12,u:'points left after round n'}];
+ let a=20,d=2,k=0,big=20;
+ el.innerHTML=`<div class="row">${PR.map((p,i)=>`<button data-k="${i}">${p.t}</button>`).join('')}</div>
+ <div class="ctrl"><label>first term f(1) <input type="range" id="aa" min="-20" max="100"></label><b id="av"></b><label>common difference <i class="v">d</i> <input type="range" id="ad" min="-15" max="15"></label><b id="dv2"></b></div>
+ <div id="ag"></div><div class="eqline math" id="aeq"></div><div class="readout" id="ar"></div>`;
+ const draw=()=>{const ts=[1,2,3,4,5,6].map(n=>a+d*(n-1));const mn=Math.min(0,...ts),mxv=Math.max(1,...ts);const H=200,sc=150/(mxv-mn||1),base=25+(mxv)*sc;
+  let s='';ts.forEach((t,i)=>{const x=30+i*80,y=t>=0?base-t*sc:base,h=Math.abs(t)*sc;s+=`<rect x="${x}" y="${y}" width="50" height="${Math.max(h,1)}" rx="4" fill="${t>=0?'#bfdbfe':'#fecaca'}" stroke="${t>=0?'#2563eb':'#b91c1c'}" stroke-width="2"/><text x="${x+25}" y="${t>=0?y-6:y+h+16}" text-anchor="middle" font-size="15" font-weight="800">${fmtNeg(t)}</text><text x="${x+25}" y="${H+20}" text-anchor="middle" class="tl">n = ${i+1}</text>`;
+   if(i<5)s+=`<text x="${x+65}" y="${H+4}" text-anchor="middle" font-size="13" font-weight="800" fill="#15803d">${d>=0?'+':MINUS}${Math.abs(d)}</text>`;});
+  s+=`<line x1="20" y1="${base}" x2="510" y2="${base}" stroke="#6b7280"/>`;
+  $('#ag',el).innerHTML=`<svg viewBox="0 0 520 ${H+30}" class="fig" style="max-width:520px">${s}</svg>`;
+  $('#av',el).textContent=a;$('#dv2',el).textContent=(d>=0?'+':MINUS)+Math.abs(d);$('#aa',el).value=a;$('#ad',el).value=d;
+  $$('[data-k]',el).forEach(b=>b.classList.toggle('sel',+b.dataset.k===k));
+  const c=a-d;$('#aeq',el).innerHTML=`${mx('f(n)')} = ${fmtNeg(a)} ${d<0?MINUS:'+'} ${Math.abs(d)}(${mx('n')} − 1) &nbsp;=&nbsp; ${mx(`${T(d,'n')}${c?S(c):''}`)}`;
+  $('#ar',el).innerHTML=`Start at <b>${fmtNeg(a)}</b>, then add <b>${fmtNeg(d)}</b> every step. To reach term n you add d only <b>(n − 1)</b> times — the first term already used one spot.<br>Jump ahead: <b>f(${big}) = ${fmtNeg(a)} + ${P(d)}(${big} − 1) = ${fmtNeg(a+d*(big-1))}</b>`+(k>=0?` <span class="mute">(${PR[k]?PR[k].u.replace(/n$/,big):''})</span>`:'');};
+ $('#aa',el).addEventListener('input',e=>{a=+e.target.value;k=-1;draw();});$('#ad',el).addEventListener('input',e=>{d=+e.target.value;k=-1;draw();});
+ el.addEventListener('click',e=>{const b=e.target.closest('[data-k]');if(b){k=+b.dataset.k;a=PR[k].a;d=PR[k].d;draw();}});draw();
+}
+
+/* ============ Module 3 lessons ============ */
+L['1A-3-1']={
+ goal:'I can represent a function with a graph, a table, and an equation, and use a graph to find values.',
+ life:{title:'The food fair',html:'Admission to a food fair costs <b>$10</b>, plus <b>$5</b> per food tasting: <span class="math">'+mx('f(n) = 5n + 10')+'</span>.<br>Make a table, plot the points, and you get a graph you can <b>read</b>: find any number of tastings and see the cost instantly — no calculating.'},
+ see:[{title:'Reading values off a graph',hint:'Slide the input. Follow the purple path up to the line, then the orange path across to the axis.',mount:mountRead}],
+ vocab:[['Function rule','The equation that turns an input into an output, like f(n) = 5n + 10.'],['Input–output table','A table of x-values and their f(x) values. Each row is a point (x, f(x)).'],['Reading a graph','Go from the x-value up/down to the line, then across to the y-axis.']],
+ examples:[
+  {title:'Example 1 — Table, then graph',prob:'Graph <span class="math">'+mx('f(x) = −6 + 3x')+'</span> by making a table.',lines:[
+   ['f(1) = −6 + 3(1) = −3','Choose x = 1. Point (1, −3).'],['f(2) = −6 + 3(2) = 0','Point (2, 0).'],['f(3) = −6 + 3(3) = 3','Point (3, 3).'],['f(4) = −6 + 3(4) = 6','Point (4, 6). Plot the points and connect them.']]},
+  {title:'Example 2 — Use the graph to find a value',prob:'Use the graph of <span class="math">'+mx('f(x) = 6x')+'</span> to find f(4.5).',lines:[
+   ['x = 4.5','Locate 4.5 on the x-axis (halfway between 4 and 5).'],['(4.5, 27)','Go straight up to the line, then across to the y-axis.'],['f(4.5) = 27','Read the value. Check: 6(4.5) = 27 ✓']]}],
+ mistake:{bad:'f(4.5): go across from 4.5 on the y-axis',good:'Start at 4.5 on the x-axis',why:'The input is always on the <b>horizontal</b> (x) axis. The output is read on the vertical axis.'},
+ practice(){
+  if(Math.random()<.6){const m=pick([-2,-1,1,2,3]),b=rand(-4,4),x=rand(-3,4),y=m*x+b;if(Math.abs(y)>6)return this.practice();const g=grid({u:24});
+   const inv=Math.random()<.4;
+   return {q:inv?`Use the graph. For what value of <i class="v">x</i> is f(x) = ${fmtNeg(y)}?`:`Use the graph to find f(${fmtNeg(x)}).`,fig:g.svg(gline(g,m,b)),fields:[{label:inv?'x =':`f(${fmtNeg(x)}) =`,answer:inv?x:y}],hint:inv?`Find ${fmtNeg(y)} on the y-axis, go across to the line, then down/up to the x-axis.`:`Find ${fmtNeg(x)} on the x-axis, go up/down to the line, then across to the y-axis.`,
+    sol:[[`(${fmtNeg(x)}, ${fmtNeg(y)})`,'The point on the line.'],[`f(${fmtNeg(x)}) = ${fmtNeg(y)}`,`The rule is ${lineEq(m,b)} — check: ${fmtNeg(m*x)}${b?S(b):''} = ${fmtNeg(y)}.`]]};}
+  const C=pick([{t:'A food fair costs $10 plus $5 per tasting.',m:5,b:10,v:'n',w:'tastings'},{t:'A gym charges $25 plus $15 per class.',m:15,b:25,v:'c',w:'classes'},{t:'A bowling alley charges $4 for shoes plus $6 per game.',m:6,b:4,v:'g',w:'games'}]);const n=rand(2,9);
+  return {q:`${C.t} The rule is <span class="math">${mx(lineEq(C.m,C.b,C.v))}</span>. What is the total cost for ${n} ${C.w}?`,fields:[{label:`f(${n}) = $`,answer:C.m*n+C.b}],hint:`Substitute ${C.v} = ${n}.`,sol:[[`f(${n}) = ${C.m}(${n}) + ${C.b}`,'Substitute.'],[`f(${n}) = ${C.m*n+C.b}`,`${n} ${C.w} cost $${C.m*n+C.b}.`]]};},
+ check:[
+  {q:'f(n) = 5n + 10. Which point is on the graph?',o:['(2, 20)','(2, 15)','(10, 5)','(0, 5)'],a:0,why:'f(2) = 5(2) + 10 = 20 → (2, 20).'},
+  {q:'To find f(3) on a graph, you start…',o:['at 3 on the y-axis','at 3 on the x-axis','at the origin and count 3 units right and up','at the y-intercept'],a:1,why:'3 is the input, so start on the x-axis.'},
+  {q:'f(x) = 6x. What is f(4.5)?',o:['10.5','24','27','30'],a:2,why:'6 × 4.5 = 27.'}]
+};
+
+L['1A-3-2']={
+ goal:'I can solve an equation f(x) = g(x) using a graph or a table, and relate it to the algebraic solution.',
+ life:{title:'Which phone plan?',html:'<b>Plan A:</b> $30 a month + $5 per GB. <b>Plan B:</b> $10 a month + $10 per GB. When do they cost the same?<br>That question is the equation <span class="math">'+mx('5x + 30 = 10x + 10')+'</span>. Graph each plan as a line — the answer is where the lines <b>cross</b>.'},
+ see:[{title:'Where the lines cross',hint:'Slide x. The dots show f(x) and g(x). The solution is the x where they are equal — look for the green row in the table.',mount:mountTwo}],
+ vocab:[['f(x) = g(x)','An equation with an expression on each side. Graph each side as its own line.'],['Intersection','The point where two graphs cross. Its x-value solves f(x) = g(x).'],['Table method','List f(x) and g(x) for several x-values; the solution is where the two outputs match.']],
+ examples:[
+  {title:'Example 1 — Graphing',prob:'Solve f(x) = g(x) by graphing: <span class="math">'+mx('f(x) = −3x + 8')+'</span>, <span class="math">'+mx('g(x) = 2x − 2')+'</span>.',lines:[
+   ['f: start (0, 8), down 3, right 1','Graph f with m = −3 and b = 8.',true],['g: start (0, −2), up 2, right 1','Graph g with m = 2 and b = −2.',true],['(2, 2)','The lines intersect at (2, 2).'],['x = 2','The solution of −3x + 8 = 2x − 2 is x = 2.']]},
+  {title:'Example 2 — Table',prob:'Solve <span class="math">'+mx('6x − 6 = −2x + 10')+'</span> with a table.',raw:true,lines:[
+   [tableHTML([['x',[0,1,2,3]],['6x − 6',[-6,0,'<b>6</b>',12]],['−2x + 10',[10,8,'<b>6</b>',4]]]),'Compute both sides for several x-values.'],['x = 2','Both sides equal 6 at x = 2. Solution: (2, 6).']]},
+  {title:'Example 3 — Check with algebra',prob:'Solve <span class="math">'+mx('−3x + 8 = 2x − 2')+'</span> algebraically.',lines:[
+   ['−3x + 8 = 2x − 2','Original equation.'],['8 = 5x − 2','Add 3x to both sides.'],['10 = 5x','Add 2 to both sides.'],['x = 2','Same answer as the graph ✓']]}],
+ mistake:{bad:'The solution is y = 2',good:'The solution is x = 2',why:'For a <b>one-variable</b> equation f(x) = g(x), the answer is the <b>x</b>-coordinate of the intersection.'},
+ practice(){
+  let a,b,c,d,x;do{a=pick([-3,-2,-1,1,2,3]);c=pick([-3,-2,-1,1,2,3]);x=rand(-3,3);b=rand(-4,4);d=(a-c)*x+b;}while(a===c||Math.abs(d)>6||Math.abs(a*x+b)>6);
+  const y=a*x+b,g=grid({u:24});const showG=Math.random()<.6;
+  return {q:`Solve <span class="math">${mx(`${T(a,'x')}${b?S(b):''} = ${T(c,'x')}${d?S(d):''}`)}</span>${showG?' using the graph of both sides.':'.'}`,fig:showG?g.svg(gline(g,a,b,'',`stroke="#2563eb" stroke-width="3"`)+gline(g,c,d,'',`stroke="#ea580c" stroke-width="3"`)):'',fields:[{label:'x =',answer:x}],hint:showG?'Find where the blue and orange lines cross. Read the x-coordinate.':'Collect x-terms on one side, constants on the other.',
+   sol:[[`(${fmtNeg(x)}, ${fmtNeg(y)})`,'The lines cross here.'],[`x = ${fmtNeg(x)}`,`Check: ${fmtNeg(a*x)}${b?S(b):''} = ${fmtNeg(y)} and ${fmtNeg(c*x)}${d?S(d):''} = ${fmtNeg(y)} ✓`]]};},
+ check:[
+  {q:'f(x) = 6x − 6 and g(x) = −2x + 10 intersect at (2, 6). What is the solution of 6x − 6 = −2x + 10?',o:['x = 6','x = 2','x = 8','(6, 2)'],a:1,why:'The solution is the x-coordinate of the intersection.'},
+  {q:'In a table, f(3) = 11 and g(3) = 11. What does that tell you?',o:['x = 11 is the solution','x = 3 is a solution of f(x) = g(x)','The lines are parallel','f and g have the same slope'],a:1,why:'Both outputs match at x = 3, so x = 3 solves f(x) = g(x).'},
+  {q:'Plan A: 5x + 30. Plan B: 10x + 10. They cost the same at…',o:['x = 2','x = 4','x = 6','never'],a:1,why:'5x + 30 = 10x + 10 → 20 = 5x → x = 4 GB (both $50).'}]
+};
+
+L['1A-3-3']={
+ goal:'I can graph the solutions to a linear inequality in two variables on a coordinate plane.',
+ life:{title:'Spending AT MOST $24',html:'Last time, <span class="math">'+mx('2x + 3y = 24')+'</span> showed the plans that spend <b>exactly</b> $24. But you usually just need to stay <b>within</b> budget: <span class="math">'+mx('2x + 3y ≤ 24')+'</span>.<br>That’s not one line of answers — it’s a whole <b>region</b> of answers, which you shade.'},
+ see:[{title:'Line + shading = the solution',hint:'Change the symbol, slope, and b. Tap the graph to move the test point.',mount:mountIneq}],
+ vocab:[['Linear inequality','Like a linear equation but with <, ≤, >, or ≥. Its solutions fill a half-plane.'],['Boundary line','Solid for ≤ or ≥ (the line counts). Dashed for < or > (the line does not count).'],['Half-plane','The side of the line you shade: above for > and ≥, below for < and ≤ (when y is alone on the left).'],['Test point','Pick a point, like (0, 0). If it makes the inequality true, shade its side.']],
+ examples:[
+  {title:'Example A',prob:'Graph <span class="math">'+mx('5y + 20 ≥ −10x')+'</span>.',lines:[
+   ['5y ≥ −10x − 20','Step 1: Solve for y. Subtract 20 from both sides.'],['y ≥ −2x − 4','Divide by 5 (positive, so the symbol stays).'],['solid line, b = −4, m = −2','Step 2: ≥ means a solid boundary line.',true],['shade above','Step 3: ≥ → shade above. Test (0, 0): 5(0) + 20 ≥ 0 → 20 ≥ 0 TRUE, and (0, 0) is above ✓',true]]},
+  {title:'Example B — Watch the flip!',prob:'Graph <span class="math">'+mx('−2y < 4x − 6')+'</span>.',lines:[
+   ['−2y < 4x − 6','Original inequality.'],['y > −2x + 3','Divide by −2 → FLIP the symbol: < becomes >.'],['dashed line, shade above','> means a dashed line and shading above.',true],['test (0, 0): 0 < −6 ?','False, and (0, 0) is below the line → shade the other side (above) ✓',true]]}],
+ mistake:{bad:'−2y < 4x − 6 → y < −2x + 3',good:'y > −2x + 3',why:'Multiplying or dividing by a <b>negative</b> number flips the inequality symbol.'},
+ practice(){
+  const m=pick([-3,-2,-1,1,2,3]),b=rand(-4,4),si=rand(0,3),sym=SYM[si],ineq=`y ${sym} ${T(m,'x')}${b?S(b):''}`;
+  if(Math.random()<.55){const x=rand(-4,4);let y=m*x+b+pick([-3,-2,-1,0,1,2,3]);const r=m*x+b,ok=sym==='<'?y<r:sym==='≤'?y<=r:sym==='>'?y>r:y>=r;
+   return {type:'mc',q:`Is the point <b>(${fmtNeg(x)}, ${fmtNeg(y)})</b> a solution of <span class="math">${mx(ineq)}</span>?`,opts:['Yes','No'],a:ok?0:1,why:`Substitute: is ${fmtNeg(y)} ${sym} ${fmtNeg(m)}(${fmtNeg(x)})${b?S(b):''} = ${fmtNeg(r)}? ${ok?'True → yes.':'False → no.'}`};}
+  const opts=['Solid line, shade above','Solid line, shade below','Dashed line, shade above','Dashed line, shade below'];const ans=(si%2===1?0:2)+(si>=2?0:1);
+  return {type:'mc',q:`How do you graph <span class="math">${mx(ineq)}</span>?`,opts,a:ans,why:`${si%2?'≤/≥ → solid':'< / > → dashed'}; ${si>=2?'> / ≥ → shade above':'< / ≤ → shade below'}.`};},
+ check:[
+  {q:'Which inequality has a dashed boundary line?',o:['y ≤ 2x + 1','y ≥ −x','y > 3x − 2','y ≤ 4'],a:2,why:'< and > use dashed lines; the points on the line are not solutions.'},
+  {q:'Is (0, 0) a solution of y > −2x + 3?',o:['Yes','No'],a:1,why:'0 > 3 is false.'},
+  {q:'Solve −3y ≥ 6x for y.',o:['y ≥ −2x','y ≤ −2x','y ≥ 2x','y ≤ 2x'],a:1,why:'Dividing by −3 flips ≥ to ≤: y ≤ −2x.'}]
+};
+
+L['1A-3-4']={
+ goal:'I can interpret the graph of a situation and sketch a graph that matches a situation.',
+ life:{title:'Late for school',html:'You walk, stop at a red light, then realize you’re late and run, then sprint. A <b>distance–time graph</b> tells that whole story with just lines: steeper = faster, flat = stopped.<br>Some stories make <b>connected</b> graphs (pumping gas), others only <b>dots</b> (selling whole candy bars).'},
+ see:[{title:'Build a distance–time story',hint:'Add one minute at a time. Compare the steepness of each piece.',mount:mountMotion},{title:'Continuous or discrete?',hint:'Switch between the two stories.',mount:mountDisc}],
+ vocab:[['Distance–time graph','x = time, y = distance traveled. Slope = speed.'],['Increasing / constant','Going up = moving away. Flat = not moving (or constant value).'],['Continuous graph','A connected line or curve — every in-between value makes sense.'],['Discrete graph','Separate points — only certain values make sense (whole items, people, laps).']],
+ examples:[
+  {title:'Example 1 — Read the story from the graph',prob:'A graph of distance vs. time has 3 pieces: steep up, then flat, then gently up.',raw:true,lines:[
+   ['Piece 1: steep up','Moving fast — a lot of distance in a short time (running).'],['Piece 2: flat','Time passes but distance doesn’t change — stopped.'],['Piece 3: gently up','Moving again, but slower (walking).']]},
+  {title:'Example 2 — Discrete or continuous?',prob:'Pete sells candy bars for $2 each. A trucker buys gas at $5 per gallon.',raw:true,lines:[
+   ['Candy: (1, 2), (2, 4), (3, 6) …','Only whole candy bars → <b>discrete</b>: plot dots, don’t connect.'],['Gas: any amount, like 3.7 gallons','Every value makes sense → <b>continuous</b>: draw a connected line.']]}],
+ mistake:{bad:'A flat piece means “going fast in a straight line”',good:'Flat means NOT moving',why:'On a distance–time graph, flat = distance isn’t changing. Speed shows up as <b>steepness</b>.'},
+ practice(){
+  if(Math.random()<.5){const pool=[['the number of tickets sold and the money collected','Discrete'],['the time you run and the distance you cover','Continuous'],['the number of students and the number of buses needed','Discrete'],['the amount of water in a tub as it fills','Continuous'],['the number of songs bought and the total cost','Discrete'],['the temperature during the day','Continuous'],['laps on a go-kart track and the price','Discrete'],['gallons of gas pumped and the cost','Continuous']];const it=pick(pool);
+   return {type:'mc',q:`Should the graph of <b>${it[0]}</b> be discrete (dots) or continuous (a connected line)?`,opts:['Discrete','Continuous'],a:it[1]==='Discrete'?0:1,why:it[1]==='Discrete'?'Only whole-number amounts make sense, so plot separate points.':'Every in-between value makes sense, so connect the graph.'};}
+  const K=['walk','run','stop'],sp={walk:1,run:2.5,stop:0},seg=shuffle(K);const G=grid({x0:0,x1:3,y0:0,y1:12,u:80,uy:16,lab:1,laby:4,gsy:2,xl:'time',yl:'distance'});let d=0,s='';seg.forEach((k,i)=>{const nd=d+sp[k]*3;s+=`<line x1="${G.X(i)}" y1="${G.Y(d)}" x2="${G.X(i+1)}" y2="${G.Y(nd)}" stroke="#2563eb" stroke-width="5"/>`;d=nd;});
+  const story=seg.map(k=>({walk:'walks',run:'runs',stop:'stops'})[k]);const correct=`First ${story[0]}, then ${story[1]}, then ${story[2]}.`;
+  const wrongs=shuffle([[1,0,2],[2,1,0],[0,2,1],[1,2,0],[2,0,1]]).map(o=>`First ${story[o[0]]}, then ${story[o[1]]}, then ${story[o[2]]}.`).slice(0,3);const m=mcFrom(correct,wrongs);
+  return {type:'mc',q:'Which story matches this distance–time graph?',fig:G.svg(s),opts:m.opts,a:m.a,why:'Steepest piece = run, gentle piece = walk, flat piece = stop.'};},
+ check:[
+  {q:'On a distance–time graph, which piece shows the fastest motion?',o:['The flattest piece','The steepest piece','A horizontal piece','The piece closest to the origin'],a:1,why:'Steeper = more distance per unit of time = faster.'},
+  {q:'A horizontal piece on a distance–time graph means…',o:['moving at top speed','going backward','stopped','speeding up'],a:2,why:'Distance doesn’t change while time passes.'},
+  {q:'Which situation is discrete?',o:['Height of a growing plant over time','Number of tickets sold and money earned','Water pouring into a pool','Distance a car drives over time'],a:1,why:'You can only sell whole tickets.'}]
+};
+
+L['1A-3-5']={
+ goal:'I can recognize that a sequence is a function: the term numbers are the domain and the terms are the range.',
+ life:{title:'Go-kart laps',html:'A go-kart track charges <b>$5</b> for the go-kart plus <b>$2 per lap</b>. The costs for 1, 2, 3, 4 laps make a list: <b>7, 9, 11, 13, …</b> — a <b>sequence</b>.<br>Each lap number gives exactly one cost, so a sequence is a function: <span class="math">'+mx('f(n) = 2n + 5')+'</span>.'},
+ see:[{title:'A sequence on a graph',hint:'Add terms. Notice the points are not connected.',mount:mountSeq}],
+ vocab:[['Sequence','An ordered list of numbers. Each number is a term.'],['Term number (n)','The position: 1st, 2nd, 3rd … These are the domain.'],['f(n)','The term at position n. The terms are the range.'],['Explicit rule','A formula that gives any term directly from n, like f(n) = 2n + 5.']],
+ examples:[
+  {title:'Example 1 — Table → points → graph',prob:'Use <span class="math">'+mx('f(n) = 2n + 5')+'</span> to make the first 4 terms and graph them.',lines:[
+   ['f(1) = 2(1) + 5 = 7','Substitute n = 1.'],['f(2) = 9, f(3) = 11, f(4) = 13','Keep going.'],['(1, 7), (2, 9), (3, 11), (4, 13)','Write the ordered pairs (n, f(n)).'],['plot the dots — don’t connect','Term numbers are whole numbers only.',true]]},
+  {title:'Example 2 — Which rule fits?',prob:'Which rule defines the sequence <b>6, 11, 16, …</b>? &nbsp; A: f(x) = 5x &nbsp; B: f(x) = 5x + 6 &nbsp; C: f(x) = 5x + 1',lines:[
+   ['A: f(1) = 5','The first term should be 6 → A is wrong.'],['B: f(1) = 11','Wrong first term → B is wrong.'],['C: f(1) = 6, f(2) = 11, f(3) = 16','All match → C is correct.']]}],
+ mistake:{bad:'6, 11, 16 → f(n) = 5n + 6',good:'f(n) = 5n + 1',why:'Always test n = 1: the rule must give the <b>first</b> term. 5(1) + 6 = 11, not 6.'},
+ practice(){
+  const d=pick([2,3,4,5,6,7,-2,-3]),a=pick([-5,-4,-3,-2,2,3,4,5,6,7,8,9,10,12,15]),c=a-d,seq=[0,1,2,3].map(i=>a+d*i);
+  if(Math.random()<.5){const n=rand(5,12);return {q:`The rule is <span class="math">${mx(`f(n) = ${T(d,'n')}${c?S(c):''}`)}</span>. Find term number ${n}.`,fields:[{label:`f(${n}) =`,answer:d*n+c}],hint:`Substitute n = ${n}.`,sol:[[`f(${n}) = ${d}(${n})${c?S(c):''}`,'Substitute.'],[`f(${n}) = ${fmtNeg(d*n+c)}`,'Compute.']]};}
+  const m=mcFrom(mx(`f(n) = ${T(d,'n')}${c?S(c):''}`),[mx(`f(n) = ${T(d,'n')}${a?S(a):''}`),mx(`f(n) = ${T(d,'n')}`),mx(`f(n) = ${T(a,'n')}${d?S(d):''}`)].filter((v,i,ar)=>ar.indexOf(v)===i&&v!==mx(`f(n) = ${T(d,'n')}${c?S(c):''}`)));
+  return {type:'mc',q:`Which rule defines the sequence <b>${seq.map(fmtNeg).join(', ')}, …</b>?`,opts:m.opts,a:m.a,why:`Test n = 1: ${d}(1)${c?S(c):''} = ${fmtNeg(a)} ✓, n = 2 gives ${fmtNeg(a+d)} ✓.`};},
+ check:[
+  {q:'For a sequence, the domain is…',o:['the terms','the term numbers 1, 2, 3, …','all real numbers','the common difference'],a:1,why:'Inputs are the positions (term numbers).'},
+  {q:'f(n) = 3n + 2. What is the 4th term?',o:['9','12','14','11'],a:2,why:'f(4) = 3(4) + 2 = 14.'},
+  {q:'Should the graph of a sequence have its points connected?',o:['Yes, always','No — term numbers are whole numbers only','Only if it goes up','Only if it starts at 0'],a:1,why:'There is no term 2.5, so the graph is discrete.'}]
+};
+
+L['1A-3-6']={
+ goal:'I can find the common difference and write an explicit rule for an arithmetic sequence from a context.',
+ life:{title:'Theater rows',html:'A theater has <b>20 seats</b> in row 1 and each row has <b>2 more</b> seats than the row in front. How many seats in row 20? You don’t want to count 20 rows!<br>Arithmetic sequences let you <b>jump straight</b> to any term: <span class="math">'+mx('f(n) = f(1) + d(n − 1)')+'</span>.'},
+ see:[{title:'Start, then add d again and again',hint:'Pick a story or move the sliders. Watch the bars grow by the same amount each time.',mount:mountArith}],
+ vocab:[['Arithmetic sequence','A sequence where you add the same number every time.'],['Common difference (d)','The amount added each time. Can be negative (the sequence goes down).'],['Explicit rule','f(n) = f(1) + d(n − 1). Plug in the first term and d.'],['Why n − 1?','To reach term n you add d only (n − 1) times — term 1 needs no additions.']],
+ examples:[
+  {title:'Example A',prob:'Write the explicit rule for <b>0, 6, 12, 18, …</b>',lines:[
+   ['+6, +6, +6','Find the common difference: d = 6.'],['f(1) = 0','The first term is 0.'],['f(n) = 0 + 6(n − 1)','Substitute into f(n) = f(1) + d(n − 1).'],['f(n) = 6n − 6','Simplify (optional).']]},
+  {title:'Example B — Going down',prob:'Write the rule for <b>100, 88, 76, 64, …</b> and find the 10th term.',lines:[
+   ['d = 88 − 100 = −12','Subtract a term from the next one.'],['f(n) = 100 − 12(n − 1)','f(1) = 100, d = −12.'],['f(10) = 100 − 12(9)','Substitute n = 10.'],['f(10) = −8','The 10th term is −8.']]},
+  {title:'Example C — Read d from a rule',prob:'Find d in each rule: <span class="math">'+mx('f(n) = −2n + 7')+'</span>, <span class="math">'+mx('f(n) = 65 + 13(n − 1)')+'</span>.',lines:[
+   ['f(n) = −2n + 7 → d = −2','The coefficient of n is the common difference.'],['f(n) = 65 + 13(n − 1) → d = 13','The number multiplying (n − 1) is d.']]}],
+ mistake:{bad:'5, 8, 11 → f(n) = 5 + 3n',good:'f(n) = 5 + 3(n − 1)',why:'Check n = 1: 5 + 3(1) = 8 ✗. You must add d only (n − 1) times.'},
+ practice(){
+  const a=rand(-10,30);let d=pick([-12,-7,-5,-4,-3,-2,2,3,4,5,6,8,11]);const seq=[0,1,2,3].map(i=>a+d*i);const ty=pick(['nth','d','ctx']);
+  if(ty==='d'){const r=Math.random()<.5?`f(n) = ${fmtNeg(a)} ${d<0?MINUS:'+'} ${Math.abs(d)}(n − 1)`:`f(n) = ${T(d,'n')}${a-d?S(a-d):''}`;return {q:`What is the common difference of <span class="math">${mx(r)}</span>?`,fields:[{label:'d =',answer:d}],hint:'d is the number multiplying n (or (n − 1)).',sol:[[`d = ${fmtNeg(d)}`,'The coefficient of n.']]};}
+  if(ty==='ctx'){const r1=rand(12,30),dd=pick([2,3,4]),n=rand(10,25);return {q:`A theater has <b>${r1}</b> seats in row 1, and each row has <b>${dd}</b> more seats than the one before. How many seats are in row ${n}?`,fields:[{label:`f(${n}) =`,answer:r1+dd*(n-1),unit:'seats'}],hint:`f(n) = ${r1} + ${dd}(n − 1).`,sol:[[`f(n) = ${r1} + ${dd}(n − 1)`,'f(1) and d from the story.'],[`f(${n}) = ${r1} + ${dd}(${n-1})`,'Substitute.'],[`f(${n}) = ${r1+dd*(n-1)}`,'Row '+n+' has '+(r1+dd*(n-1))+' seats.']]};}
+  const n=rand(8,20);return {q:`For the arithmetic sequence <b>${seq.map(fmtNeg).join(', ')}, …</b> find d and term number ${n}.`,fields:[{label:'d =',answer:d},{label:`f(${n}) =`,answer:a+d*(n-1)}],hint:'d = second term − first term. Then use f(n) = f(1) + d(n − 1).',
+   sol:[[`d = ${fmtNeg(seq[1])} − ${P(seq[0])} = ${fmtNeg(d)}`,'Common difference.'],[`f(n) = ${fmtNeg(a)} ${d<0?MINUS:'+'} ${Math.abs(d)}(n − 1)`,'Explicit rule.'],[`f(${n}) = ${fmtNeg(a)} ${d<0?MINUS:'+'} ${Math.abs(d)}(${n-1}) = ${fmtNeg(a+d*(n-1))}`,'Substitute.']]};},
+ check:[
+  {q:'What is the common difference of 74, 85, 96, 107, …?',o:['74','11','10','−11'],a:1,why:'85 − 74 = 11.'},
+  {q:'Which is the explicit rule for 3, 7, 11, 15, …?',o:['f(n) = 3 + 4n','f(n) = 3 + 4(n − 1)','f(n) = 4 + 3(n − 1)','f(n) = 3n + 4'],a:1,why:'f(1) = 3, d = 4: f(n) = 3 + 4(n − 1).'},
+  {q:'f(n) = −10(n − 1) + 4. What is d?',o:['4','−10','10','−6'],a:1,why:'The number multiplying (n − 1) is −10.'}]
 };
 
 /* ============ views ============ */
