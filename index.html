@@ -232,12 +232,15 @@ footer{border-top:1px solid #e2e8f0;background:rgba(255,255,255,.55);padding:24p
 }
 /* ============ END VISUAL REFRESH 2026 ============ */
 
+.vocab dt .en{font-weight:400;color:var(--mute,#667);font-size:.85em;margin-left:4px}
+h1 .h1en{display:block;font-size:.5em;font-weight:500;opacity:.6;margin-top:4px}
 </style>
 </head>
 <body>
 <header class="top"><a class="brand" href="#/">HS Math <span>Visual Lab</span></a><span class="hdr-r"><span class="topprog" id="topprog"></span><button id="langbtn" class="langbtn" onclick="setLang(LANG==='zh'?'en':'zh')">中文</button></span></header>
 <main id="app"></main>
 <footer>Picture → Steps → Pencil → Check · Algebra 1 · Geometry · Algebra II · Pre-Calculus · Calculus</footer>
+<script src="js/zh.js"></script>
 <script>
 /* ============ helpers ============ */
 const $=(s,el=document)=>el.querySelector(s);
@@ -263,7 +266,7 @@ function parseAns(s){s=String(s).trim().replace(/[−–]/g,'-').replace(/\s+/g,
 /* ============ language ============ */
 let LANG=(()=>{try{return localStorage.getItem('alg1lab-lang')||'en';}catch(e){return 'en';}})();
 const I18N={en:{btnCheck:'Check',brand:'HS Math <span>Visual Lab</span>',zhNote:''},
-zh:{btnCheck:'檢查答案',brand:'高中數學<span>視覺實驗室</span>',zhNote:'介面為繁體中文；課程內容（例題、題目）目前為英文。',
+zh:{btnCheck:'檢查答案',brand:'高中數學<span>視覺實驗室</span>',zhNote:'介面、課名與關鍵詞為繁體中文；例題與題目維持英文。',
 'Algebra 1':'代數一','Algebra 1 (Khan)':'代數一（Khan）','Geometry':'幾何','Algebra II':'代數二','Pre-Calculus':'微積分預備','Calculus':'微積分',
 '{0} of {1} lessons done':'已完成 {0} / {1} 課','soon':'即將推出','Continue':'繼續','Start':'開始','{0} of {1} lessons complete':'已完成 {0} / {1} 課',
 ' · {0} lessons open now, more coming soon':' · 目前開放 {0} 課，更多即將推出','Course map is ready: {0} modules, {1} lessons. Interactive lessons coming soon.':'課程地圖已完成：{0} 個模組、{1} 課。互動課程即將推出。',
@@ -279,6 +282,11 @@ zh:{btnCheck:'檢查答案',brand:'高中數學<span>視覺實驗室</span>',zhN
 '{0}/3 — Lesson complete!':'{0}/3 — 本課完成！','Next lesson: {0} ▶':'下一課：{0} ▶','{0}/3. Read the explanations, review the Steps, then try again.':'{0}/3。先看解析、複習步驟，再試一次。','◀ Review Steps':'◀ 複習步驟','Try again':'再試一次',
 'Loading lesson…':'載入課程中…','Could not load this lesson. Check your internet connection and refresh.':'無法載入這一課。請檢查網路後重新整理。',
 'Picture → Steps → Pencil → Check':'看圖 → 步驟 → 動筆 → 檢測','◀ Back':'◀ 上一步','Next step ▶':'下一步 ▶','Next move ▶':'下一步 ▶'}};
+const ZHON=()=>LANG==='zh'&&typeof ZH_TITLE!=='undefined';
+function lt(id){const e=META[id]?META[id].title:id;return ZHON()&&ZH_TITLE[id]?ZH_TITLE[id]:e;}
+function mt(key,en){return ZHON()&&ZH_MOD[key]?ZH_MOD[key]:en;}
+function vocabHTML(id,v){const z=ZHON()?(ZH_VOCAB[id]||ZH_VOCAB[KA_ALIAS[id]]):null;
+ return v.map((x,i)=>{const y=z&&z[i];return y?`<dt>${y[0]} <span class="en">${x[0]}</span></dt><dd>${y[1]===null?x[1]:y[1]}</dd>`:`<dt>${x[0]}</dt><dd>${x[1]}</dd>`;}).join('');}
 function t(k,...a){let r=I18N[LANG][k];if(r===undefined)r=I18N.en[k];if(r===undefined)r=k;a.forEach((v,i)=>r=r.split('{'+i+'}').join(v));return r;}
 function applyChrome(){document.documentElement.lang=LANG==='zh'?'zh-Hant':'en';$('.brand').innerHTML=t('brand');$('#langbtn').textContent=LANG==='zh'?'English':'中文';$('footer').textContent=t('Picture → Steps → Pencil → Check')+' · '+CATS.map(c=>t(c.n)).join(' · ');}
 function setLang(l){LANG=l;try{localStorage.setItem('alg1lab-lang',l);}catch(e){}applyChrome();route();}
@@ -1253,18 +1261,18 @@ function topProg(){const o=ORDER.filter(inCat);$('#topprog').textContent=t('{0} 
 function renderHome(){
  const cat=CATS.find(c=>c.k===CUR),ord=ORDER.filter(inCat),av=avail.filter(inCat),done=av.filter(isDone).length,nid=av.find(id=>!isDone(id))||av[0],anyDone=done>0;
  const tabs=`<nav class="tabs" style="--tc:${cat.c}">${CATS.map(c=>{const n=avail.filter(id=>META[id].cat===c.k).length;return `<a class="${c.k===CUR?'on':''}" href="#/c/${c.k}">${t(c.n)}${n?'':`<small>${t('soon')}</small>`}</a>`;}).join('')}</nav>`;
- const hero=av.length?`<a class="btn primary" href="#/l/${nid}/0">${anyDone?t('Continue'):t('Start')}: ${META[nid].title} ▶</a>
+ const hero=av.length?`<a class="btn primary" href="#/l/${nid}/0">${anyDone?t('Continue'):t('Start')}: ${lt(nid)} ▶</a>
  <div class="bar"><i style="width:${done/ord.length*100}%"></i></div><div class="mute" style="font-size:14px">${t('{0} of {1} lessons complete',done,ord.length)}${av.length<ord.length?t(' · {0} lessons open now, more coming soon',av.length):''}</div>`
  :`<div class="mute" style="font-size:15px">${t('Course map is ready: {0} modules, {1} lessons. Interactive lessons coming soon.',COURSE.filter(c=>c.cat===CUR).reduce((a,c)=>a+c.modules.length,0),ord.length)}</div>`;
  app.innerHTML=`<div class="wrap">${tabs}<div class="card hero"><h1>${t('{0} Visual Lab',t(cat.n))}</h1><p style="margin:4px 0">${t('See the idea first. Then do it with your pencil.')}</p>
  <div class="flow">${STAGES.map((x,i)=>`<span>${x.i} ${i+1}. ${t(x.n)}</span>`).join('')}</div>${hero}${t('zhNote')?`<div class="mute" style="font-size:13px;margin-top:8px">${t('zhNote')}</div>`:''}</div>
- ${COURSE.filter(c=>c.cat===CUR).map(c=>`<h2>${c.label}</h2><div class="mods">${c.modules.map(m=>`<div class="mod" style="--mc:${m.color}"><span class="mn">${t((c.unit||'Module')+' {0}',m.n)}</span><b>${m.title}</b><ol>${m.lessons.map((t,i)=>{const id=`${c.id}-${m.n}-${i+1}`;return hasLesson(id)?`<li><a href="#/l/${id}/0"><span class="st ${isDone(id)?'d':''}">${isDone(id)?'✓':'○'}</span>${i+1}. ${t}</a></li>`:`<li class="soon"><span class="st">·</span>${i+1}. ${t}<small>${window.t('soon')}</small></li>`;}).join('')}</ol></div>`).join('')}</div>`).join('')}</div>`;
+ ${COURSE.filter(c=>c.cat===CUR).map(c=>`<h2>${t(c.label)}</h2><div class="mods">${c.modules.map(m=>`<div class="mod" style="--mc:${m.color}"><span class="mn">${t((c.unit||'Module')+' {0}',m.n)}</span><b>${mt(c.id+'-'+m.n,m.title)}</b><ol>${m.lessons.map((t,i)=>{const id=`${c.id}-${m.n}-${i+1}`;return hasLesson(id)?`<li><a href="#/l/${id}/0"><span class="st ${isDone(id)?'d':''}">${isDone(id)?'✓':'○'}</span>${i+1}. ${lt(id)}</a></li>`:`<li class="soon"><span class="st">·</span>${i+1}. ${lt(id)}<small>${window.t('soon')}</small></li>`;}).join('')}</ol></div>`).join('')}</div>`).join('')}</div>`;
 }
 
 function renderLesson(id,stage){
  const M=META[id],D=L[id],pr=prog(id);document.documentElement.style.setProperty('--acc',M.color);
  const nx=nextLesson(id);
- app.innerHTML=`<div class="wrap"><a href="#/c/${M.cat}">${t('← All {0} lessons',t(CATS.find(c=>c.k===M.cat).n))}</a><div class="crumb">${M.lab} · ${t(M.u+' {0}',M.m)}: ${M.mt} · ${t('Lesson {0}',M.n)}</div><h1>${M.title}</h1><div class="goal">🎯 ${D.goal}</div>
+ app.innerHTML=`<div class="wrap"><a href="#/c/${M.cat}">${t('← All {0} lessons',t(CATS.find(c=>c.k===M.cat).n))}</a><div class="crumb">${t(M.lab)} · ${t(M.u+' {0}',M.m)}: ${mt(M.c+'-'+M.m,M.mt)} · ${t('Lesson {0}',M.n)}</div><h1>${lt(id)}${ZHON()?`<span class="h1en">${M.title}</span>`:''}</h1><div class="goal">🎯 ${D.goal}</div>
  <nav class="stepper">${STAGES.map((s,i)=>`<a class="pill ${i===stage?'on':''} ${pr[s.k]?'done':''}" data-k="${s.k}" href="#/l/${id}/${i}"><span class="ic">${s.i} </span>${t(s.n)}</a>`).join('')}</nav>
  <section id="stage"></section>
  <div class="navrow">${stage>0?`<a class="btn" href="#/l/${id}/${stage-1}">◀ ${t(STAGES[stage-1].n)}</a>`:'<span></span>'}${stage<3?`<a class="btn primary" href="#/l/${id}/${stage+1}">${t('Next: {0} ▶',t(STAGES[stage+1].n))}</a>`:(nx?`<a class="btn" href="#/l/${nx}/0">${t('Next lesson ▶')}</a>`:`<a class="btn" href="#/c/${M.cat}">${t('All lessons')}</a>`)}</div></div>`;
@@ -1275,7 +1283,7 @@ function markStage(id,k){const pr=prog(id);if(!pr[k]){pr[k]=true;save();}const p
 function stPicture(el,id,D){
  el.innerHTML=`<div class="card life"><div class="tag">${t('Real life')}</div><h3>${D.life.title}</h3><div>${D.life.html}</div></div>
  ${D.see.map((s,i)=>`<div class="card"><div class="tag">${t('See it')}</div><h3>${s.title}</h3><p class="mute" style="margin-top:0">${s.hint}</p><div id="see${i}"></div></div>`).join('')}
- <div class="card"><div class="tag">${t('Key words')}</div><dl class="vocab">${D.vocab.map(v=>`<dt>${v[0]}</dt><dd>${v[1]}</dd>`).join('')}</dl></div>`;
+ <div class="card"><div class="tag">${t('Key words')}</div><dl class="vocab">${vocabHTML(id,D.vocab)}</dl></div>`;
  D.see.forEach((s,i)=>s.mount($('#see'+i)));markStage(id,'pic');
 }
 function lineHTML(l,raw,hide){return `<div class="ln-step ${hide?'hide':''}"><div class="m math">${raw||l[2]?l[0]:mx(l[0])}</div><div class="why">${l[1]}</div></div>`;}
@@ -1327,7 +1335,7 @@ function stCheck(el,id,D,pr){
    D.check.forEach((c,i)=>{const ok=sel[i]===c.a;if(ok)score++;$(`.qq[data-q="${i}"]`,el).classList.add('shown');$$(`.opt[data-q="${i}"]`,el).forEach(x=>{const j=+x.dataset.j;x.classList.remove('sel');if(j===c.a)x.classList.add('right');else if(j===sel[i])x.classList.add('wrong');x.disabled=true;});});
    b.disabled=true;
    if(score>=2){pr.check=score;pr.done=true;save();markStage(id,'check');topProg();const nx=nextLesson(id);
-    $('#res',el).innerHTML=`<div class="done-banner">🎉 ${t('{0}/3 — Lesson complete!',score)}${nx?` <a class="btn primary" href="#/l/${nx}/0" style="margin-left:8px">${t('Next lesson: {0} ▶',META[nx].title)}</a>`:''}</div>`;}
+    $('#res',el).innerHTML=`<div class="done-banner">🎉 ${t('{0}/3 — Lesson complete!',score)}${nx?` <a class="btn primary" href="#/l/${nx}/0" style="margin-left:8px">${t('Next lesson: {0} ▶',lt(nx))}</a>`:''}</div>`;}
    else $('#res',el).innerHTML=`<p class="bad">${t('{0}/3. Read the explanations, review the Steps, then try again.',score)}</p><div class="row"><a class="btn" href="#/l/${id}/1">${t('◀ Review Steps')}</a><button data-a="retry">${t('Try again')}</button></div>`;}
   if(b.dataset.a==='retry'){delete el.dataset.locked;sel.length=0;draw();}});
 }
