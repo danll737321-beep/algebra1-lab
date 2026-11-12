@@ -406,8 +406,9 @@ function setLang(l){LANG=l;try{localStorage.setItem('alg1lab-lang',l);}catch(e){
 const STORE='alg1lab-v1';
 let PR={};try{PR=JSON.parse(localStorage.getItem(STORE))||{};}catch(e){PR={};}
 function save(){try{localStorage.setItem(STORE,JSON.stringify(PR));}catch(e){}}
-function prog(id){return PR[id]||(PR[id]={});}
-function isDone(id){return !!(PR[id]&&PR[id].done);}
+function canonicalLessonId(id){return Object.keys(KA_ALIAS).find(k=>KA_ALIAS[k]===id)||id;}
+function prog(id){id=canonicalLessonId(id);return PR[id]||(PR[id]={});}
+function isDone(id){id=canonicalLessonId(id);return !!(PR[id]&&PR[id].done);}
 
 /* ============ course map ============ */
 const COURSE=[
@@ -1360,7 +1361,7 @@ const PREREQ={GEO:'js/geo-core.js',KA:'js/ka-core.js'};
 for(const u of [1,2,3,4,5,6,7,8,10,11,13,14,15])MODFILES['KA-'+u]=`js/ka-u${u}.js`;
 function ensureLesson(id){if(L[id])return Promise.resolve();const src=KA_ALIAS[id];if(src)return ensureLesson(src).then(()=>{if(L[src]&&!L[id])L[id]=Object.assign({},L[src]);});return loadMod(modKey(id));}
 const modKey=id=>id.split('-').slice(0,2).join('-');
-const hasLesson=id=>!!L[id]||!!MODFILES[modKey(id)]||!!KA_ALIAS[id];
+const hasLesson=id=>!!L[id]||!!MODFILES[modKey(id)]||!!KA_ALIAS[id]||Object.keys(KA_ALIAS).some(k=>KA_ALIAS[k]===id);
 const LOADED={};
 function loadJS(src){return LOADED[src]||(LOADED[src]=new Promise((res,rej)=>{const sc=document.createElement('script');sc.src=src;sc.onload=res;sc.onerror=()=>{delete LOADED[src];rej();};document.head.appendChild(sc);}));}
 function loadMod(k){if(!MODFILES[k])return Promise.resolve();const pre=PREREQ[k.split('-')[0]];return (pre?loadJS(pre):Promise.resolve()).then(()=>loadJS(MODFILES[k]));}
