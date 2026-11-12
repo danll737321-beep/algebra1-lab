@@ -1098,12 +1098,15 @@ L['1A-3-6']={
 const STAGES=[{k:'pic',n:'Picture',i:'🖼'},{k:'steps',n:'Steps',i:'🪜'},{k:'pencil',n:'Pencil',i:'✏️'},{k:'check',n:'Check',i:'✅'}];
 const app=$('#app');
 const MODFILES={'1A-4':'js/1a-m4.js','1A-5':'js/1a-m5.js','1B-1':'js/1b-m1.js','1B-2':'js/1b-m2.js','1B-3':'js/1b-m3.js','1B-4':'js/1b-m4.js','1B-5':'js/1b-m5.js'};
+for(let i=1;i<=9;i++)MODFILES['GEO-'+i]=`js/geo-m${i}.js`;
+const PREREQ={GEO:'js/geo-core.js'};
 const modKey=id=>id.split('-').slice(0,2).join('-');
 const hasLesson=id=>!!L[id]||!!MODFILES[modKey(id)];
 const LOADED={};
-function loadMod(k){if(!MODFILES[k])return Promise.resolve();return LOADED[k]||(LOADED[k]=new Promise((res,rej)=>{const sc=document.createElement('script');sc.src=MODFILES[k];sc.onload=res;sc.onerror=()=>{delete LOADED[k];rej();};document.head.appendChild(sc);}));}
+function loadJS(src){return LOADED[src]||(LOADED[src]=new Promise((res,rej)=>{const sc=document.createElement('script');sc.src=src;sc.onload=res;sc.onerror=()=>{delete LOADED[src];rej();};document.head.appendChild(sc);}));}
+function loadMod(k){if(!MODFILES[k])return Promise.resolve();const pre=PREREQ[k.split('-')[0]];return (pre?loadJS(pre):Promise.resolve()).then(()=>loadJS(MODFILES[k]));}
 const avail=ORDER.filter(hasLesson);
-function nextLesson(id){const i=avail.indexOf(id);return avail[i+1];}
+function nextLesson(id){const i=avail.indexOf(id),n=avail[i+1];return n&&META[n].cat===META[id].cat?n:undefined;}
 const inCat=id=>META[id].cat===CUR;
 function topProg(){const o=ORDER.filter(inCat);$('#topprog').textContent=`${o.filter(isDone).length} of ${o.length} lessons done`;}
 
