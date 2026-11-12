@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HS Math Visual Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 :root{--ink:#1f2937;--mute:#6b7280;--line:#e5e7eb;--bg:#f6f5f1;--x:#2563eb;--k:#ea580c;--ok:#15803d;--bad:#b91c1c;--rise:#7c3aed;--run:#059669;--acc:#2563eb}
 *{box-sizing:border-box}
@@ -427,6 +428,79 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,s
  .unit-select select{font:inherit;font-size:16px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--ink);padding:11px 12px;border:1px solid #cbd5e1;border-radius:12px;background:#fff;width:100%}
  .unit-panel{padding:16px}.cp-top .btn{width:100%;text-align:center}
 }
+/* ============ KHAN-STYLE MINIMAL THEME (final layer) ============ */
+:root{--kb:#1865f2;--kb-d:#1b50b3;--kb-soft:#e8f0fe;--k-ink:#21242c;--k-mute:#5f6368;--k-line:#d6d8da;--k-bg:#f7f8fa;--acc:#1865f2;--alg-blue:#1865f2}
+body{font-family:Lato,"Noto Sans TC",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#fff;color:var(--k-ink);letter-spacing:0}
+h1,h2,h3,.brand{font-family:Lato,"Noto Sans TC",ui-sans-serif,system-ui,sans-serif;letter-spacing:0}
+h1{font-weight:900}h2{font-weight:700}
+header.top{background:#fff;border-bottom:1px solid var(--k-line);box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;min-height:56px}
+.brand{color:var(--k-ink);font-weight:900}.brand span{color:var(--kb)}
+.langbtn{border-radius:4px}
+.card,.hero,.unit-panel,.course-sidebar,.visual-lab,.slope-lab,.unit-diagnostic,.unit-goal,.unit-callout,.unit-hero{box-shadow:none!important;background:#fff;border:1px solid var(--k-line);border-radius:8px;transition:none}
+.card:hover,.mod:hover{transform:none;box-shadow:none}
+/* buttons */
+button,.btn{border-radius:4px;border:1px solid var(--k-line);background:#fff;color:var(--k-ink);font-weight:700;box-shadow:none;transition:background .1s,border-color .1s}
+button:hover,.btn:hover{transform:none;box-shadow:none;border-color:var(--kb);color:var(--kb)}
+button.primary,.btn.primary{background:var(--kb);border-color:var(--kb);color:#fff;box-shadow:none}
+button.primary:hover,.btn.primary:hover{background:var(--kb-d);border-color:var(--kb-d);color:#fff;box-shadow:none}
+/* course tabs: underline style */
+.course-tabs{gap:0;border-bottom:1px solid var(--k-line);padding:0;margin:0 0 22px;overflow-x:auto}
+.course-tabs a,.course-tabs a.on{border:0;border-radius:0;background:none;color:var(--k-mute);padding:14px 16px 12px;font-weight:700;font-size:15px;border-bottom:4px solid transparent;margin-bottom:-1px}
+.course-tabs a:not(.on):hover{background:none;color:var(--kb)}
+.course-tabs a.on{color:var(--kb);border-bottom-color:var(--kb)}
+.course-tabs small{font-weight:400;color:#9aa0a6;margin-left:4px}
+/* course header */
+.course-progress{background:none;border:0;border-bottom:1px solid var(--k-line);border-radius:0;padding:4px 0 20px;margin:0 0 24px}
+.course-progress h1{font-size:clamp(26px,3.4vw,34px)}
+.course-progress .flow{gap:0;margin:12px 0 4px}
+.course-progress .flow span{background:none;border:0;border-radius:0;padding:0 12px 0 0;font-size:14px;font-weight:700;color:var(--k-mute)}
+.course-progress .flow span+span:before{content:"→";margin-right:12px;color:#bdc1c6}
+.bar,.unit-progress{height:8px;background:#e8eaed;border-radius:4px}
+.bar>i,.unit-progress>i,.unit-panel .unit-progress>i{background:var(--kb);border-radius:4px}
+/* sidebar */
+.course-sidebar{border:0;border-right:1px solid var(--k-line);border-radius:0;padding:0 14px 0 0;background:#fff;top:72px}
+.sidebar-heading{color:var(--k-mute);margin:0 8px 10px;letter-spacing:.06em}
+.sidebar-units{gap:0}
+.side-unit,.side-unit.open{background:none;box-shadow:none;border-radius:0}
+.sidebar-unit,.sidebar-unit.active{border:0;border-radius:4px;padding:10px 10px;margin:0}
+.sidebar-unit:hover{background:var(--k-bg);color:var(--k-ink)}
+.sidebar-unit.active{background:var(--kb-soft)}
+.sidebar-unit span{color:var(--k-ink);font-size:13px;font-weight:700}
+.sidebar-unit.active span{color:var(--kb)}
+.sidebar-unit small{color:var(--k-mute);font-size:13px}
+.sidebar-unit span em{color:var(--k-mute);font-weight:400}
+.su-bar{height:3px;background:#e8eaed}.su-bar b{background:var(--kb)}
+.side-lessons{padding:4px 0 8px 10px;margin:0}
+.side-lessons a,.side-lessons li.soon{border-radius:4px;padding:6px 8px}
+.side-lessons a:hover{background:var(--k-bg);color:var(--k-ink)}
+.side-lessons a.cur{color:var(--kb)}
+.side-lessons .st.d{color:var(--kb)}
+/* unit panel */
+.unit-panel{border:0;border-radius:0;padding:0}
+.unit-panel .unit-kicker{color:var(--k-mute);letter-spacing:.06em}
+.unit-panel h2{font-size:clamp(22px,3vw,28px);font-weight:900;margin:6px 0 10px}
+.unit-lesson-list{gap:0;border:1px solid var(--k-line);border-radius:8px;overflow:hidden}
+.unit-lesson-list li+li{border-top:1px solid var(--k-line)}
+.unit-lesson-list a,.unit-lesson-list li.soon{border:0;border-radius:0;padding:14px 16px}
+.unit-lesson-list a:hover{background:var(--k-bg);border:0}
+.unit-lesson-list b{font-weight:700}
+.unit-lesson-list li.soon{background:#fff;color:#9aa0a6}
+.unit-lesson-num,.unit-lesson-num.d{width:28px;height:28px;flex:0 0 28px;border-radius:50%;background:#fff;border:2px solid #bdc1c6;color:var(--k-mute);font-size:12px}
+.unit-lesson-num.d{background:var(--kb);border-color:var(--kb);color:#fff}
+.unit-lesson-list .tag{color:var(--kb);font-size:11px}
+.interactive-tools-heading{border-top:1px solid var(--k-line)}
+.lab-kicker,.tag,.unit-kicker,.unit-eyebrow{color:var(--k-mute)}
+.unit-callout{border-left:4px solid var(--kb);background:var(--k-bg)}
+.unit-diagnostic{background:#fff}
+.hero:before,.hero:after{display:none!important}
+.goal{background:var(--k-bg);border-left:4px solid var(--kb);border-radius:0 4px 4px 0}
+.wrap>a:first-child{text-decoration:none;font-weight:700;font-size:15px}.wrap>a:first-child:hover{text-decoration:underline}
+.stepper{background:#fff;backdrop-filter:none;-webkit-backdrop-filter:none;gap:0;padding:0;border-bottom:1px solid var(--k-line);top:56px}
+.stepper .pill,.stepper .pill.on{border:0;border-radius:0;background:none;box-shadow:none;color:var(--k-mute);font-weight:700;border-bottom:4px solid transparent;margin-bottom:-1px;padding:12px 6px 10px;text-align:center;justify-content:center}
+.stepper .pill.on{color:var(--kb);border-bottom-color:var(--kb)}
+.stepper .pill:hover{color:var(--kb);background:none}
+.stepper .pill.done:not(.on){color:var(--k-ink)}
+@media(max-width:680px){.course-tabs a{padding:12px 12px 10px;font-size:14px}.unit-select select{border-radius:4px;border-color:var(--k-line)}}
 </style>
 </head>
 <body>
@@ -1599,7 +1673,7 @@ function mountUnit4Diag(){
  $('#diag-next').addEventListener('click',()=>{if(!answered)return;if(qIndex<2){qIndex++;drawQ();}else{$('#unit-diagnostic').innerHTML=`<b>${t('Starting point:')} ${score}/3</b><p>${score===3?t('You are ready to begin Unit 4.'):t('Review the explanations above, then begin with Lesson 1. You can revisit this check anytime.')}</p><a class="btn primary" href="#/l/KA-4-1/0">${t('Start Lesson 1')} →</a>`;}});drawQ();
 }
 function renderLesson(id,stage){
- const M=META[id],D=L[id],pr=prog(id);document.documentElement.style.setProperty('--acc',M.color);
+ const M=META[id],D=L[id],pr=prog(id);document.documentElement.style.setProperty('--acc','#1865f2');
  const nx=nextLesson(id);
  app.innerHTML=`<div class="wrap"><a href="${unitHref(M.cat,unitIndexOf(id))}">← ${t(M.u+' {0}',M.m)}: ${mt(M.c+'-'+M.m,M.mt)}</a><div class="crumb">${t(M.lab)} · ${t(M.u+' {0}',M.m)}: ${mt(M.c+'-'+M.m,M.mt)} · ${t('Lesson {0}',M.n)}</div><h1>${lt(id)}${ZHON()?`<span class="h1en">${M.title}</span>`:''}</h1><div class="goal">🎯 ${D.goal}</div>
  <nav class="stepper">${STAGES.map((s,i)=>`<a class="pill ${i===stage?'on':''} ${pr[s.k]?'done':''}" data-k="${s.k}" href="#/l/${id}/${i}"><span class="ic">${s.i} </span>${t(s.n)}</a>`).join('')}</nav>
@@ -1675,7 +1749,7 @@ function route(){const h=location.hash.replace(/^#\/?/,'').split('/');
  if(h[0]==='l'&&META[h[1]]&&META[h[1]].cat==='alg1'){const k=Object.keys(KA_ALIAS).find(a=>KA_ALIAS[a]===h[1]);if(k){location.replace(`#/l/${k}/${h[2]||0}`);return;}}
  if(h[0]==='c'&&h[1]==='alg1'){location.replace('#/c/ka');return;}
  if(h[0]==='l'&&META[h[1]])CUR=META[h[1]].cat;else if(h[0]==='c'&&CATS.some(c=>c.k===h[1]))CUR=h[1];
- if(h[0]==='l'&&hasLesson(h[1])){const s=Math.max(0,Math.min(3,+h[2]||0));if(L[h[1]])renderLesson(h[1],s);else{app.innerHTML=`<div class="wrap"><p class="mute">${t('Loading lesson…')}</p></div>`;ensureLesson(h[1]).then(()=>{if(L[h[1]])renderLesson(h[1],s);else renderHome();topProg();}).catch(()=>{app.innerHTML=`<div class="wrap"><p class="bad">${t('Could not load this lesson. Check your internet connection and refresh.')}</p></div>`;});}}else{document.documentElement.style.setProperty('--acc',CATS.find(c=>c.k===CUR).c);renderHome(h[0]==='c'&&h[2]==='u'?(+h[3]||1)-1:undefined);}
+ if(h[0]==='l'&&hasLesson(h[1])){const s=Math.max(0,Math.min(3,+h[2]||0));if(L[h[1]])renderLesson(h[1],s);else{app.innerHTML=`<div class="wrap"><p class="mute">${t('Loading lesson…')}</p></div>`;ensureLesson(h[1]).then(()=>{if(L[h[1]])renderLesson(h[1],s);else renderHome();topProg();}).catch(()=>{app.innerHTML=`<div class="wrap"><p class="bad">${t('Could not load this lesson. Check your internet connection and refresh.')}</p></div>`;});}}else{document.documentElement.style.setProperty('--acc','#1865f2');renderHome(h[0]==='c'&&h[2]==='u'?(+h[3]||1)-1:undefined);}
  topProg();window.scrollTo(0,0);}
 window.addEventListener('hashchange',route);applyChrome();route();
 </script>
