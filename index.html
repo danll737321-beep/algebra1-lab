@@ -286,6 +286,27 @@ h1 .h1en{display:block;font-size:.5em;font-weight:500;opacity:.6;margin-top:4px}
 @media(max-width:760px){.visual-labs{grid-template-columns:1fr}}
 /* ============ END INTERACTIVE ALGEBRA TILES 2026 ============ */
 
+
+/* ============ COURSE MAP & PROGRESS UX ============ */
+.course-intro{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin:26px 0 12px}
+.course-intro h2{margin:0 0 3px}
+.course-intro p{margin:0;color:var(--mute);font-size:14px}
+.course-stats{display:flex;gap:8px;flex-wrap:wrap}
+.course-stat{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:7px 11px;font-size:13px;color:#475569}
+.course-stat b{color:#17243a;font-variant-numeric:tabular-nums}
+.mod{display:flex;flex-direction:column;min-width:0}
+.mod .module-lessons{flex:1}
+.module-progress{margin:12px 0 8px}
+.module-progress-top{display:flex;justify-content:space-between;gap:8px;color:#64748b;font-size:12px;margin-bottom:6px}
+.module-progress-track{height:6px;border-radius:99px;background:#e8eef5;overflow:hidden}
+.module-progress-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#2563eb,#0d9488)}
+.module-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;border-top:1px solid #edf2f7;margin-top:10px;padding-top:10px}
+.module-foot .btn{font-size:13px;min-height:36px;padding:6px 10px}
+.module-foot .module-status{font-size:12px;color:#64748b}
+.module-empty{font-size:13px;color:#94a3b8}
+@media(max-width:640px){.course-intro{margin-top:20px}.course-stats{width:100%}.course-stat{flex:1}.module-foot{align-items:flex-start;flex-direction:column}}
+/* ============ END COURSE MAP & PROGRESS UX ============ */
+
 </style>
 </head>
 <body>
@@ -1398,14 +1419,25 @@ function mountBalanceLab(){
 
 function renderHome(){
  const cat=CATS.find(c=>c.k===CUR),ord=ORDER.filter(inCat),av=avail.filter(inCat),done=av.filter(isDone).length,nid=av.find(id=>!isDone(id))||av[0],anyDone=done>0;
- const tabs=`<nav class="tabs" style="--tc:${cat.c}">${CATS.map(c=>{const n=avail.filter(id=>META[id].cat===c.k).length;return `<a class="${c.k===CUR?'on':''}" href="#/c/${c.k}">${t(c.n)}${n?'':`<small>${t('soon')}</small>`}</a>`;}).join('')}</nav>`;
+ const tabs=`<nav class="tabs" aria-label="Course selection" style="--tc:${cat.c}">${CATS.map(c=>{const n=avail.filter(id=>META[id].cat===c.k).length;return `<a class="${c.k===CUR?'on':''}" href="#/c/${c.k}" ${c.k===CUR?'aria-current="page"':''}>${t(c.n)}${n?'':`<small>${t('soon')}</small>`}</a>`;}).join('')}</nav>`;
  const hero=av.length?`<a class="btn primary" href="#/l/${nid}/0">${anyDone?t('Continue'):t('Start')}: ${lt(nid)} ▶</a>
- <div class="bar"><i style="width:${done/ord.length*100}%"></i></div><div class="mute" style="font-size:14px">${t('{0} of {1} lessons complete',done,ord.length)}${av.length<ord.length?t(' · {0} lessons open now, more coming soon',av.length):''}</div>`
+ <div class="bar" role="progressbar" aria-label="${t('Course progress')}" aria-valuemin="0" aria-valuemax="${av.length}" aria-valuenow="${done}"><i style="width:${av.length?done/av.length*100:0}%"></i></div><div class="mute" style="font-size:14px">${t('{0} of {1} lessons complete',done,av.length)}${av.length<ord.length?t(' · {0} lessons open now, more coming soon',av.length):''}</div>`
  :`<div class="mute" style="font-size:15px">${t('Course map is ready: {0} modules, {1} lessons. Interactive lessons coming soon.',COURSE.filter(c=>c.cat===CUR).reduce((a,c)=>a+c.modules.length,0),ord.length)}</div>`;
+ const courseUnits=COURSE.filter(c=>c.cat===CUR).reduce((sum,c)=>sum+c.modules.length,0);
+ const courseLessons=ord.length;
+ const courseIntro=`<div class="course-intro"><div><h2>${t('Your learning path')}</h2><p>${t('Work through each unit in order, or choose a lesson to review.')}</p></div><div class="course-stats"><span class="course-stat"><b>${courseUnits}</b> ${t('units')}</span><span class="course-stat"><b>${courseLessons}</b> ${t('lessons')}</span><span class="course-stat"><b>${av.length}</b> ${t('available')}</span></div></div>`;
+ const modules=COURSE.filter(c=>c.cat===CUR).map(c=>`<section class="course-section" aria-label="${t(c.label)}"><h2>${t(c.label)}</h2><div class="mods">${c.modules.map(m=>{
+  const ids=m.lessons.map((_,i)=>`${c.id}-${m.n}-${i+1}`);
+  const ready=ids.filter(id=>hasLesson(id)),finished=ready.filter(isDone).length;
+  const next=ready.find(id=>!isDone(id))||ready[0];
+  const pct=ready.length?Math.round(finished/ready.length*100):0;
+  const unitLabel=t((c.unit||'Module')+' {0}',m.n);
+  return `<article class="mod" style="--mc:${m.color}"><span class="mn">${unitLabel}</span><b>${mt(c.id+'-'+m.n,m.title)}</b><div class="module-progress"><div class="module-progress-top"><span>${t('{0} of {1} available lessons',finished,ready.length)}</span><span>${pct}%</span></div><div class="module-progress-track" role="progressbar" aria-label="${unitLabel} ${t('progress')}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><div class="module-progress-fill" style="width:${pct}%"></div></div></div><ol class="module-lessons">${m.lessons.map((title,i)=>{const id=ids[i];return hasLesson(id)?`<li><a href="#/l/${id}/0"><span class="st ${isDone(id)?'d':''}" aria-hidden="true">${isDone(id)?'✓':'○'}</span>${i+1}. ${lt(id)}</a></li>`:`<li class="soon"><span class="st" aria-hidden="true">·</span>${i+1}. ${lt(id)}<small>${window.t('soon')}</small></li>`;}).join('')}</ol><div class="module-foot">${next?`<span class="module-status">${finished===ready.length?t('Unit completed'):finished?t('In progress'):t('Not started')}</span><a class="btn ${finished===ready.length?'':'primary'}" href="#/l/${next}/0">${finished===ready.length?t('Review unit'):finished?t('Continue unit'):t('Start unit')} →</a>`:`<span class="module-empty">${t('Lessons coming soon')}</span>`}</div></article>`;
+ }).join('')}</div></section>`).join('');
  app.innerHTML=`<div class="wrap">${tabs}<div class="card hero"><h1>${t('{0} Visual Lab',t(cat.n))}</h1><p style="margin:4px 0">${t('See the idea first. Then do it with your pencil.')}</p>
  <div class="flow">${STAGES.map((x,i)=>`<span>${x.i} ${i+1}. ${t(x.n)}</span>`).join('')}</div>${hero}${t('zhNote')?`<div class="mute" style="font-size:13px;margin-top:8px">${t('zhNote')}</div>`:''}</div>
+ ${courseIntro}
  ${CUR==='ka'?`<section class="card slope-lab" id="slope-lab"><div class="slope-head"><div><h2>${t('Slope Explorer')}</h2><div class="mute" style="font-size:14px">${t('Change the slope and y-intercept. Watch the line move.')}</div></div><span class="tag">${t('INTERACTIVE')}</span></div><div class="slope-grid"><div><div class="slope-plot" id="slope-plot"></div><div class="slope-legend"><span><i class="slope-dot"></i> ${t('Y-intercept (b)')}</span><span>🟠 Rise / Run</span></div></div><div class="slope-controls"><div class="slope-control"><label for="slope-m">${t('Slope (m)')} <output id="slope-m-out">1</output></label><input id="slope-m" type="range" min="-3" max="3" step="0.5" value="1"></div><div class="slope-control"><label for="slope-b">${t('Y-intercept (b)')} <output id="slope-b-out">0</output></label><input id="slope-b" type="range" min="-4" max="4" step="1" value="0"></div><div class="slope-equation" id="slope-eq">y = x</div><div class="slope-insight" id="slope-insight" aria-live="polite"></div></div></div></section>`:''}
-
  ${CUR==='ka'?`<div class="visual-labs">
  <section class="visual-lab" id="tiles-lab"><div class="visual-lab-head"><div><div class="lab-kicker">${t('VISUAL MODEL 01')}</div><h2>${t('Algebra Tiles')}</h2><div class="mute" style="font-size:13px">${t('Build an expression with positive and negative tiles.')}</div></div><span class="tag">${t('INTERACTIVE')}</span></div>
  <div class="tile-stage"><div class="tile-group"><div class="tile-group-title">${t('Your tiles')}</div><div class="tile-row" id="tile-row" aria-live="polite"></div><div class="mute" id="tile-count" style="font-size:12px;margin-top:8px"></div></div></div>
@@ -1418,7 +1450,7 @@ function renderHome(){
  <div class="balance-explain" id="balance-explain" aria-live="polite"></div><div class="row" style="justify-content:space-between;align-items:center"><span class="mute" id="balance-step" style="font-size:12px"></span><span class="good" id="balance-proof" style="font-size:12px"></span></div>
  <div class="balance-controls"><button class="primary" id="balance-next">${t('Next step')} →</button></div></section>
  </div>`:''}
- ${COURSE.filter(c=>c.cat===CUR).map(c=>`<h2>${t(c.label)}</h2><div class="mods">${c.modules.map(m=>`<div class="mod" style="--mc:${m.color}"><span class="mn">${t((c.unit||'Module')+' {0}',m.n)}</span><b>${mt(c.id+'-'+m.n,m.title)}</b><ol>${m.lessons.map((t,i)=>{const id=`${c.id}-${m.n}-${i+1}`;return hasLesson(id)?`<li><a href="#/l/${id}/0"><span class="st ${isDone(id)?'d':''}">${isDone(id)?'✓':'○'}</span>${i+1}. ${lt(id)}</a></li>`:`<li class="soon"><span class="st">·</span>${i+1}. ${lt(id)}<small>${window.t('soon')}</small></li>`;}).join('')}</ol></div>`).join('')}</div>`).join('')}</div>`;
+ ${modules}</div>`;
 
  if(CUR==='ka'){mountSlopeExplorer();mountAlgebraTiles();mountBalanceLab();}
 }
@@ -1503,4 +1535,4 @@ function route(){const h=location.hash.replace(/^#\/?/,'').split('/');
 window.addEventListener('hashchange',route);applyChrome();route();
 </script>
 </body>
-</html>
+</html>,'Your learning path':'你的學習路徑','Work through each unit in order, or choose a lesson to review.':'依序完成各單元，也可以選擇課程複習。','units':'個單元','lessons':'堂課','available':'已開放','Course progress':'課程進度','{0} of {1} available lessons':'已開放課程完成 {0} / {1} 堂','progress':'進度','Unit completed':'單元已完成','In progress':'進行中','Not started':'尚未開始','Review unit':'複習單元','Continue unit':'繼續單元','Start unit':'開始單元','Lessons coming soon':'課程即將推出'
