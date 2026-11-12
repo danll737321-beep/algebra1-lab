@@ -255,6 +255,37 @@ h1 .h1en{display:block;font-size:.5em;font-weight:500;opacity:.6;margin-top:4px}
 @media(max-width:420px){.slope-controls{grid-template-columns:1fr}}
 /* ============ END INTERACTIVE SLOPE EXPLORER ============ */
 
+
+/* ============ INTERACTIVE ALGEBRA TILES 2026 ============ */
+.visual-labs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:16px 0 26px}
+.visual-lab{min-width:0;background:linear-gradient(145deg,#fff,#f8fbff);border:1px solid #dbe5f2;border-radius:18px;padding:clamp(16px,2vw,22px);box-shadow:var(--shadow)}
+.visual-lab-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
+.visual-lab-head h2{margin:0 0 4px}
+.lab-kicker{font-size:11px;font-weight:800;letter-spacing:.12em;color:#2563eb}
+.tile-stage{display:grid;grid-template-columns:1fr;gap:12px;margin:14px 0}
+.tile-group{background:#fff;border:1px solid #e2e8f0;border-radius:13px;padding:12px;min-height:106px}
+.tile-group-title{font-size:12px;font-weight:750;color:#64748b;margin-bottom:9px}
+.tile-row{display:flex;flex-wrap:wrap;gap:7px;align-items:flex-end;min-height:48px}
+.alg-tile{display:flex;align-items:center;justify-content:center;font-weight:800;border:1.5px solid;border-radius:5px;box-shadow:inset 0 -3px rgba(15,23,42,.07);transition:transform .18s ease}
+.alg-tile.xpos{width:88px;height:38px;background:#dbeafe;border-color:#60a5fa;color:#1d4ed8}
+.alg-tile.xneg{width:88px;height:38px;background:#fee2e2;border-color:#f87171;color:#b91c1c}
+.alg-tile.onepos{width:38px;height:38px;background:#d1fae5;border-color:#34d399;color:#047857}
+.alg-tile.oneneg{width:38px;height:38px;background:#ffe4e6;border-color:#fb7185;color:#be123c}
+.tile-controls{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.tile-controls button{font-size:13px;padding:8px 10px}
+.tile-expression{font:700 clamp(20px,2.5vw,27px)/1.3 "Cambria Math",Georgia,serif;text-align:center;color:#1e40af;background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:12px;margin-top:12px}
+.tile-feedback{font-size:13px;line-height:1.55;color:#475569;margin-top:8px;min-height:40px}
+.balance-visual{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:8px;margin:14px 0 10px}
+.balance-visual svg{width:100%;height:auto;display:block}
+.balance-eq{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin:12px 0}
+.balance-side{padding:11px 7px;border-radius:11px;text-align:center;background:#eff6ff;border:1px solid #bfdbfe;font:700 clamp(18px,2.3vw,24px)/1.3 "Cambria Math",Georgia,serif;color:#1d4ed8}
+.balance-side:last-child{background:#ecfdf5;border-color:#a7f3d0;color:#047857}
+.balance-eq .equals{font-weight:800;color:#64748b}
+.balance-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.balance-explain{background:#f8fafc;border-left:4px solid #0d9488;padding:11px 13px;border-radius:0 10px 10px 0;font-size:14px;line-height:1.55;min-height:66px}
+@media(max-width:760px){.visual-labs{grid-template-columns:1fr}}
+/* ============ END INTERACTIVE ALGEBRA TILES 2026 ============ */
+
 </style>
 </head>
 <body>
@@ -1312,6 +1343,60 @@ function mountSlopeExplorer(){
  mr.addEventListener('input',draw);br.addEventListener('input',draw);draw();
 }
 
+
+function mountAlgebraTiles(){
+ const root=$('#tiles-lab');if(!root)return;
+ let xp=2,xn=0,up=3,un=0;
+ const row=$('#tile-row',root),expr=$('#tile-expression',root),feedback=$('#tile-feedback',root);
+ const fmt=n=>n<0?'− '+Math.abs(n):String(n);
+ function draw(){
+  const tiles=[];
+  for(let i=0;i<Math.min(xp,8);i++)tiles.push('<span class="alg-tile xpos" aria-label="positive x tile">x</span>');
+  for(let i=0;i<Math.min(xn,8);i++)tiles.push('<span class="alg-tile xneg" aria-label="negative x tile">−x</span>');
+  for(let i=0;i<Math.min(up,12);i++)tiles.push('<span class="alg-tile onepos" aria-label="positive one tile">+1</span>');
+  for(let i=0;i<Math.min(un,12);i++)tiles.push('<span class="alg-tile oneneg" aria-label="negative one tile">−1</span>');
+  row.innerHTML=tiles.join('')||'<span class="mute">No tiles yet. Add a tile to begin.</span>';
+  const x=xp-xn,c=up-un;
+  const xPart=x===0?'':x===1?'x':x===-1?'−x':x<0?'− '+Math.abs(x)+'x':x+'x';
+  const cPart=c===0?'':c<0?'− '+Math.abs(c):'+ '+c;
+  expr.textContent=(xPart+(xPart&&cPart?' ':'')+cPart)||'0';
+  const pairs=Math.min(xp,xn)+Math.min(up,un);
+  feedback.textContent=pairs?t('You have {0} zero pair(s). A positive and a negative tile cancel to make 0.',pairs):t('Combine like tiles: x-tiles with x-tiles, and unit tiles with unit tiles.');
+  $('#tile-count',root).textContent=t('{0} x-tile(s) · {1} unit tile(s)',xp+xn,up+un);
+ }
+ root.addEventListener('click',e=>{
+  const b=e.target.closest('button[data-tile]');if(!b)return;
+  const a=b.dataset.tile;
+  if(a==='xp'&&xp<8)xp++;if(a==='xn'&&xn<8)xn++;if(a==='up'&&up<12)up++;if(a==='un'&&un<12)un++;
+  if(a==='cancel'){const k=Math.min(xp,xn);xp-=k;xn-=k;const q=Math.min(up,un);up-=q;un-=q;}
+  if(a==='reset'){xp=2;xn=0;up=3;un=0;}
+  draw();
+ });
+ draw();
+}
+function mountBalanceLab(){
+ const root=$('#balance-lab');if(!root)return;
+ let stage=0;
+ const left=$('#balance-left',root),right=$('#balance-right',root),ex=$('#balance-explain',root),beam=$('#balance-beam',root),next=$('#balance-next',root);
+ const states=[
+  {l:'2x + 3',r:'11',msg:'The equation is balanced. Our goal is to get x by itself. Undo the +3 first.'},
+  {l:'2x',r:'8',msg:'Subtract 3 from BOTH sides. The balance stays level: 2x + 3 − 3 = 11 − 3, so 2x = 8.'},
+  {l:'x',r:'4',msg:'Divide BOTH sides by 2. The balance stays level: 2x ÷ 2 = 8 ÷ 2, so x = 4.'}
+ ];
+ function draw(){
+  const q=states[stage];left.textContent=q.l;right.textContent=q.r;ex.textContent=q.msg;
+  beam.setAttribute('transform','rotate(0 180 58)');
+  next.textContent=stage===2?'↺ '+t('Try another time'):t('Next step')+' →';
+  $('#balance-step',root).textContent=t('Step {0} of 2',stage);
+  $('#balance-proof',root).textContent=stage===2?'✓ '+t('Solution: x = 4'):t('Keep both sides equal');
+ }
+ next.addEventListener('click',()=>{
+  if(stage===2)stage=0;else stage++;
+  draw();
+ });
+ draw();
+}
+
 function renderHome(){
  const cat=CATS.find(c=>c.k===CUR),ord=ORDER.filter(inCat),av=avail.filter(inCat),done=av.filter(isDone).length,nid=av.find(id=>!isDone(id))||av[0],anyDone=done>0;
  const tabs=`<nav class="tabs" style="--tc:${cat.c}">${CATS.map(c=>{const n=avail.filter(id=>META[id].cat===c.k).length;return `<a class="${c.k===CUR?'on':''}" href="#/c/${c.k}">${t(c.n)}${n?'':`<small>${t('soon')}</small>`}</a>`;}).join('')}</nav>`;
@@ -1321,9 +1406,22 @@ function renderHome(){
  app.innerHTML=`<div class="wrap">${tabs}<div class="card hero"><h1>${t('{0} Visual Lab',t(cat.n))}</h1><p style="margin:4px 0">${t('See the idea first. Then do it with your pencil.')}</p>
  <div class="flow">${STAGES.map((x,i)=>`<span>${x.i} ${i+1}. ${t(x.n)}</span>`).join('')}</div>${hero}${t('zhNote')?`<div class="mute" style="font-size:13px;margin-top:8px">${t('zhNote')}</div>`:''}</div>
  ${CUR==='ka'?`<section class="card slope-lab" id="slope-lab"><div class="slope-head"><div><h2>${t('Slope Explorer')}</h2><div class="mute" style="font-size:14px">${t('Change the slope and y-intercept. Watch the line move.')}</div></div><span class="tag">INTERACTIVE</span></div><div class="slope-grid"><div><div class="slope-plot" id="slope-plot"></div><div class="slope-legend"><span><i class="slope-dot"></i> ${t('Y-intercept (b)')}</span><span>🟠 Rise / Run</span></div></div><div class="slope-controls"><div class="slope-control"><label for="slope-m">${t('Slope (m)')} <output id="slope-m-out">1</output></label><input id="slope-m" type="range" min="-3" max="3" step="0.5" value="1"></div><div class="slope-control"><label for="slope-b">${t('Y-intercept (b)')} <output id="slope-b-out">0</output></label><input id="slope-b" type="range" min="-4" max="4" step="1" value="0"></div><div class="slope-equation" id="slope-eq">y = x</div><div class="slope-insight" id="slope-insight" aria-live="polite"></div></div></div></section>`:''}
+
+ ${CUR==='ka'?\`<div class="visual-labs">
+ <section class="visual-lab" id="tiles-lab"><div class="visual-lab-head"><div><div class="lab-kicker">VISUAL MODEL 01</div><h2>${t('Algebra Tiles')}</h2><div class="mute" style="font-size:13px">${t('Build an expression with positive and negative tiles.')}</div></div><span class="tag">INTERACTIVE</span></div>
+ <div class="tile-stage"><div class="tile-group"><div class="tile-group-title">${t('Your tiles')}</div><div class="tile-row" id="tile-row" aria-live="polite"></div><div class="mute" id="tile-count" style="font-size:12px;margin-top:8px"></div></div></div>
+ <div class="tile-expression" id="tile-expression" aria-live="polite">2x + 3</div>
+ <div class="tile-controls"><button data-tile="xp">＋ x</button><button data-tile="xn">− x</button><button data-tile="up">＋ 1</button><button data-tile="un">− 1</button><button data-tile="cancel">${t('Cancel zero pairs')}</button><button data-tile="reset">${t('Reset')}</button></div>
+ <div class="tile-feedback" id="tile-feedback" aria-live="polite"></div></section>
+ <section class="visual-lab" id="balance-lab"><div class="visual-lab-head"><div><div class="lab-kicker">VISUAL MODEL 02</div><h2>${t('Equation Balancer')}</h2><div class="mute" style="font-size:13px">${t('Solve an equation while keeping both sides equal.')}</div></div><span class="tag">INTERACTIVE</span></div>
+ <div class="balance-visual"><svg viewBox="0 0 360 160" role="img" aria-label="A balanced scale showing equal expressions on both sides"><path d="M180 26 L180 128 M148 128 H212 M164 140 H196" stroke="#64748b" stroke-width="5" stroke-linecap="round"/><path id="balance-beam" d="M48 58 H312" stroke="#2563eb" stroke-width="7" stroke-linecap="round"/><circle cx="180" cy="58" r="8" fill="#0f766e"/><path d="M70 58 L48 103 M70 58 L92 103 M268 58 L246 103 M268 58 L290 103" stroke="#94a3b8" stroke-width="2.5"/><path d="M35 103 Q70 122 105 103 M235 103 Q270 122 305 103" fill="#dbeafe" stroke="#60a5fa" stroke-width="2.5"/><rect x="49" y="84" width="42" height="16" rx="4" fill="#bfdbfe"/><rect x="252" y="84" width="36" height="16" rx="4" fill="#a7f3d0"/></svg></div>
+ <div class="balance-eq"><div class="balance-side" id="balance-left">2x + 3</div><div class="equals">=</div><div class="balance-side" id="balance-right">11</div></div>
+ <div class="balance-explain" id="balance-explain" aria-live="polite"></div><div class="row" style="justify-content:space-between;align-items:center"><span class="mute" id="balance-step" style="font-size:12px"></span><span class="good" id="balance-proof" style="font-size:12px"></span></div>
+ <div class="balance-controls"><button class="primary" id="balance-next">${t('Next step')} →</button></div></section>
+ </div>\`:''}
  ${COURSE.filter(c=>c.cat===CUR).map(c=>`<h2>${t(c.label)}</h2><div class="mods">${c.modules.map(m=>`<div class="mod" style="--mc:${m.color}"><span class="mn">${t((c.unit||'Module')+' {0}',m.n)}</span><b>${mt(c.id+'-'+m.n,m.title)}</b><ol>${m.lessons.map((t,i)=>{const id=`${c.id}-${m.n}-${i+1}`;return hasLesson(id)?`<li><a href="#/l/${id}/0"><span class="st ${isDone(id)?'d':''}">${isDone(id)?'✓':'○'}</span>${i+1}. ${lt(id)}</a></li>`:`<li class="soon"><span class="st">·</span>${i+1}. ${lt(id)}<small>${window.t('soon')}</small></li>`;}).join('')}</ol></div>`).join('')}</div>`).join('')}</div>`;
 
- if(CUR==='ka')mountSlopeExplorer();
+ if(CUR==='ka'){mountSlopeExplorer();mountAlgebraTiles();mountBalanceLab();}
 }
 function renderLesson(id,stage){
  const M=META[id],D=L[id],pr=prog(id);document.documentElement.style.setProperty('--acc',M.color);
