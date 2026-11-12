@@ -67,7 +67,7 @@ const CONS=[
   base:()=>fL([60,220],[360,220])+fL([60,220],[330,24])+fDot([60,220])+fT(50,240,'A')}];
 function mountCons(el){
  let c=0,st=0;
- el.innerHTML=btns(CONS.map(x=>x.n),'data-c')+`<div class="row"><button data-s="-1">◀ Back</button><button class="primary" data-s="1">Next step ▶</button></div><div id="og"></div><div class="readout" id="or"></div>`;
+ el.innerHTML=btns(CONS.map(x=>x.n),'data-c')+`<div class="row"><button data-s="-1">${t("◀ Back")}</button><button class="primary" data-s="1">${t("Next step ▶")}</button></div><div id="og"></div><div class="readout" id="or"></div>`;
  const draw=()=>{const C=CONS[c];$('#og',el).innerHTML=svgF(400,270,C.base()+C.st[st][1](),420);$('#or',el).innerHTML=`<b>Step ${st+1} of ${C.st.length}:</b> ${C.st[st][0]}`;$$('[data-c]',el).forEach(x=>x.classList.toggle('sel',+x.dataset.c===c));};
  el.addEventListener('click',e=>{const x=e.target.closest('[data-c],[data-s]');if(!x)return;if(x.dataset.c!==undefined){c=+x.dataset.c;st=0;}else st=Math.max(0,Math.min(CONS[c].st.length-1,st+ +x.dataset.s));draw();});draw();
 }

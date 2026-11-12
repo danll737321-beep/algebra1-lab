@@ -21,7 +21,7 @@ function mountSys(el){
 }
 function mountStepper(el,sets){
  let k=0,st=0;
- el.innerHTML=`<div class="row">${sets.map((p,i)=>`<button data-k="${i}">${p.t}</button>`).join('')}</div><div class="card" style="margin:10px 0;text-align:center" id="stc"></div><div class="note" id="stn"></div><div class="row"><button data-a="b">◀ Back</button><button class="primary" data-a="n">Next step ▶</button></div>`;
+ el.innerHTML=`<div class="row">${sets.map((p,i)=>`<button data-k="${i}">${p.t}</button>`).join('')}</div><div class="card" style="margin:10px 0;text-align:center" id="stc"></div><div class="note" id="stn"></div><div class="row"><button data-a="b">${t("◀ Back")}</button><button class="primary" data-a="n">${t("Next step ▶")}</button></div>`;
  const draw=()=>{const p=sets[k];$('#stc',el).innerHTML=p.steps[st].h;$('#stn',el).innerHTML=`<b>Step ${st}/${p.steps.length-1}:</b> `+p.steps[st].n;
   $('[data-a=b]',el).disabled=st===0;$('[data-a=n]',el).disabled=st===p.steps.length-1;$$('[data-k]',el).forEach(b=>b.classList.toggle('sel',+b.dataset.k===k));};
  el.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.k!==undefined){k=+b.dataset.k;st=0;}if(b.dataset.a==='n')st++;if(b.dataset.a==='b')st--;draw();});draw();

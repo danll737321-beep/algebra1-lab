@@ -16,7 +16,7 @@ function numberLine(o){const {lo=-10,hi=10,W=580,marks=[],rays=[],step=1,labStep
  marks.forEach(m=>{s+=`<circle cx="${X(m.v)}" cy="${Y}" r="8" fill="${m.open?'#fff':(m.col||'#2563eb')}" stroke="${m.col||'#2563eb'}" stroke-width="3"/>`;if(m.label)s+=`<text x="${X(m.v)}" y="${Y-16}" text-anchor="middle" font-size="13" font-weight="800" fill="${m.col||'#2563eb'}">${m.label}</text>`;});
  return `<svg viewBox="0 0 ${W} ${H}" class="fig" style="max-width:${W}px">${s}</svg>`;}
 function stepper(el,sets){let k=0,st=0;
- el.innerHTML=`${sets.length>1?`<div class="row">${sets.map((p,i)=>`<button data-k="${i}">${p.t}</button>`).join('')}</div>`:''}<div class="card" style="margin:10px 0;text-align:center" id="stc"></div><div class="note" id="stn"></div><div class="row"><button data-a="b">◀ Back</button><button class="primary" data-a="n">Next step ▶</button></div>`;
+ el.innerHTML=`${sets.length>1?`<div class="row">${sets.map((p,i)=>`<button data-k="${i}">${p.t}</button>`).join('')}</div>`:''}<div class="card" style="margin:10px 0;text-align:center" id="stc"></div><div class="note" id="stn"></div><div class="row"><button data-a="b">${t("◀ Back")}</button><button class="primary" data-a="n">${t("Next step ▶")}</button></div>`;
  const draw=()=>{const p=sets[k];$('#stc',el).innerHTML=p.steps[st].h;$('#stn',el).innerHTML=`<b>Step ${st}/${p.steps.length-1}:</b> `+p.steps[st].n;$('[data-a=b]',el).disabled=st===0;$('[data-a=n]',el).disabled=st===p.steps.length-1;$$('[data-k]',el).forEach(b=>b.classList.toggle('sel',+b.dataset.k===k));};
  el.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.k!==undefined){k=+b.dataset.k;st=0;}if(b.dataset.a==='n')st++;if(b.dataset.a==='b')st--;draw();});draw();}
 /* tiles: c = [x2, x, 1] */
