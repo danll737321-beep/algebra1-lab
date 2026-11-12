@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Algebra 1 Visual Lab</title>
+<title>HS Math Visual Lab</title>
 <style>
 :root{--ink:#1f2937;--mute:#6b7280;--line:#e5e7eb;--bg:#f6f5f1;--x:#2563eb;--k:#ea580c;--ok:#15803d;--bad:#b91c1c;--rise:#7c3aed;--run:#059669;--acc:#2563eb}
 *{box-sizing:border-box}
@@ -49,6 +49,7 @@ svg.fig{width:100%;height:auto;display:block;margin:6px auto}
 .mod li{padding:5px 0;border-top:1px solid #f3f4f6;font-size:15.5px}
 .mod li a{display:flex;gap:8px;text-decoration:none;color:var(--ink);font-weight:600}
 .mod li a:hover{color:var(--acc)}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 14px}.tabs a{padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;text-decoration:none;color:var(--ink);font-weight:700;font-size:15px}.tabs a.on{background:var(--tc);border-color:var(--tc);color:#fff}.tabs a small{font-weight:600;opacity:.75;margin-left:4px}
 .mod li.soon{color:#9ca3af;display:flex;gap:8px}
 .mod li small{margin-left:auto;font-size:12px}
 .st{width:20px;flex:none;text-align:center}
@@ -139,9 +140,9 @@ footer{text-align:center;font-size:13px;color:var(--mute);padding:20px}
 </style>
 </head>
 <body>
-<header class="top"><a class="brand" href="#/">Algebra 1 <span>Visual Lab</span></a><span class="topprog" id="topprog"></span></header>
+<header class="top"><a class="brand" href="#/">HS Math <span>Visual Lab</span></a><span class="topprog" id="topprog"></span></header>
 <main id="app"></main>
-<footer>Picture → Steps → Pencil → Check · Follows the Algebra 1A &amp; 1B module sequence</footer>
+<footer>Picture → Steps → Pencil → Check · Algebra 1 · Geometry · Algebra II · Pre-Calculus · Calculus</footer>
 <script>
 /* ============ helpers ============ */
 const $=(s,el=document)=>el.querySelector(s);
@@ -173,20 +174,68 @@ function isDone(id){return !!(PR[id]&&PR[id].done);}
 
 /* ============ course map ============ */
 const COURSE=[
-{id:'1A',modules:[
+{id:'1A',cat:'alg1',label:'Algebra 1A',modules:[
  {n:1,title:'Algebraic Modeling',color:'#2563eb',lessons:['Solving Equations','Reporting with Precision and Accuracy','Modeling with Expressions','Creating and Solving Equations','Solving for a Variable in a Formula']},
  {n:2,title:'Characteristics of Linear Relationships',color:'#0891b2',lessons:['Understanding Linear Equations','Using Intercepts','Interpreting Rate of Change and Slope','Slope-Intercept Form','Modeling Linear Relationships','Understanding Relations and Functions','Modeling with Functions']},
  {n:3,title:'Understanding Linear Functions',color:'#059669',lessons:['Graphing Functions','Using Functions to Solve One-Variable Equations','Linear Inequalities in Two Variables','Graphing Relationships','Identifying and Graphing Sequences','Constructing Arithmetic Sequences']},
  {n:4,title:'Linear Systems',color:'#d97706',lessons:['Solving Linear Systems by Graphing','Solving Linear Systems by Substitution','Solving Linear Systems by Adding or Subtracting','Solving Linear Systems by Multiplying','Creating Systems of Linear Equations','Graphing Systems of Linear Inequalities']},
  {n:5,title:'Linear and Statistical Models',color:'#0d9488',lessons:['Measures of Center and Spread','Dot Plots, Histograms, and Outliers','Normal Distributions & Probability','Scatter Plots and Trend Lines','Fitting a Linear Model to Data']}]},
-{id:'1B',modules:[
+{id:'1B',cat:'alg1',label:'Algebra 1B',modules:[
  {n:1,title:'Exponential Relationships',color:'#9333ea',lessons:['Constructing Exponential Functions','Graphing Exponential Functions','Modeling Exponential Growth and Decay','Understanding Geometric Sequences','Constructing Geometric Sequences']},
  {n:2,title:'Polynomial Operations',color:'#db2777',lessons:['Understanding Polynomial Expressions','Adding Polynomial Expressions','Subtracting Polynomial Expressions','Multiplying Polynomial Expressions by Monomials','Multiplying Polynomial Expressions']},
  {n:3,title:'Quadratic Equations and Modeling',color:'#e11d48',lessons:['Connecting Intercepts and Zeros','Solving Equations by Factoring x² + bx + c','Solving Equations by Factoring ax² + bx + c','Solving Equations by Taking Square Roots','Using the Quadratic Formula to Solve Equations','Solving Equations by Completing the Square']},
  {n:4,title:'Quadratic Functions',color:'#4f46e5',lessons:['Describing Effects on Quadratic Functions','Transforming Quadratic Functions','Interpreting Vertex and Standard Form','Interpreting Factored Form and Standard Form']},
  {n:5,title:'Linear, Exponential, and Quadratic Functions',color:'#475569',lessons:['Comparing Linear and Exponential Models','Modeling with Quadratic Functions','Comparing Properties of Linear, Exponential, and Quadratic Functions','Solving Nonlinear Systems']}]}];
+
+const L5=(t,c,ls)=>({title:t,color:c,lessons:ls});
+const NEWC=[
+{id:'GEO',cat:'geo',label:'Geometry',modules:[
+ L5('Tools of Geometry','#2563eb',['Points, Lines, and Planes','Segment Length and Midpoints','Angle Measures and Angle Bisectors','Inductive and Deductive Reasoning']),
+ L5('Transformations and Symmetry','#0891b2',['Translations','Reflections','Rotations','Compositions of Rigid Motions','Symmetry']),
+ L5('Lines, Angles, and Proof','#059669',['Parallel Lines and Transversals','Proving Lines Are Parallel','Perpendicular Lines','Slopes of Parallel and Perpendicular Lines','Writing Two-Column Proofs']),
+ L5('Triangle Congruence','#d97706',['Congruent Figures and Rigid Motions','SSS and SAS Congruence','ASA and AAS Congruence','HL Congruence','Using Congruent Triangles (CPCTC)']),
+ L5('Properties of Triangles','#0d9488',['Interior and Exterior Angles','Isosceles and Equilateral Triangles','Triangle Inequalities','Perpendicular and Angle Bisectors','Medians and Altitudes','Midsegments']),
+ L5('Quadrilaterals and Coordinate Proof','#9333ea',['Properties of Parallelograms','Conditions for Parallelograms','Rectangles, Rhombuses, and Squares','Trapezoids and Kites','Coordinate Proofs']),
+ L5('Similarity','#db2777',['Dilations','Similar Figures','AA Similarity','Triangle Proportionality Theorem','Similarity and the Pythagorean Theorem']),
+ L5('Right Triangles and Trigonometry','#e11d48',['Pythagorean Theorem and Its Converse','Special Right Triangles','The Tangent Ratio','Sine and Cosine Ratios','Solving Right Triangles','Law of Sines and Law of Cosines']),
+ L5('Circles','#4f46e5',['Central and Inscribed Angles','Tangents and Circumscribed Angles','Chords, Secants, and Tangents','Arc Length and Radian Measure','Sector Area','Equations of Circles']),
+ L5('Area, Surface Area, and Volume','#475569',['Area on the Coordinate Plane','Cross Sections and Solids of Rotation','Volume of Prisms and Cylinders','Volume of Pyramids and Cones','Volume of Spheres','Surface Area','Modeling with Density']),
+ L5('Probability','#ca8a04',['Sample Spaces and Basic Probability','Permutations and Combinations','Independent Events','Conditional Probability','Two-Way Tables'])]},
+{id:'A2',cat:'alg2',label:'Algebra II',modules:[
+ L5('Functions and Transformations','#2563eb',['Analyzing Functions','Parent Functions and Transformations','Piecewise and Absolute Value Functions','Inverse Functions']),
+ L5('Quadratics and Complex Numbers','#0891b2',['Quadratic Functions in Vertex Form','Solving Quadratic Equations','Complex Numbers','Quadratics with Complex Solutions','Linear–Quadratic Systems']),
+ L5('Polynomial Functions','#059669',['Graphing Polynomial Functions','Polynomial Operations','Dividing Polynomials','Factor and Remainder Theorems','Finding All Roots','Polynomial Identities']),
+ L5('Rational Functions','#d97706',['Graphing Simple Rational Functions','Asymptotes and Holes','Multiplying and Dividing Rational Expressions','Adding and Subtracting Rational Expressions','Solving Rational Equations']),
+ L5('Radical Functions and Rational Exponents','#0d9488',['nth Roots and Rational Exponents','Properties of Rational Exponents','Graphing Square Root and Cube Root Functions','Solving Radical Equations']),
+ L5('Exponential and Logarithmic Functions','#9333ea',['Exponential Growth and Decay','The Number e','Logarithms as Inverses','Properties of Logarithms','Solving Exponential and Logarithmic Equations','Exponential Models']),
+ L5('Sequences and Series','#db2777',['Arithmetic Sequences and Series','Geometric Sequences and Series','Infinite Geometric Series','Sigma Notation and Recursive Rules']),
+ L5('Trigonometric Functions','#e11d48',['Angles and Radian Measure','The Unit Circle','Graphing Sine and Cosine','Graphing Tangent','Transformations of Trig Graphs','Modeling Periodic Phenomena']),
+ L5('Statistics and Inference','#475569',['Sampling and Data Collection','Normal Distributions','Margin of Error','Experiments and Significance'])]},
+{id:'PC',cat:'pre',label:'Pre-Calculus',modules:[
+ L5('Functions and Their Graphs','#2563eb',['Analyzing Graphs of Functions','Transformations','Combining and Composing Functions','Inverse Functions','Piecewise Functions']),
+ L5('Polynomial and Rational Functions','#0891b2',['Polynomial Behavior and Zeros','Complex Zeros','Rational Functions and Asymptotes','Polynomial and Rational Inequalities']),
+ L5('Exponential and Logarithmic Functions','#059669',['Exponential Functions','Logarithmic Functions','Properties of Logarithms','Exponential and Logarithmic Equations','Growth, Decay, and Logistic Models']),
+ L5('Trigonometric Functions','#d97706',['Radian Measure','The Unit Circle','Graphs of Sine and Cosine','Graphs of Other Trig Functions','Inverse Trig Functions']),
+ L5('Trig Identities and Equations','#0d9488',['Fundamental Identities','Verifying Identities','Sum and Difference Formulas','Double- and Half-Angle Formulas','Solving Trig Equations']),
+ L5('Applications of Trigonometry','#9333ea',['Law of Sines','Law of Cosines','Vectors in the Plane','The Dot Product']),
+ L5('Polar and Parametric','#db2777',['Polar Coordinates','Graphs of Polar Equations','Complex Numbers in Polar Form','Parametric Equations']),
+ L5('Conic Sections','#e11d48',['Parabolas','Ellipses','Hyperbolas','Systems with Conics']),
+ L5('Matrices and Systems','#4f46e5',['Systems in Three Variables','Matrix Operations','Inverse Matrices and Determinants']),
+ L5('Sequences, Series, and Limits','#475569',['Sequences and Series','Mathematical Induction','The Binomial Theorem','Introduction to Limits'])]},
+{id:'CALC',cat:'calc',label:'Calculus',modules:[
+ L5('Limits and Continuity','#2563eb',['Limits from Graphs and Tables','Limit Laws and Algebra','Limits at Infinity','The Squeeze Theorem','Continuity and the IVT']),
+ L5('Derivatives','#0891b2',['Average vs. Instantaneous Rate of Change','The Definition of the Derivative','Power, Sum, and Constant Rules','Derivatives of sin, cos, eˣ, and ln x','Product and Quotient Rules','Differentiability']),
+ L5('Chain Rule, Implicit and Inverse','#059669',['The Chain Rule','Implicit Differentiation','Derivatives of Inverse Functions','Inverse Trig Derivatives','Higher-Order Derivatives']),
+ L5('Applications of Derivatives','#d97706',['Derivatives in Context','Position, Velocity, and Acceleration','Related Rates','Linear Approximation',"L'Hôpital's Rule"]),
+ L5('Analyzing Functions','#0d9488',['Mean Value Theorem','Extreme Values and Critical Points','First Derivative Test','Concavity and the Second Derivative Test','Curve Sketching','Optimization']),
+ L5('Integration','#9333ea',['Riemann Sums','The Definite Integral','Fundamental Theorem of Calculus','Antiderivatives','u-Substitution','Accumulation Functions']),
+ L5('Differential Equations','#db2777',['Modeling with Differential Equations','Slope Fields','Separation of Variables','Exponential Growth and Decay Models']),
+ L5('Applications of Integration','#e11d48',['Average Value of a Function','Motion with Integrals','Area Between Curves','Volume: Disks and Washers','Volume: Cross Sections'])]}];
+NEWC.forEach(c=>c.modules.forEach((m,i)=>m.n=i+1));COURSE.push(...NEWC);
+const CATS=[{k:'alg1',n:'Algebra 1',c:'#2563eb'},{k:'geo',n:'Geometry',c:'#059669'},{k:'alg2',n:'Algebra II',c:'#9333ea'},{k:'pre',n:'Pre-Calculus',c:'#d97706'},{k:'calc',n:'Calculus',c:'#e11d48'}];
+let CUR='alg1';
 const ORDER=[];const META={};
-COURSE.forEach(c=>c.modules.forEach(m=>m.lessons.forEach((t,i)=>{const id=`${c.id}-${m.n}-${i+1}`;ORDER.push(id);META[id]={c:c.id,m:m.n,mt:m.title,n:i+1,title:t,color:m.color};})));
+COURSE.forEach(c=>c.modules.forEach(m=>m.lessons.forEach((t,i)=>{const id=`${c.id}-${m.n}-${i+1}`;ORDER.push(id);META[id]={c:c.id,cat:c.cat,lab:c.label,m:m.n,mt:m.title,n:i+1,title:t,color:m.color};})));
 
 /* ============ graph grid ============ */
 let GID=0;
@@ -1055,24 +1104,27 @@ const LOADED={};
 function loadMod(k){if(!MODFILES[k])return Promise.resolve();return LOADED[k]||(LOADED[k]=new Promise((res,rej)=>{const sc=document.createElement('script');sc.src=MODFILES[k];sc.onload=res;sc.onerror=()=>{delete LOADED[k];rej();};document.head.appendChild(sc);}));}
 const avail=ORDER.filter(hasLesson);
 function nextLesson(id){const i=avail.indexOf(id);return avail[i+1];}
-function topProg(){$('#topprog').textContent=`${avail.filter(isDone).length} of ${ORDER.length} lessons done`;}
+const inCat=id=>META[id].cat===CUR;
+function topProg(){const o=ORDER.filter(inCat);$('#topprog').textContent=`${o.filter(isDone).length} of ${o.length} lessons done`;}
 
 function renderHome(){
- const nid=avail.find(id=>!isDone(id))||avail[0],anyDone=avail.some(isDone),done=avail.filter(isDone).length;
- app.innerHTML=`<div class="wrap"><div class="card hero"><h1>Algebra 1 Visual Lab</h1><p style="margin:4px 0">See the idea first. Then do it with your pencil.</p>
- <div class="flow"><span>🖼 1. Picture</span><span>🪜 2. Steps</span><span>✏️ 3. Pencil</span><span>✅ 4. Check</span></div>
- <a class="btn primary" href="#/l/${nid}/0">${anyDone?'Continue':'Start'}: ${META[nid].title} ▶</a>
- <div class="bar"><i style="width:${done/ORDER.length*100}%"></i></div><div class="mute" style="font-size:14px">${done} of ${ORDER.length} lessons complete${avail.length<ORDER.length?` · ${avail.length} lessons open now, more coming soon`:' · Algebra 1A and 1B, all 10 modules'}</div></div>
- ${COURSE.map(c=>`<h2>Algebra ${c.id}</h2><div class="mods">${c.modules.map(m=>`<div class="mod" style="--mc:${m.color}"><span class="mn">Module ${m.n}</span><b>${m.title}</b><ol>${m.lessons.map((t,i)=>{const id=`${c.id}-${m.n}-${i+1}`;return hasLesson(id)?`<li><a href="#/l/${id}/0"><span class="st ${isDone(id)?'d':''}">${isDone(id)?'✓':'○'}</span>${i+1}. ${t}</a></li>`:`<li class="soon"><span class="st">·</span>${i+1}. ${t}<small>soon</small></li>`;}).join('')}</ol></div>`).join('')}</div>`).join('')}</div>`;
+ const cat=CATS.find(c=>c.k===CUR),ord=ORDER.filter(inCat),av=avail.filter(inCat),done=av.filter(isDone).length,nid=av.find(id=>!isDone(id))||av[0],anyDone=done>0;
+ const tabs=`<nav class="tabs" style="--tc:${cat.c}">${CATS.map(c=>{const n=avail.filter(id=>META[id].cat===c.k).length;return `<a class="${c.k===CUR?'on':''}" href="#/c/${c.k}">${c.n}${n?'':'<small>soon</small>'}</a>`;}).join('')}</nav>`;
+ const hero=av.length?`<a class="btn primary" href="#/l/${nid}/0">${anyDone?'Continue':'Start'}: ${META[nid].title} ▶</a>
+ <div class="bar"><i style="width:${done/ord.length*100}%"></i></div><div class="mute" style="font-size:14px">${done} of ${ord.length} lessons complete${av.length<ord.length?` · ${av.length} lessons open now, more coming soon`:''}</div>`
+ :`<div class="mute" style="font-size:15px">Course map is ready: ${COURSE.filter(c=>c.cat===CUR).reduce((a,c)=>a+c.modules.length,0)} modules, ${ord.length} lessons. Interactive lessons coming soon.</div>`;
+ app.innerHTML=`<div class="wrap">${tabs}<div class="card hero"><h1>${cat.n} Visual Lab</h1><p style="margin:4px 0">See the idea first. Then do it with your pencil.</p>
+ <div class="flow"><span>🖼 1. Picture</span><span>🪜 2. Steps</span><span>✏️ 3. Pencil</span><span>✅ 4. Check</span></div>${hero}</div>
+ ${COURSE.filter(c=>c.cat===CUR).map(c=>`<h2>${c.label}</h2><div class="mods">${c.modules.map(m=>`<div class="mod" style="--mc:${m.color}"><span class="mn">Module ${m.n}</span><b>${m.title}</b><ol>${m.lessons.map((t,i)=>{const id=`${c.id}-${m.n}-${i+1}`;return hasLesson(id)?`<li><a href="#/l/${id}/0"><span class="st ${isDone(id)?'d':''}">${isDone(id)?'✓':'○'}</span>${i+1}. ${t}</a></li>`:`<li class="soon"><span class="st">·</span>${i+1}. ${t}<small>soon</small></li>`;}).join('')}</ol></div>`).join('')}</div>`).join('')}</div>`;
 }
 
 function renderLesson(id,stage){
  const M=META[id],D=L[id],pr=prog(id);document.documentElement.style.setProperty('--acc',M.color);
  const nx=nextLesson(id);
- app.innerHTML=`<div class="wrap"><a href="#/">← All lessons</a><div class="crumb">Algebra ${M.c} · Module ${M.m}: ${M.mt} · Lesson ${M.n}</div><h1>${M.title}</h1><div class="goal">🎯 ${D.goal}</div>
+ app.innerHTML=`<div class="wrap"><a href="#/c/${M.cat}">← All ${CATS.find(c=>c.k===M.cat).n} lessons</a><div class="crumb">${M.lab} · Module ${M.m}: ${M.mt} · Lesson ${M.n}</div><h1>${M.title}</h1><div class="goal">🎯 ${D.goal}</div>
  <nav class="stepper">${STAGES.map((s,i)=>`<a class="pill ${i===stage?'on':''} ${pr[s.k]?'done':''}" data-k="${s.k}" href="#/l/${id}/${i}"><span class="ic">${s.i} </span>${s.n}</a>`).join('')}</nav>
  <section id="stage"></section>
- <div class="navrow">${stage>0?`<a class="btn" href="#/l/${id}/${stage-1}">◀ ${STAGES[stage-1].n}</a>`:'<span></span>'}${stage<3?`<a class="btn primary" href="#/l/${id}/${stage+1}">Next: ${STAGES[stage+1].n} ▶</a>`:(nx?`<a class="btn" href="#/l/${nx}/0">Next lesson ▶</a>`:'<a class="btn" href="#/">All lessons</a>')}</div></div>`;
+ <div class="navrow">${stage>0?`<a class="btn" href="#/l/${id}/${stage-1}">◀ ${STAGES[stage-1].n}</a>`:'<span></span>'}${stage<3?`<a class="btn primary" href="#/l/${id}/${stage+1}">Next: ${STAGES[stage+1].n} ▶</a>`:(nx?`<a class="btn" href="#/l/${nx}/0">Next lesson ▶</a>`:`<a class="btn" href="#/c/${M.cat}">All lessons</a>`)}</div></div>`;
  const el=$('#stage');[stPicture,stSteps,stPencil,stCheck][stage](el,id,D,pr);
 }
 function markStage(id,k){const pr=prog(id);if(!pr[k]){pr[k]=true;save();}const p=$(`.pill[data-k="${k}"]`);if(p)p.classList.add('done');}
@@ -1138,7 +1190,8 @@ function stCheck(el,id,D,pr){
 }
 
 function route(){const h=location.hash.replace(/^#\/?/,'').split('/');
- if(h[0]==='l'&&hasLesson(h[1])){const s=Math.max(0,Math.min(3,+h[2]||0));if(L[h[1]])renderLesson(h[1],s);else{app.innerHTML='<div class="wrap"><p class="mute">Loading lesson…</p></div>';loadMod(modKey(h[1])).then(()=>{if(L[h[1]])renderLesson(h[1],s);else renderHome();topProg();}).catch(()=>{app.innerHTML='<div class="wrap"><p class="bad">Could not load this lesson. Check your internet connection and refresh.</p></div>';});}}else{document.documentElement.style.setProperty('--acc','#2563eb');renderHome();}
+ if(h[0]==='l'&&META[h[1]])CUR=META[h[1]].cat;else if(h[0]==='c'&&CATS.some(c=>c.k===h[1]))CUR=h[1];
+ if(h[0]==='l'&&hasLesson(h[1])){const s=Math.max(0,Math.min(3,+h[2]||0));if(L[h[1]])renderLesson(h[1],s);else{app.innerHTML='<div class="wrap"><p class="mute">Loading lesson…</p></div>';loadMod(modKey(h[1])).then(()=>{if(L[h[1]])renderLesson(h[1],s);else renderHome();topProg();}).catch(()=>{app.innerHTML='<div class="wrap"><p class="bad">Could not load this lesson. Check your internet connection and refresh.</p></div>';});}}else{document.documentElement.style.setProperty('--acc',CATS.find(c=>c.k===CUR).c);renderHome();}
  topProg();window.scrollTo(0,0);}
 window.addEventListener('hashchange',route);route();
 </script>
