@@ -383,6 +383,50 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,s
 @media(max-width:900px){.home-layout{grid-template-columns:210px minmax(0,1fr);gap:16px}.course-sidebar{padding:12px}}
 @media(max-width:680px){.home-layout{display:block}.course-sidebar{position:static;max-height:none;margin-bottom:14px;padding:12px}.sidebar-courses{display:flex;overflow-x:auto;padding-bottom:4px}.sidebar-course{white-space:nowrap;flex:none}.sidebar-units{display:flex;overflow-x:auto;padding-bottom:4px}.sidebar-unit{min-width:155px;margin-left:0}.sidebar-units-heading{margin-top:14px}.home-main>.hero{margin-top:0}}
 /* ============ END LEFT COURSE NAVIGATION ============ */
+/* ============ COURSE PAGE v2: tabs → progress → unit sidebar + panel ============ */
+.course-page{max-width:1320px}
+.course-tabs{margin:0 0 14px}
+.course-progress{margin:0 0 18px}
+.cp-top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.cp-top h1{margin:0}
+.course-progress .flow{margin:12px 0 10px}
+.unit-select{display:none}
+.side-unit{border-radius:12px}
+.side-unit.open{background:#f8fafc;box-shadow:inset 0 0 0 1px #e2e8f0}
+.sidebar-unit{border-left:3px solid #e2e8f0;margin-left:0}
+.sidebar-unit.active{border-left-color:var(--mc);background:#eef4ff}
+.sidebar-unit span{display:flex;justify-content:space-between;align-items:center;color:var(--mc)}
+.sidebar-unit span em{font-style:normal;font-size:11px;font-weight:700;color:#64748b}
+.su-bar{display:block;height:3px;background:#e2e8f0;border-radius:9px;margin-top:6px;overflow:hidden}
+.su-bar b{display:block;height:100%;background:var(--mc)}
+.side-lessons{list-style:none;margin:2px 0 8px;padding:0 4px 0 12px}
+.side-lessons li{font-size:13px;line-height:1.35}
+.side-lessons a,.side-lessons li.soon{display:flex;gap:7px;padding:6px 6px;border-radius:8px;text-decoration:none;color:#334155}
+.side-lessons a:hover{background:#eff6ff;color:#1d4ed8}
+.side-lessons a.cur{font-weight:700;color:#1d4ed8}
+.side-lessons a.d{color:#64748b}
+.side-lessons .st{flex:0 0 14px;color:#94a3b8}.side-lessons .st.d{color:#0f766e}
+.side-lessons li.soon{color:#94a3b8}.side-lessons li.soon small{margin-left:auto;font-size:11px}
+.unit-panel{background:#fff;border:1px solid #e2e8f0;border-top:5px solid var(--mc);border-radius:16px;padding:20px 22px;box-shadow:0 4px 16px rgba(15,23,42,.045)}
+.unit-panel h2{margin:4px 0 8px;font-size:clamp(20px,3vw,26px)}
+.unit-panel .unit-kicker{color:var(--mc);text-transform:uppercase}
+.unit-panel .unit-progress>i{background:var(--mc)}
+.unit-panel-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:4px 0 14px;font-size:14px}
+.unit-lesson-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.unit-lesson-list a,.unit-lesson-list li.soon{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:var(--ink)}
+.unit-lesson-list a:hover{border-color:#bfdbfe;background:#f8fbff}
+.unit-lesson-list b{font-size:15px;font-weight:650}
+.unit-lesson-list small{margin-left:auto}
+.unit-lesson-list li.soon{color:#94a3b8;background:#fafafa}
+.unit-lesson-num.d{background:#ccfbf1;color:#0f766e}
+.visual-labs.one{grid-template-columns:1fr}
+.home-main .unit-goals{margin-top:22px}
+@media(max-width:680px){
+ .home-layout{display:block}.course-sidebar{display:none}
+ .unit-select{display:flex;flex-direction:column;gap:4px;margin:0 0 14px;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#64748b}
+ .unit-select select{font:inherit;font-size:16px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--ink);padding:11px 12px;border:1px solid #cbd5e1;border-radius:12px;background:#fff;width:100%}
+ .unit-panel{padding:16px}.cp-top .btn{width:100%;text-align:center}
+}
 </style>
 </head>
 <body>
@@ -432,6 +476,7 @@ zh:{btnCheck:'檢查答案',brand:'高中數學<span>視覺實驗室</span>',zhN
 '{0}/3 — Lesson complete!':'{0}/3 — 本課完成！','Next lesson: {0} ▶':'下一課：{0} ▶','{0}/3. Read the explanations, review the Steps, then try again.':'{0}/3。先看解析、複習步驟，再試一次。','◀ Review Steps':'◀ 複習步驟','Try again':'再試一次',
 'Loading lesson…':'載入課程中…','Could not load this lesson. Check your internet connection and refresh.':'無法載入這一課。請檢查網路後重新整理。',
 'Picture → Steps → Pencil → Check':'看圖 → 步驟 → 動筆 → 檢測','◀ Back':'◀ 上一步','Next step ▶':'下一步 ▶','Next move ▶':'下一步 ▶','Your learning path':'你的學習路徑','Work through each unit in order, or choose a lesson to review.':'依序完成各單元，也可以選擇課程複習。','units':'個單元','lessons':'堂課','available':'已開放','Course progress':'課程進度','{0} of {1} available lessons':'已開放課程完成 {0} / {1} 堂','progress':'進度','Unit completed':'單元已完成','In progress':'進行中','Not started':'尚未開始','Review unit':'複習單元','Continue unit':'繼續單元','Start unit':'開始單元','Lessons coming soon':'課程即將推出','PILOT UNIT':'試行單元','ALGEBRA 1A':'代數一 A','Unit 4: Linear Systems':'第 4 單元：聯立方程式','Learn how two linear equations work together, compare solution methods, and interpret intersections.':'學習兩個線性方程式如何共同描述情境，比較不同解法，並解讀交點。','completed':'已完成','Visual models + practice + checks':'視覺模型＋練習＋檢測','Explore unit':'進入單元','Back to Algebra 1':'返回代數一','UNIT 4':'第 4 單元','Linear Systems':'聯立方程式','A linear relationship can be represented by an equation, a table, a graph, or a real-world situation. In this unit, connect these representations and explain what slope and intercepts tell you.':'聯立方程式由描述同一情境的多個方程式組成。學習找出、說明並解讀能同時滿足所有方程式的數值。','Unit progress':'單元進度','lessons completed':'堂課已完成','complete':'完成','Find the solution':'找出解','Identify the ordered pair that makes both equations true.':'找出能同時讓兩個方程式成立的有序數對。','Choose a method':'選擇方法','Use graphing, substitution, or elimination strategically.':'有策略地使用圖形法、代入法或消去法。','Model a situation':'建立情境模型','Write systems from context and explain what the answer means.':'根據情境建立聯立方程式，並解釋答案的意義。','Learning sequence':'學習順序','Solving Linear Systems by Graphing':'利用圖形法解聯立方程式','Find the point where two lines intersect and interpret what it means.':'找出兩條直線的交點，並解讀交點的意義。','Solving Linear Systems by Substitution':'利用代入法解聯立方程式','Replace one variable with an equivalent expression, then solve.':'用等值代數式取代其中一個變數，再求解。','Solving Linear Systems by Adding or Subtracting':'利用加減法解聯立方程式','Eliminate a variable by combining equations.':'透過方程式相加或相減消去一個變數。','Solving Linear Systems by Multiplying':'利用乘法消去法解聯立方程式','Scale an equation first when coefficients do not yet eliminate.':'當係數無法直接消去時，先將方程式乘以適當數值。','Creating Systems of Linear Equations':'建立聯立線性方程式','Translate a situation into two equations and interpret the solution.':'將情境轉換成兩個方程式，並解讀解答。','Graphing Systems of Linear Inequalities':'繪製線性不等式組的圖形','Graph overlapping solution regions and interpret feasible choices.':'繪製解集區域的重疊部分，並解讀可行選擇。','Check your starting point':'檢查先備知識','Try these three quick questions before beginning. Use the feedback to decide what to review.':'開始前先回答三題，根據回饋判斷需要複習的概念。','What does a solution to a system of two equations represent?':'兩個方程式組成的聯立方程式，其解代表什麼？','A point that makes at least one equation true':'至少讓其中一個方程式成立的點','An ordered pair that makes BOTH equations true':'能讓兩個方程式都成立的有序數對','The y-intercept of either line':'其中一條直線的 y 截距','Both equations must be true at the same time. The solution is their shared ordered pair.':'兩個方程式必須同時成立。解是它們共同的有序數對。','Two lines intersect at exactly one point. How many solutions does the system have?':'兩條直線恰好交於一點，這個聯立方程式有幾個解？','No solutions':'無解','Exactly one solution':'唯一解','Infinitely many solutions':'無限多解','The intersection point lies on both lines, so it is the one shared solution.':'交點同時位於兩條直線上，因此就是共同的唯一解。','Two different parallel lines never intersect. How many solutions?':'兩條不同的平行線永不相交，有幾個解？','There is no point shared by both lines, so no ordered pair satisfies both equations.':'兩條直線沒有共同點，因此不存在能同時滿足兩個方程式的有序數對。','Question {0} of 3 · Score {1}':'第 {0} 題，共 3 題 · 得分 {1}','Correct!':'答對了！','Not quite.':'還不完全正確。','Next question':'下一題','See results':'查看結果','Starting point:':'先備知識檢查：','You are ready to begin Unit 4.':'你已準備好開始第 4 單元。','Review the explanations above, then begin with Lesson 1. You can revisit this check anytime.':'先複習上方解析，再從第 1 課開始。你隨時可以重新進行檢查。','Start Unit 4':'開始第 4 單元','Start Lesson 1':'開始第 1 課','Remember:':'請記住：','A solution to a system must satisfy BOTH equations. A point that works in only one equation is not a solution to the system.':'聯立方程式的解必須同時滿足所有方程式。只符合其中一個方程式的點，並不是這組聯立方程式的解。','Course overview':'課程總覽','ALGEBRA 1':'代數一','Unit 4: Linear Equations & Graphs':'第 4 單元：線性方程式與圖形','Linear Equations & Graphs':'線性方程式與圖形','Connect equations, slope, and graphs. Learn how a linear relationship appears in different forms.':'連結方程式、斜率與圖形，理解線性關係的不同表示方式。','Read a graph':'讀懂圖形','Identify solutions, intercepts, and key points on a line.':'辨識解、截距，以及直線上的關鍵點。','Interpret slope':'解讀斜率','Explain rise over run and connect slope to a rate of change.':'說明升高量與水平移動量的比值，並連結到變化率。','Connect representations':'連結不同表示法','Move between equations, ordered pairs, graphs, and contexts.':'在方程式、有序數對、圖形與生活情境之間轉換。','Two-Variable Linear Equations Intro':'二元線性方程式導論','Understand ordered-pair solutions and see why they form a line.':'理解有序數對解，並觀察它們如何形成一條直線。','Slope':'斜率','Measure steepness as rise over run and interpret its meaning.':'以升高量除以水平移動量衡量陡峭程度，並解讀其意義。','Horizontal and Vertical Lines':'水平線與垂直線','Compare slope 0 with undefined slope.':'比較斜率為 0 與斜率不存在的情況。','x- and y-Intercepts':'x 截距與 y 截距','Find where a line crosses each axis and use those points to graph.':'找出直線與兩軸的交點，並利用這些點繪圖。','Applying Intercepts and Slope':'應用截距與斜率','Use slope and intercepts to model and interpret a real situation.':'運用斜率與截距建立模型，並解讀實際情境。','What does the point (3, 7) mean on a graph?':'圖形上的點 (3, 7) 代表什麼？','x = 7 and y = 3':'x = 7 且 y = 3','x = 3 and y = 7':'x = 3 且 y = 7','The slope is 7':'斜率是 7','Ordered pairs are written (x, y): move 3 units across, then 7 units up.':'有序數對寫作 (x, y)：先向右移動 3，再向上移動 7。','A line rises 6 units when it runs 3 units to the right. What is its slope?':'一條直線向右移動 3 單位時上升 6 單位，斜率是多少？','Which statement about a horizontal line is true?':'關於水平線，哪個敘述正確？','Its slope is undefined':'斜率不存在','Its slope is 0':'斜率為 0','It has no y-intercept':'沒有 y 截距','Slope = rise ÷ run = 6 ÷ 3 = 2.':'斜率 = 升高量 ÷ 水平移動量 = 6 ÷ 3 = 2。','A horizontal line has no vertical change, so rise = 0 and slope = 0.':'水平線沒有垂直變化，因此升高量為 0，斜率也為 0。','Slope describes how y changes when x increases. A horizontal line has slope 0; a vertical line has undefined slope.':'斜率描述 x 增加時 y 如何改變。水平線的斜率為 0；垂直線的斜率不存在。','FEATURED UNIT':'精選單元','A linear relationship can be represented by an equation, a table, a graph, or a real-world situation. In this unit, connect these representations and explain what slope and intercepts tell you.':'線性關係可以用方程式、表格、圖形或生活情境表示。本單元將連結這些表示方式，並說明斜率與截距所代表的意義。'}};
+Object.assign(I18N.zh,{'Units':'單元','Unit list':'單元列表','Course list':'課程列表','Previous unit':'上一個單元','Next unit':'下一個單元','Next':'下一課','Interactive Learning Tools':'互動學習工具','Use these visual tools to explore and practice key ideas.':'用這些視覺工具探索並練習重點概念。'});
 const ZHON=()=>LANG==='zh'&&typeof ZH_TITLE!=='undefined';
 function lt(id){const e=META[id]?META[id].title:id;return ZHON()&&ZH_TITLE[id]?ZH_TITLE[id]:e;}
 function mt(key,en){return ZHON()&&ZH_MOD[key]?ZH_MOD[key]:en;}
@@ -1494,68 +1539,55 @@ function mountBalanceLab(){
  draw();
 }
 
-function renderHome(){
- const cat=CATS.find(c=>c.k===CUR),ord=ORDER.filter(inCat),av=avail.filter(inCat),done=av.filter(isDone).length,nid=av.find(id=>!isDone(id))||av[0],anyDone=done>0;
- const tabs=`<nav class="tabs" aria-label="Course selection" style="--tc:${cat.c}">${CATS.map(c=>{const n=avail.filter(id=>META[id].cat===c.k).length;return `<a class="${c.k===CUR?'on':''}" href="#/c/${c.k}" ${c.k===CUR?'aria-current="page"':''}>${t(c.n)}${n?'':`<small>${t('soon')}</small>`}</a>`;}).join('')}</nav>`;
- const unit4Ids=['KA-4-1','KA-4-2','KA-4-3','KA-4-4','KA-4-5'];
- const unit4Done=unit4Ids.filter(isDone).length;
- const hero=av.length?`${CUR==='ka'?`<a class="btn primary" href="#/u/linear-equations-graphs">${unit4Done?t('Continue Unit 4'):t('Start Unit 4')} →</a>`:`<a class="btn primary" href="#/l/${nid}/0">${anyDone?t('Continue'):t('Start')}: ${lt(nid)} ▶</a>`}
- <div class="bar" role="progressbar" aria-label="${t('Course progress')}" aria-valuemin="0" aria-valuemax="${av.length}" aria-valuenow="${done}"><i style="width:${av.length?done/av.length*100:0}%"></i></div><div class="mute" style="font-size:14px">${t('{0} of {1} lessons complete',done,av.length)}${av.length<ord.length?t(' · {0} lessons open now, more coming soon',av.length):''}</div>`
- :`<div class="mute" style="font-size:15px">${t('Course map is ready: {0} modules, {1} lessons. Interactive lessons coming soon.',COURSE.filter(c=>c.cat===CUR).reduce((a,c)=>a+c.modules.length,0),ord.length)}</div>`;
- const courseUnits=COURSE.filter(c=>c.cat===CUR).reduce((sum,c)=>sum+c.modules.length,0);
- const courseLessons=ord.length;
- const unit4Card=`<section class="unit-feature" aria-labelledby="unit4-feature-title"><div><span class="unit-eyebrow">${t('START HERE')} · ${t('ALGEBRA 1')}</span><h2 id="unit4-feature-title">${t('Unit 4: Linear Equations & Graphs')}</h2><p>${t('Connect equations, slope, and graphs. Learn how a linear relationship appears in different forms.')}</p><div class="unit-feature-meta"><span>${unit4Ids.length} ${t('lessons')}</span><span>${unit4Done}/${unit4Ids.length} ${t('completed')}</span><span>${t('Visual models + practice + checks')}</span></div></div><a class="btn primary" href="#/u/linear-equations-graphs">${t('Start Unit 4')} →</a></section>`;
- const courseIntro=`<div class="course-intro"><div><h2>${t('Your learning path')}</h2><p>${t('Work through each unit in order, or choose a lesson to review.')}</p></div><div class="course-stats"><span class="course-stat"><b>${courseUnits}</b> ${t('units')}</span><span class="course-stat"><b>${courseLessons}</b> ${t('lessons')}</span><span class="course-stat"><b>${av.length}</b> ${t('available')}</span></div></div>`;
- const modules=COURSE.filter(c=>c.cat===CUR).map(c=>`<section class="course-section" aria-label="${t(c.label)}"><h2>${t(c.label)}</h2><div class="mods">${c.modules.map(m=>{
-  const ids=m.lessons.map((_,i)=>`${c.id}-${m.n}-${i+1}`);
-  const ready=ids.filter(id=>hasLesson(id)),finished=ready.filter(isDone).length;
-  const next=ready.find(id=>!isDone(id))||ready[0];
-  const pct=ready.length?Math.round(finished/ready.length*100):0;
-  const unitLabel=t((c.unit||'Module')+' {0}',m.n);
-  return `<article class="mod" id="unit-${c.id}-${m.n}" style="--mc:${m.color}"><span class="mn">${unitLabel}</span><b>${mt(c.id+'-'+m.n,m.title)}</b><div class="module-progress"><div class="module-progress-top"><span>${t('{0} of {1} available lessons',finished,ready.length)}</span><span>${pct}%</span></div><div class="module-progress-track" role="progressbar" aria-label="${unitLabel} ${t('progress')}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><div class="module-progress-fill" style="width:${pct}%"></div></div></div><ol class="module-lessons">${m.lessons.map((title,i)=>{const id=ids[i];return hasLesson(id)?`<li><a href="#/l/${id}/0"><span class="st ${isDone(id)?'d':''}" aria-hidden="true">${isDone(id)?'✓':'○'}</span>${i+1}. ${lt(id)}</a></li>`:`<li class="soon"><span class="st" aria-hidden="true">·</span>${i+1}. ${lt(id)}<small>${window.t('soon')}</small></li>`;}).join('')}</ol><div class="module-foot">${next?`<span class="module-status">${finished===ready.length?t('Unit completed'):finished?t('In progress'):t('Not started')}</span><a class="btn ${finished===ready.length?'':'primary'}" href="#/l/${next}/0">${finished===ready.length?t('Review unit'):finished?t('Continue unit'):t('Start unit')} →</a>`:`<span class="module-empty">${t('Lessons coming soon')}</span>`}</div></article>`;
- }).join('')}</div></section>`).join('');
- app.innerHTML=`<div class="wrap home-layout"><aside class="course-sidebar" aria-label="${t('Course navigation')}"><div class="sidebar-heading">${t('Courses')}</div><nav class="sidebar-courses" aria-label="${t('Course list')}">${CATS.map(c=>`<a class="sidebar-course ${c.k===CUR?'active':''}" href="#/c/${c.k}" ${c.k===CUR?'aria-current="page"':''}>${t(c.n)}</a>`).join('')}</nav><div class="sidebar-heading sidebar-units-heading">${t('Units')}</div><nav class="sidebar-units" aria-label="${t('Unit list')}">${COURSE.filter(c=>c.cat===CUR).map(c=>c.modules.map(m=>`<a class="sidebar-unit" href="#unit-${c.id}-${m.n}"><span>${t((c.unit||'Module')+' {0}',m.n)}</span><small>${mt(c.id+'-'+m.n,m.title)}</small></a>`).join('')).join('')}</nav></aside><main class="home-main"><div class="card hero"><h1>${t('{0} Visual Lab',t(cat.n))}</h1><p style="margin:4px 0">${t('See the idea first. Then do it with your pencil.')}</p>
- <div class="flow">${STAGES.map((x,i)=>`<span>${x.i} ${i+1}. ${t(x.n)}</span>`).join('')}</div>${hero}${t('zhNote')?`<div class="mute" style="font-size:13px;margin-top:8px">${t('zhNote')}</div>`:''}</div>
- ${CUR==='ka'?unit4Card:''}
- <div class="course-intro"><div><h2>${t('Your Learning Path')}</h2><p>${t('Work through each unit in order, or choose a lesson to review.')}</p></div><div class="course-stats"><span class="course-stat"><b>${courseUnits}</b> ${t('units')}</span><span class="course-stat"><b>${courseLessons}</b> ${t('lessons')}</span><span class="course-stat"><b>${av.length}</b> ${t('available')}</span></div></div>
- ${CUR==='ka'?`<section class="interactive-tools-heading"><h2>${t('Interactive Learning Tools')}</h2><p>${t('Use these visual tools to explore and practice key ideas.')}</p></section><section class="card slope-lab" id="slope-lab"><div class="slope-head"><div><h2>${t('Slope Explorer')}</h2><div class="mute" style="font-size:14px">${t('Change the slope and y-intercept. Watch the line move.')}</div></div><span class="tag">${t('INTERACTIVE')}</span></div><div class="slope-grid"><div><div class="slope-plot" id="slope-plot"></div><div class="slope-legend"><span><i class="slope-dot"></i> ${t('Y-intercept (b)')}</span><span>🟠 Rise / Run</span></div></div><div class="slope-controls"><div class="slope-control"><label for="slope-m">${t('Slope (m)')} <output id="slope-m-out">1</output></label><input id="slope-m" type="range" min="-3" max="3" step="0.5" value="1"></div><div class="slope-control"><label for="slope-b">${t('Y-intercept (b)')} <output id="slope-b-out">0</output></label><input id="slope-b" type="range" min="-4" max="4" step="1" value="0"></div><div class="slope-equation" id="slope-eq">y = x</div><div class="slope-insight" id="slope-insight" aria-live="polite"></div></div></div></section>`:''}
- ${CUR==='ka'?`<div class="visual-labs">
- <section class="visual-lab" id="tiles-lab"><div class="visual-lab-head"><div><div class="lab-kicker">${t('VISUAL MODEL 01')}</div><h2>${t('Algebra Tiles')}</h2><div class="mute" style="font-size:13px">${t('Build an expression with positive and negative tiles.')}</div></div><span class="tag">${t('INTERACTIVE')}</span></div>
+/* ============ course page: top tabs → progress → unit sidebar + unit panel ============ */
+const TOOLS={
+ 'KA-1':[{h:()=>`<div class="visual-labs one"> <section class="visual-lab" id="tiles-lab"><div class="visual-lab-head"><div><div class="lab-kicker">${t('VISUAL MODEL 01')}</div><h2>${t('Algebra Tiles')}</h2><div class="mute" style="font-size:13px">${t('Build an expression with positive and negative tiles.')}</div></div><span class="tag">${t('INTERACTIVE')}</span></div>
  <div class="tile-stage"><div class="tile-group"><div class="tile-group-title">${t('Your tiles')}</div><div class="tile-row" id="tile-row" aria-live="polite"></div><div class="mute" id="tile-count" style="font-size:12px;margin-top:8px"></div></div></div>
  <div class="tile-expression" id="tile-expression" aria-live="polite">2x + 3</div>
  <div class="tile-controls"><button data-tile="xp">＋ x</button><button data-tile="xn">− x</button><button data-tile="up">＋ 1</button><button data-tile="un">− 1</button><button data-tile="cancel">${t('Cancel zero pairs')}</button><button data-tile="reset">${t('Reset')}</button></div>
- <div class="tile-feedback" id="tile-feedback" aria-live="polite"></div></section>
- <section class="visual-lab" id="balance-lab"><div class="visual-lab-head"><div><div class="lab-kicker">${t('VISUAL MODEL 02')}</div><h2>${t('Equation Balancer')}</h2><div class="mute" style="font-size:13px">${t('Solve an equation while keeping both sides equal.')}</div></div><span class="tag">${t('INTERACTIVE')}</span></div>
+ <div class="tile-feedback" id="tile-feedback" aria-live="polite"></div></section></div>`,m:()=>mountAlgebraTiles()}],
+ 'KA-2':[{h:()=>`<div class="visual-labs one"> <section class="visual-lab" id="balance-lab"><div class="visual-lab-head"><div><div class="lab-kicker">${t('VISUAL MODEL 02')}</div><h2>${t('Equation Balancer')}</h2><div class="mute" style="font-size:13px">${t('Solve an equation while keeping both sides equal.')}</div></div><span class="tag">${t('INTERACTIVE')}</span></div>
  <div class="balance-visual"><svg viewBox="0 0 360 160" role="img" aria-label="A balanced scale showing equal expressions on both sides"><path d="M180 26 L180 128 M148 128 H212 M164 140 H196" stroke="#64748b" stroke-width="5" stroke-linecap="round"/><path id="balance-beam" d="M48 58 H312" stroke="#2563eb" stroke-width="7" stroke-linecap="round"/><circle cx="180" cy="58" r="8" fill="#0f766e"/><path d="M70 58 L48 103 M70 58 L92 103 M268 58 L246 103 M268 58 L290 103" stroke="#94a3b8" stroke-width="2.5"/><path d="M35 103 Q70 122 105 103 M235 103 Q270 122 305 103" fill="#dbeafe" stroke="#60a5fa" stroke-width="2.5"/><rect x="49" y="84" width="42" height="16" rx="4" fill="#bfdbfe"/><rect x="252" y="84" width="36" height="16" rx="4" fill="#a7f3d0"/></svg></div>
  <div class="balance-eq"><div class="balance-side" id="balance-left">2x + 3</div><div class="equals">=</div><div class="balance-side" id="balance-right">11</div></div>
  <div class="balance-explain" id="balance-explain" aria-live="polite"></div><div class="row" style="justify-content:space-between;align-items:center"><span class="mute" id="balance-step" style="font-size:12px"></span><span class="good" id="balance-proof" style="font-size:12px"></span></div>
- <div class="balance-controls"><button class="primary" id="balance-next">${t('Next step')} →</button></div></section>
- </div>`:''}
- ${modules}</main></div>`;
-
- if(CUR==='ka'){mountSlopeExplorer();mountAlgebraTiles();mountBalanceLab();}
-}
-
-
-function renderUnit(){
- const lessons=[
-  {id:'KA-4-1',title:'Two-Variable Linear Equations Intro',desc:'Understand ordered-pair solutions and see why they form a line.'},
-  {id:'KA-4-2',title:'Slope',desc:'Measure steepness as rise over run and interpret its meaning.'},
-  {id:'KA-4-3',title:'Horizontal and Vertical Lines',desc:'Compare slope 0 with undefined slope.'},
-  {id:'KA-4-4',title:'x- and y-Intercepts',desc:'Find where a line crosses each axis and use those points to graph.'},
-  {id:'KA-4-5',title:'Applying Intercepts and Slope',desc:'Use slope and intercepts to model and interpret a real situation.'}
- ];
- const done=lessons.filter(x=>isDone(x.id)).length,pct=Math.round(done/lessons.length*100);
- app.innerHTML=`<div class="wrap unit-page"><a href="#/c/ka">← ${t('Back to Algebra 1')}</a>
- <section class="unit-hero"><span class="unit-kicker">${t('ALGEBRA 1')} · ${t('UNIT 4')}</span><h1>${t('Linear Equations & Graphs')}</h1><p>${t('A linear relationship can be represented by an equation, a table, a graph, or a real-world situation. In this unit, connect these representations and explain what slope and intercepts tell you.')}</p>
- <div class="unit-start-row"><a class="btn primary unit-start-btn" href="#/l/${(lessons.find(x=>!isDone(x.id))||lessons[0]).id}/0">${done?t('Continue learning'):t('Start with Lesson 1')} →</a><span>${t('Recommended path')} · ${lessons.length} ${t('lessons')}</span></div>
- <div class="unit-progress" role="progressbar" aria-label="${t('Unit progress')}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><i style="width:${pct}%"></i></div><div class="unit-feature-meta"><b>${done}/${lessons.length} ${t('lessons completed')}</b><span>${pct}% ${t('complete')}</span></div></section>
- <section class="unit-goals"><div class="unit-goal"><b>📍 ${t('Read a graph')}</b><span>${t('Identify solutions, intercepts, and key points on a line.')}</span></div><div class="unit-goal"><b>📐 ${t('Interpret slope')}</b><span>${t('Explain rise over run and connect slope to a rate of change.')}</span></div><div class="unit-goal"><b>🔄 ${t('Connect representations')}</b><span>${t('Move between equations, ordered pairs, graphs, and contexts.')}</span></div></section>
- <section class="unit-section"><h2>${t('Learning sequence')}</h2><div class="unit-lessons">${lessons.map((x,i)=>`<a class="unit-lesson" href="#/l/${x.id}/0"><span class="unit-lesson-num">${i+1}</span><span><b>${t(x.title)}</b><small>${t(x.desc)}</small></span>${isDone(x.id)?'<span class="unit-done" aria-label="Completed">✓</span>':''}</a>`).join('')}</div></section>
+ <div class="balance-controls"><button class="primary" id="balance-next">${t('Next step')} →</button></div></section></div>`,m:()=>mountBalanceLab()}],
+ 'KA-4':[{h:()=>`<section class="card slope-lab" id="slope-lab"><div class="slope-head"><div><h2>${t('Slope Explorer')}</h2><div class="mute" style="font-size:14px">${t('Change the slope and y-intercept. Watch the line move.')}</div></div><span class="tag">${t('INTERACTIVE')}</span></div><div class="slope-grid"><div><div class="slope-plot" id="slope-plot"></div><div class="slope-legend"><span><i class="slope-dot"></i> ${t('Y-intercept (b)')}</span><span>🟠 Rise / Run</span></div></div><div class="slope-controls"><div class="slope-control"><label for="slope-m">${t('Slope (m)')} <output id="slope-m-out">1</output></label><input id="slope-m" type="range" min="-3" max="3" step="0.5" value="1"></div><div class="slope-control"><label for="slope-b">${t('Y-intercept (b)')} <output id="slope-b-out">0</output></label><input id="slope-b" type="range" min="-4" max="4" step="1" value="0"></div><div class="slope-equation" id="slope-eq">y = x</div><div class="slope-insight" id="slope-insight" aria-live="polite"></div></div></div></section>`,m:()=>mountSlopeExplorer()}]
+};
+const EXTRAS={'KA-4':{h:()=>` <section class="unit-goals"><div class="unit-goal"><b>📍 ${t('Read a graph')}</b><span>${t('Identify solutions, intercepts, and key points on a line.')}</span></div><div class="unit-goal"><b>📐 ${t('Interpret slope')}</b><span>${t('Explain rise over run and connect slope to a rate of change.')}</span></div><div class="unit-goal"><b>🔄 ${t('Connect representations')}</b><span>${t('Move between equations, ordered pairs, graphs, and contexts.')}</span></div></section>
  <section class="unit-section"><h2>${t('Check your starting point')}</h2><p class="mute">${t('Try these three quick questions before beginning. Use the feedback to decide what to review.')}</p>
  <div class="unit-diagnostic" id="unit-diagnostic"><p class="diag-q" id="diag-q"></p><div class="diag-options" id="diag-options"></div><div class="diag-feedback" id="diag-feedback" aria-live="polite"></div><div class="row" style="justify-content:space-between;align-items:center;margin-top:10px"><span class="mute" id="diag-count"></span><button class="primary" id="diag-next" disabled>${t('Next question')} →</button></div></div></section>
- <div class="unit-callout"><b>${t('Remember:')}</b> ${t('Slope describes how y changes when x increases. A horizontal line has slope 0; a vertical line has undefined slope.')}</div>
- <div class="navrow" style="margin:22px 0"><a class="btn" href="#/c/ka">← ${t('Course overview')}</a><a class="btn primary" href="#/l/KA-4-1/0">${t('Start Unit 4')} →</a></div></div>`;
+ <div class="unit-callout"><b>${t('Remember:')}</b> ${t('Slope describes how y changes when x increases. A horizontal line has slope 0; a vertical line has undefined slope.')}</div>`,m:mountUnit4Diag}};
+function catUnits(cat){const r=[];COURSE.filter(c=>c.cat===cat).forEach(c=>c.modules.forEach(m=>r.push({c,m,key:c.id+'-'+m.n,ids:m.lessons.map((_,i)=>`${c.id}-${m.n}-${i+1}`)})));return r;}
+function unitHref(cat,i){return `#/c/${cat}/u/${i+1}`;}
+function unitIndexOf(id){const M=META[id];return catUnits(M.cat).findIndex(u=>u.key===M.c+'-'+M.m);}
+function renderHome(ui){
+ const cat=CATS.find(c=>c.k===CUR),units=catUnits(CUR),av=avail.filter(inCat),ord=ORDER.filter(inCat),done=av.filter(isDone).length;
+ const nid=av.find(id=>!isDone(id))||av[0];
+ if(!(ui>=0&&ui<units.length))ui=nid?Math.max(0,unitIndexOf(nid)):0;
+ const U=units[ui];
+ const uStat=u=>{const r=u.ids.filter(hasLesson);return {r,f:r.filter(isDone).length};};
+ const tabs=`<nav class="tabs course-tabs" aria-label="${t('Course list')}" style="--tc:${cat.c}">${CATS.map(c=>{const n=avail.filter(id=>META[id].cat===c.k).length;return `<a class="${c.k===CUR?'on':''}" href="#/c/${c.k}" ${c.k===CUR?'aria-current="page"':''}>${t(c.n)}${n?'':`<small>${t('soon')}</small>`}</a>`;}).join('')}</nav>`;
+ const pct=av.length?Math.round(done/av.length*100):0;
+ const progress=`<section class="card hero course-progress"><div class="cp-top"><div><h1>${t('{0} Visual Lab',t(cat.n))}</h1><p class="mute" style="margin:2px 0 0">${t('See the idea first. Then do it with your pencil.')}</p></div>${nid?`<a class="btn primary" href="#/l/${nid}/0">${done?t('Continue'):t('Start')}: ${lt(nid)} ▶</a>`:''}</div>
+ <div class="flow">${STAGES.map((x,i)=>`<span>${x.i} ${i+1}. ${t(x.n)}</span>`).join('')}</div>
+ ${av.length?`<div class="bar" role="progressbar" aria-label="${t('Course progress')}" aria-valuemin="0" aria-valuemax="${av.length}" aria-valuenow="${done}"><i style="width:${pct}%"></i></div><div class="mute" style="font-size:14px">${t('{0} of {1} lessons complete',done,av.length)} · ${units.length} ${t('units')} · ${ord.length} ${t('lessons')}${av.length<ord.length?t(' · {0} lessons open now, more coming soon',av.length):''}</div>`
+  :`<div class="mute" style="font-size:15px">${t('Course map is ready: {0} modules, {1} lessons. Interactive lessons coming soon.',units.length,ord.length)}</div>`}
+ ${t('zhNote')?`<div class="mute" style="font-size:13px;margin-top:8px">${t('zhNote')}</div>`:''}</section>`;
+ const lessonLi=(id,i)=>hasLesson(id)?`<li><a href="#/l/${id}/0" class="${isDone(id)?'d':''}${id===nid?' cur':''}"><span class="st ${isDone(id)?'d':''}" aria-hidden="true">${isDone(id)?'✓':id===nid?'▶':'○'}</span><span>${i+1}. ${lt(id)}</span></a></li>`:`<li class="soon"><span class="st" aria-hidden="true">·</span><span>${i+1}. ${lt(id)}</span><small>${t('soon')}</small></li>`;
+ const side=`<aside class="course-sidebar" aria-label="${t('Unit list')}"><div class="sidebar-heading">${t('Units')}</div><nav class="sidebar-units">${units.map((u,i)=>{const s=uStat(u),open=i===ui;return `<div class="side-unit${open?' open':''}" style="--mc:${u.m.color}"><a class="sidebar-unit${open?' active':''}" href="${unitHref(CUR,i)}" ${open?'aria-current="page"':''}><span>${t((u.c.unit||'Module')+' {0}',u.m.n)}${s.r.length?`<em>${s.f}/${s.r.length}</em>`:''}</span><small>${mt(u.key,u.m.title)}</small>${s.r.length?`<i class="su-bar"><b style="width:${Math.round(s.f/s.r.length*100)}%"></b></i>`:''}</a>${open?`<ol class="side-lessons">${u.ids.map(lessonLi).join('')}</ol>`:''}</div>`;}).join('')}</nav></aside>`;
+ const pick=`<label class="unit-select"><span>${t('Units')}</span><select aria-label="${t('Unit list')}" onchange="location.hash=this.value">${units.map((u,i)=>{const s=uStat(u);return `<option value="${unitHref(CUR,i)}" ${i===ui?'selected':''}>${t((u.c.unit||'Module')+' {0}',u.m.n)}: ${mt(u.key,u.m.title)}${s.r.length?` (${s.f}/${s.r.length})`:''}</option>`;}).join('')}</select></label>`;
+ const s=uStat(U),upct=s.r.length?Math.round(s.f/s.r.length*100):0,unext=s.r.find(id=>!isDone(id))||s.r[0];
+ const tools=(TOOLS[U.key]||[]),ex=EXTRAS[U.key];
+ const panel=`<section class="unit-panel" style="--mc:${U.m.color}"><span class="unit-kicker">${t(cat.n)} · ${t((U.c.unit||'Module')+' {0}',U.m.n)}</span><h2>${mt(U.key,U.m.title)}</h2>
+ ${s.r.length?`<div class="unit-progress" role="progressbar" aria-label="${t('Unit progress')}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${upct}"><i style="width:${upct}%"></i></div><div class="unit-panel-row"><span class="mute">${t('{0} of {1} available lessons',s.f,s.r.length)} · ${upct}%</span><a class="btn primary" href="#/l/${unext}/0">${s.f===s.r.length?t('Review unit'):s.f?t('Continue unit'):t('Start unit')} →</a></div>`:`<p class="mute">${t('Lessons coming soon')}</p>`}
+ <ol class="unit-lesson-list">${U.ids.map((id,i)=>hasLesson(id)?`<li><a href="#/l/${id}/0"><span class="unit-lesson-num ${isDone(id)?'d':''}">${isDone(id)?'✓':i+1}</span><b>${lt(id)}</b>${id===nid?`<small class="tag">${t('Next')}</small>`:''}</a></li>`:`<li class="soon"><span class="unit-lesson-num">${i+1}</span><b>${lt(id)}</b><small>${t('soon')}</small></li>`).join('')}</ol></section>
+ ${tools.length?`<section class="interactive-tools-heading"><h2>${t('Interactive Learning Tools')}</h2><p>${t('Use these visual tools to explore and practice key ideas.')}</p></section>${tools.map(x=>x.h()).join('')}`:''}
+ ${ex?ex.h():''}
+ <div class="navrow" style="margin:22px 0">${ui>0?`<a class="btn" href="${unitHref(CUR,ui-1)}">◀ ${t('Previous unit')}</a>`:'<span></span>'}${ui<units.length-1?`<a class="btn" href="${unitHref(CUR,ui+1)}">${t('Next unit')} ▶</a>`:'<span></span>'}</div>`;
+ app.innerHTML=`<div class="wrap course-page">${tabs}${progress}${pick}<div class="home-layout">${side}<main class="home-main">${panel}</main></div></div>`;
+ tools.forEach(x=>x.m());if(ex)ex.m();
+}
+function mountUnit4Diag(){
  const questions=[
   {q:t('What does the point (3, 7) mean on a graph?'),opts:[t('x = 7 and y = 3'),t('x = 3 and y = 7'),t('The slope is 7')],a:1,why:t('Ordered pairs are written (x, y): move 3 units across, then 7 units up.')},
   {q:t('A line rises 6 units when it runs 3 units to the right. What is its slope?'),opts:['2','3','18'],a:0,why:t('Slope = rise ÷ run = 6 ÷ 3 = 2.')},
@@ -1569,10 +1601,10 @@ function renderUnit(){
 function renderLesson(id,stage){
  const M=META[id],D=L[id],pr=prog(id);document.documentElement.style.setProperty('--acc',M.color);
  const nx=nextLesson(id);
- app.innerHTML=`<div class="wrap"><a href="#/c/${M.cat}">${t('← All {0} lessons',t(CATS.find(c=>c.k===M.cat).n))}</a><div class="crumb">${t(M.lab)} · ${t(M.u+' {0}',M.m)}: ${mt(M.c+'-'+M.m,M.mt)} · ${t('Lesson {0}',M.n)}</div><h1>${lt(id)}${ZHON()?`<span class="h1en">${M.title}</span>`:''}</h1><div class="goal">🎯 ${D.goal}</div>
+ app.innerHTML=`<div class="wrap"><a href="${unitHref(M.cat,unitIndexOf(id))}">← ${t(M.u+' {0}',M.m)}: ${mt(M.c+'-'+M.m,M.mt)}</a><div class="crumb">${t(M.lab)} · ${t(M.u+' {0}',M.m)}: ${mt(M.c+'-'+M.m,M.mt)} · ${t('Lesson {0}',M.n)}</div><h1>${lt(id)}${ZHON()?`<span class="h1en">${M.title}</span>`:''}</h1><div class="goal">🎯 ${D.goal}</div>
  <nav class="stepper">${STAGES.map((s,i)=>`<a class="pill ${i===stage?'on':''} ${pr[s.k]?'done':''}" data-k="${s.k}" href="#/l/${id}/${i}"><span class="ic">${s.i} </span>${t(s.n)}</a>`).join('')}</nav>
  <section id="stage"></section>
- <div class="navrow">${stage>0?`<a class="btn" href="#/l/${id}/${stage-1}">◀ ${t(STAGES[stage-1].n)}</a>`:'<span></span>'}${stage<3?`<a class="btn primary" href="#/l/${id}/${stage+1}">${t('Next: {0} ▶',t(STAGES[stage+1].n))}</a>`:(nx?`<a class="btn" href="#/l/${nx}/0">${t('Next lesson ▶')}</a>`:`<a class="btn" href="#/c/${M.cat}">${t('All lessons')}</a>`)}</div></div>`;
+ <div class="navrow">${stage>0?`<a class="btn" href="#/l/${id}/${stage-1}">◀ ${t(STAGES[stage-1].n)}</a>`:'<span></span>'}${stage<3?`<a class="btn primary" href="#/l/${id}/${stage+1}">${t('Next: {0} ▶',t(STAGES[stage+1].n))}</a>`:(nx?`<a class="btn" href="#/l/${nx}/0">${t('Next lesson ▶')}</a>`:`<a class="btn" href="${unitHref(M.cat,unitIndexOf(id))}">${t('All lessons')}</a>`)}</div></div>`;
  const el=$('#stage');[stPicture,stSteps,stPencil,stCheck][stage](el,id,D,pr);
 }
 function markStage(id,k){const pr=prog(id);if(!pr[k]){pr[k]=true;save();}const p=$(`.pill[data-k="${k}"]`);if(p)p.classList.add('done');}
@@ -1638,12 +1670,12 @@ function stCheck(el,id,D,pr){
 }
 
 function route(){const h=location.hash.replace(/^#\/?/,'').split('/');
- if(h[0]==='u'&&h[1]==='linear-equations-graphs'){CUR='ka';renderUnit();topProg();window.scrollTo(0,0);return;}
+ if(h[0]==='u'&&h[1]==='linear-equations-graphs'){location.replace('#/c/ka/u/4');return;}
  /* L4L tab removed: send old Algebra 1A/1B links to the matching Algebra 1 lesson, or to the course page */
  if(h[0]==='l'&&META[h[1]]&&META[h[1]].cat==='alg1'){const k=Object.keys(KA_ALIAS).find(a=>KA_ALIAS[a]===h[1]);if(k){location.replace(`#/l/${k}/${h[2]||0}`);return;}}
  if(h[0]==='c'&&h[1]==='alg1'){location.replace('#/c/ka');return;}
  if(h[0]==='l'&&META[h[1]])CUR=META[h[1]].cat;else if(h[0]==='c'&&CATS.some(c=>c.k===h[1]))CUR=h[1];
- if(h[0]==='l'&&hasLesson(h[1])){const s=Math.max(0,Math.min(3,+h[2]||0));if(L[h[1]])renderLesson(h[1],s);else{app.innerHTML=`<div class="wrap"><p class="mute">${t('Loading lesson…')}</p></div>`;ensureLesson(h[1]).then(()=>{if(L[h[1]])renderLesson(h[1],s);else renderHome();topProg();}).catch(()=>{app.innerHTML=`<div class="wrap"><p class="bad">${t('Could not load this lesson. Check your internet connection and refresh.')}</p></div>`;});}}else{document.documentElement.style.setProperty('--acc',CATS.find(c=>c.k===CUR).c);renderHome();}
+ if(h[0]==='l'&&hasLesson(h[1])){const s=Math.max(0,Math.min(3,+h[2]||0));if(L[h[1]])renderLesson(h[1],s);else{app.innerHTML=`<div class="wrap"><p class="mute">${t('Loading lesson…')}</p></div>`;ensureLesson(h[1]).then(()=>{if(L[h[1]])renderLesson(h[1],s);else renderHome();topProg();}).catch(()=>{app.innerHTML=`<div class="wrap"><p class="bad">${t('Could not load this lesson. Check your internet connection and refresh.')}</p></div>`;});}}else{document.documentElement.style.setProperty('--acc',CATS.find(c=>c.k===CUR).c);renderHome(h[0]==='c'&&h[2]==='u'?(+h[3]||1)-1:undefined);}
  topProg();window.scrollTo(0,0);}
 window.addEventListener('hashchange',route);applyChrome();route();
 </script>
