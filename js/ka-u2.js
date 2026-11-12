@@ -1,7 +1,7 @@
 /* Khan Algebra 1 · Unit 2 · Solving equations & inequalities */
 (function(){const {nf,q2,lin,numberLine,stepper,curve}=KA;
 function mountBal2(el){const SS=[{L:{x:5,k:2},R:{x:2,k:11},eq:'5x + 2 = 2x + 11',n:'x-boxes on <b>both</b> sides. Goal: get all the x-boxes on one side.'},{L:{x:3,k:2},R:{k:11},eq:'3x + 2 = 11',n:'Took <b>2 x-boxes off both sides</b>. Still balanced.'},{L:{x:3},R:{k:9},eq:'3x = 9',n:'Took <b>2 blocks off both sides</b>.'},{L:{x:1},R:{k:3},eq:'x = 3',n:'Split both sides into 3 equal groups: <b class="good">x = 3</b>. Check: 5(3) + 2 = 17 and 2(3) + 11 = 17 ✓'}];let st=0;
- el.innerHTML=`<svg viewBox="0 60 560 240" class="fig" style="max-width:560px"></svg><div class="eqline math" id="be"></div><div class="note" id="bn"></div><div class="row"><button data-a="b">◀ Back</button><button class="primary" data-a="n">Next move ▶</button></div>`;
+ el.innerHTML=`<svg viewBox="0 60 560 240" class="fig" style="max-width:560px"></svg><div class="eqline math" id="be"></div><div class="note" id="bn"></div><div class="row"><button data-a="b">${t("◀ Back")}</button><button class="primary" data-a="n">${t("Next move ▶")}</button></div>`;
  const draw=()=>{const s=SS[st];$('svg',el).innerHTML=scaleSVG(s.L,s.R,0);$('#be',el).innerHTML=mx(s.eq);$('#bn',el).innerHTML=s.n;$('[data-a=b]',el).disabled=!st;$('[data-a=n]',el).disabled=st===3;};
  el.addEventListener('click',e=>{const a=e.target.closest('button')?.dataset.a;if(a==='n')st++;if(a==='b')st--;draw();});draw();}
 const V=t=>`<i class="v">${t}</i>`;

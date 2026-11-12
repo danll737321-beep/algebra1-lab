@@ -13,6 +13,7 @@ header.top{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px sol
 .brand{font-weight:800;font-size:18px;text-decoration:none;color:var(--ink)}
 .brand span{color:var(--acc)}
 .topprog{font-size:14px;color:var(--mute)}
+.hdr-r{display:flex;align-items:center;gap:10px}.langbtn{min-height:34px;padding:4px 12px;font-size:14px;font-weight:700;border-radius:999px}
 .wrap{max-width:900px;margin:0 auto;padding:12px 16px 60px}
 h1{font-size:28px;line-height:1.25;margin:6px 0}
 h2{font-size:22px;margin:28px 0 8px}
@@ -120,6 +121,7 @@ input[type=range]{width:200px;accent-color:var(--acc)}
 .darts b{display:block}
 .tri-btns button.on{background:#fef9c3;border-color:#ca8a04;font-weight:800}
 @media (max-width:640px){
+ .topprog{display:none} .brand{font-size:16px;white-space:nowrap}
  body{font-size:16px}
  h1{font-size:23px}
  .ln-step{grid-template-columns:1fr;gap:4px}
@@ -140,7 +142,7 @@ footer{text-align:center;font-size:13px;color:var(--mute);padding:20px}
 </style>
 </head>
 <body>
-<header class="top"><a class="brand" href="#/">HS Math <span>Visual Lab</span></a><span class="topprog" id="topprog"></span></header>
+<header class="top"><a class="brand" href="#/">HS Math <span>Visual Lab</span></a><span class="hdr-r"><span class="topprog" id="topprog"></span><button id="langbtn" class="langbtn" onclick="setLang(LANG==='zh'?'en':'zh')">中文</button></span></header>
 <main id="app"></main>
 <footer>Picture → Steps → Pencil → Check · Algebra 1 · Geometry · Algebra II · Pre-Calculus · Calculus</footer>
 <script>
@@ -164,6 +166,29 @@ function parseAns(s){s=String(s).trim().replace(/[−–]/g,'-').replace(/\s+/g,
  if(/^-?\d+(\.\d+)?\/-?\d+(\.\d+)?$/.test(s)){const [a,b]=s.split('/').map(Number);return b===0?NaN:a/b;}
  if(/^-?(\d+\.?\d*|\.\d+)$/.test(s))return Number(s);
  return NaN;}
+
+/* ============ language ============ */
+let LANG=(()=>{try{return localStorage.getItem('alg1lab-lang')||'en';}catch(e){return 'en';}})();
+const I18N={en:{btnCheck:'Check',brand:'HS Math <span>Visual Lab</span>',zhNote:''},
+zh:{btnCheck:'檢查答案',brand:'高中數學<span>視覺實驗室</span>',zhNote:'介面為繁體中文；課程內容（例題、題目）目前為英文。',
+'Algebra 1':'代數一','Algebra 1 (Khan)':'代數一（Khan）','Geometry':'幾何','Algebra II':'代數二','Pre-Calculus':'微積分預備','Calculus':'微積分',
+'{0} of {1} lessons done':'已完成 {0} / {1} 課','soon':'即將推出','Continue':'繼續','Start':'開始','{0} of {1} lessons complete':'已完成 {0} / {1} 課',
+' · {0} lessons open now, more coming soon':' · 目前開放 {0} 課，更多即將推出','Course map is ready: {0} modules, {1} lessons. Interactive lessons coming soon.':'課程地圖已完成：{0} 個模組、{1} 課。互動課程即將推出。',
+'{0} Visual Lab':'{0} 視覺實驗室','See the idea first. Then do it with your pencil.':'先看懂概念，再動筆練習。',
+'Picture':'看圖','Steps':'步驟','Pencil':'動筆','Check':'檢測','Module {0}':'模組 {0}','Unit {0}':'第 {0} 單元','Lesson {0}':'第 {0} 課',
+'← All {0} lessons':'← 全部{0}課程','Next: {0} ▶':'下一步：{0} ▶','Next lesson ▶':'下一課 ▶','All lessons':'全部課程',
+'Real life':'生活中的例子','See it':'看圖理解','Key words':'關鍵詞','Next step ▼':'下一步 ▼','Show all':'全部顯示','⚠ Common mistake':'⚠ 常見錯誤',
+'Correct answers: <b>{0}</b> · ':'答對：<b>{0}</b> 題 · ','✓ Pencil step complete':'✓ 動筆練習完成',' — keep practicing or move on to Check.':'，可以繼續練習或進入檢測。','Get 2 correct to complete this step.':'答對 2 題即完成這一步。',
+'Your turn':'換你做','<b>Pencil first:</b> work it out on paper — write each step and why. Then enter your answer.':'<b>先動筆：</b>在紙上寫出每一步和理由，再輸入答案。',
+'💡 Hint':'💡 提示','Show solution':'看解答','New problem ↻':'換一題 ↻','✓ Correct! ':'✓ 答對了！','Not quite — look at the picture again and try another choice.':'還不對——再看看圖，選另一個答案。',
+'Enter an answer in every box first.':'請先在每個空格填入答案。','✓ Correct! Nice pencil work. Try another one with “New problem”.':'✓ 答對了！做得好。按「換一題」再練一題。','Not yet. Check your work step by step, or tap 💡 Hint.':'還不對。一步一步檢查，或按 💡 提示。',
+'Quick check':'小測驗','Answer all 3. Get at least 2 right to complete the lesson.':'3 題都要作答，答對至少 2 題即完成本課。','Submit':'送出','Answer all 3 questions first.':'請先回答全部 3 題。',
+'{0}/3 — Lesson complete!':'{0}/3 — 本課完成！','Next lesson: {0} ▶':'下一課：{0} ▶','{0}/3. Read the explanations, review the Steps, then try again.':'{0}/3。先看解析、複習步驟，再試一次。','◀ Review Steps':'◀ 複習步驟','Try again':'再試一次',
+'Loading lesson…':'載入課程中…','Could not load this lesson. Check your internet connection and refresh.':'無法載入這一課。請檢查網路後重新整理。',
+'Picture → Steps → Pencil → Check':'看圖 → 步驟 → 動筆 → 檢測','◀ Back':'◀ 上一步','Next step ▶':'下一步 ▶','Next move ▶':'下一步 ▶'}};
+function t(k,...a){let r=I18N[LANG][k];if(r===undefined)r=I18N.en[k];if(r===undefined)r=k;a.forEach((v,i)=>r=r.split('{'+i+'}').join(v));return r;}
+function applyChrome(){document.documentElement.lang=LANG==='zh'?'zh-Hant':'en';$('.brand').innerHTML=t('brand');$('#langbtn').textContent=LANG==='zh'?'English':'中文';$('footer').textContent=t('Picture → Steps → Pencil → Check')+' · '+CATS.map(c=>t(c.n)).join(' · ');}
+function setLang(l){LANG=l;try{localStorage.setItem('alg1lab-lang',l);}catch(e){}applyChrome();route();}
 
 /* ============ storage ============ */
 const STORE='alg1lab-v1';
@@ -1130,41 +1155,41 @@ function loadMod(k){if(!MODFILES[k])return Promise.resolve();const pre=PREREQ[k.
 const avail=ORDER.filter(hasLesson);
 function nextLesson(id){const i=avail.indexOf(id),n=avail[i+1];return n&&META[n].cat===META[id].cat?n:undefined;}
 const inCat=id=>META[id].cat===CUR;
-function topProg(){const o=ORDER.filter(inCat);$('#topprog').textContent=`${o.filter(isDone).length} of ${o.length} lessons done`;}
+function topProg(){const o=ORDER.filter(inCat);$('#topprog').textContent=t('{0} of {1} lessons done',o.filter(isDone).length,o.length);}
 
 function renderHome(){
  const cat=CATS.find(c=>c.k===CUR),ord=ORDER.filter(inCat),av=avail.filter(inCat),done=av.filter(isDone).length,nid=av.find(id=>!isDone(id))||av[0],anyDone=done>0;
- const tabs=`<nav class="tabs" style="--tc:${cat.c}">${CATS.map(c=>{const n=avail.filter(id=>META[id].cat===c.k).length;return `<a class="${c.k===CUR?'on':''}" href="#/c/${c.k}">${c.n}${n?'':'<small>soon</small>'}</a>`;}).join('')}</nav>`;
- const hero=av.length?`<a class="btn primary" href="#/l/${nid}/0">${anyDone?'Continue':'Start'}: ${META[nid].title} ▶</a>
- <div class="bar"><i style="width:${done/ord.length*100}%"></i></div><div class="mute" style="font-size:14px">${done} of ${ord.length} lessons complete${av.length<ord.length?` · ${av.length} lessons open now, more coming soon`:''}</div>`
- :`<div class="mute" style="font-size:15px">Course map is ready: ${COURSE.filter(c=>c.cat===CUR).reduce((a,c)=>a+c.modules.length,0)} modules, ${ord.length} lessons. Interactive lessons coming soon.</div>`;
- app.innerHTML=`<div class="wrap">${tabs}<div class="card hero"><h1>${cat.n} Visual Lab</h1><p style="margin:4px 0">See the idea first. Then do it with your pencil.</p>
- <div class="flow"><span>🖼 1. Picture</span><span>🪜 2. Steps</span><span>✏️ 3. Pencil</span><span>✅ 4. Check</span></div>${hero}</div>
- ${COURSE.filter(c=>c.cat===CUR).map(c=>`<h2>${c.label}</h2><div class="mods">${c.modules.map(m=>`<div class="mod" style="--mc:${m.color}"><span class="mn">${c.unit||'Module'} ${m.n}</span><b>${m.title}</b><ol>${m.lessons.map((t,i)=>{const id=`${c.id}-${m.n}-${i+1}`;return hasLesson(id)?`<li><a href="#/l/${id}/0"><span class="st ${isDone(id)?'d':''}">${isDone(id)?'✓':'○'}</span>${i+1}. ${t}</a></li>`:`<li class="soon"><span class="st">·</span>${i+1}. ${t}<small>soon</small></li>`;}).join('')}</ol></div>`).join('')}</div>`).join('')}</div>`;
+ const tabs=`<nav class="tabs" style="--tc:${cat.c}">${CATS.map(c=>{const n=avail.filter(id=>META[id].cat===c.k).length;return `<a class="${c.k===CUR?'on':''}" href="#/c/${c.k}">${t(c.n)}${n?'':`<small>${t('soon')}</small>`}</a>`;}).join('')}</nav>`;
+ const hero=av.length?`<a class="btn primary" href="#/l/${nid}/0">${anyDone?t('Continue'):t('Start')}: ${META[nid].title} ▶</a>
+ <div class="bar"><i style="width:${done/ord.length*100}%"></i></div><div class="mute" style="font-size:14px">${t('{0} of {1} lessons complete',done,ord.length)}${av.length<ord.length?t(' · {0} lessons open now, more coming soon',av.length):''}</div>`
+ :`<div class="mute" style="font-size:15px">${t('Course map is ready: {0} modules, {1} lessons. Interactive lessons coming soon.',COURSE.filter(c=>c.cat===CUR).reduce((a,c)=>a+c.modules.length,0),ord.length)}</div>`;
+ app.innerHTML=`<div class="wrap">${tabs}<div class="card hero"><h1>${t('{0} Visual Lab',t(cat.n))}</h1><p style="margin:4px 0">${t('See the idea first. Then do it with your pencil.')}</p>
+ <div class="flow">${STAGES.map((x,i)=>`<span>${x.i} ${i+1}. ${t(x.n)}</span>`).join('')}</div>${hero}${t('zhNote')?`<div class="mute" style="font-size:13px;margin-top:8px">${t('zhNote')}</div>`:''}</div>
+ ${COURSE.filter(c=>c.cat===CUR).map(c=>`<h2>${c.label}</h2><div class="mods">${c.modules.map(m=>`<div class="mod" style="--mc:${m.color}"><span class="mn">${t((c.unit||'Module')+' {0}',m.n)}</span><b>${m.title}</b><ol>${m.lessons.map((t,i)=>{const id=`${c.id}-${m.n}-${i+1}`;return hasLesson(id)?`<li><a href="#/l/${id}/0"><span class="st ${isDone(id)?'d':''}">${isDone(id)?'✓':'○'}</span>${i+1}. ${t}</a></li>`:`<li class="soon"><span class="st">·</span>${i+1}. ${t}<small>${window.t('soon')}</small></li>`;}).join('')}</ol></div>`).join('')}</div>`).join('')}</div>`;
 }
 
 function renderLesson(id,stage){
  const M=META[id],D=L[id],pr=prog(id);document.documentElement.style.setProperty('--acc',M.color);
  const nx=nextLesson(id);
- app.innerHTML=`<div class="wrap"><a href="#/c/${M.cat}">← All ${CATS.find(c=>c.k===M.cat).n} lessons</a><div class="crumb">${M.lab} · ${M.u} ${M.m}: ${M.mt} · Lesson ${M.n}</div><h1>${M.title}</h1><div class="goal">🎯 ${D.goal}</div>
- <nav class="stepper">${STAGES.map((s,i)=>`<a class="pill ${i===stage?'on':''} ${pr[s.k]?'done':''}" data-k="${s.k}" href="#/l/${id}/${i}"><span class="ic">${s.i} </span>${s.n}</a>`).join('')}</nav>
+ app.innerHTML=`<div class="wrap"><a href="#/c/${M.cat}">${t('← All {0} lessons',t(CATS.find(c=>c.k===M.cat).n))}</a><div class="crumb">${M.lab} · ${t(M.u+' {0}',M.m)}: ${M.mt} · ${t('Lesson {0}',M.n)}</div><h1>${M.title}</h1><div class="goal">🎯 ${D.goal}</div>
+ <nav class="stepper">${STAGES.map((s,i)=>`<a class="pill ${i===stage?'on':''} ${pr[s.k]?'done':''}" data-k="${s.k}" href="#/l/${id}/${i}"><span class="ic">${s.i} </span>${t(s.n)}</a>`).join('')}</nav>
  <section id="stage"></section>
- <div class="navrow">${stage>0?`<a class="btn" href="#/l/${id}/${stage-1}">◀ ${STAGES[stage-1].n}</a>`:'<span></span>'}${stage<3?`<a class="btn primary" href="#/l/${id}/${stage+1}">Next: ${STAGES[stage+1].n} ▶</a>`:(nx?`<a class="btn" href="#/l/${nx}/0">Next lesson ▶</a>`:`<a class="btn" href="#/c/${M.cat}">All lessons</a>`)}</div></div>`;
+ <div class="navrow">${stage>0?`<a class="btn" href="#/l/${id}/${stage-1}">◀ ${t(STAGES[stage-1].n)}</a>`:'<span></span>'}${stage<3?`<a class="btn primary" href="#/l/${id}/${stage+1}">${t('Next: {0} ▶',t(STAGES[stage+1].n))}</a>`:(nx?`<a class="btn" href="#/l/${nx}/0">${t('Next lesson ▶')}</a>`:`<a class="btn" href="#/c/${M.cat}">${t('All lessons')}</a>`)}</div></div>`;
  const el=$('#stage');[stPicture,stSteps,stPencil,stCheck][stage](el,id,D,pr);
 }
 function markStage(id,k){const pr=prog(id);if(!pr[k]){pr[k]=true;save();}const p=$(`.pill[data-k="${k}"]`);if(p)p.classList.add('done');}
 
 function stPicture(el,id,D){
- el.innerHTML=`<div class="card life"><div class="tag">Real life</div><h3>${D.life.title}</h3><div>${D.life.html}</div></div>
- ${D.see.map((s,i)=>`<div class="card"><div class="tag">See it</div><h3>${s.title}</h3><p class="mute" style="margin-top:0">${s.hint}</p><div id="see${i}"></div></div>`).join('')}
- <div class="card"><div class="tag">Key words</div><dl class="vocab">${D.vocab.map(v=>`<dt>${v[0]}</dt><dd>${v[1]}</dd>`).join('')}</dl></div>`;
+ el.innerHTML=`<div class="card life"><div class="tag">${t('Real life')}</div><h3>${D.life.title}</h3><div>${D.life.html}</div></div>
+ ${D.see.map((s,i)=>`<div class="card"><div class="tag">${t('See it')}</div><h3>${s.title}</h3><p class="mute" style="margin-top:0">${s.hint}</p><div id="see${i}"></div></div>`).join('')}
+ <div class="card"><div class="tag">${t('Key words')}</div><dl class="vocab">${D.vocab.map(v=>`<dt>${v[0]}</dt><dd>${v[1]}</dd>`).join('')}</dl></div>`;
  D.see.forEach((s,i)=>s.mount($('#see'+i)));markStage(id,'pic');
 }
 function lineHTML(l,raw,hide){return `<div class="ln-step ${hide?'hide':''}"><div class="m math">${raw||l[2]?l[0]:mx(l[0])}</div><div class="why">${l[1]}</div></div>`;}
 function stSteps(el,id,D){
  el.innerHTML=D.examples.map((e,i)=>`<div class="card ex" data-i="${i}"><div class="tag">${e.title}</div><div class="prob">${e.prob}</div><div class="lines">${e.lines.map((l,j)=>lineHTML(l,e.raw,j>0)).join('')}</div>
- <div class="row"><button class="primary" data-a="next">Next step ▼</button><button data-a="all">Show all</button></div></div>`).join('')+
- `<div class="card mistake"><div class="tag">⚠ Common mistake</div><div class="mk"><div class="x"><span class="bad">✗</span> <span class="math">${D.mistake.bad}</span></div><div class="o"><span class="good">✓</span> <span class="math">${D.mistake.good}</span></div></div><p style="margin-bottom:0">${D.mistake.why}</p></div>`;
+ <div class="row"><button class="primary" data-a="next">${t('Next step ▼')}</button><button data-a="all">${t('Show all')}</button></div></div>`).join('')+
+ `<div class="card mistake"><div class="tag">${t('⚠ Common mistake')}</div><div class="mk"><div class="x"><span class="bad">✗</span> <span class="math">${D.mistake.bad}</span></div><div class="o"><span class="good">✓</span> <span class="math">${D.mistake.good}</span></div></div><p style="margin-bottom:0">${D.mistake.why}</p></div>`;
  const chk=()=>{if(!$$('.ln-step.hide',el).length)markStage(id,'steps');};
  el.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const card=b.closest('.ex');const hidden=$$('.ln-step.hide',card);
   if(b.dataset.a==='next'&&hidden.length)hidden[0].classList.remove('hide');if(b.dataset.a==='all')hidden.forEach(h=>h.classList.remove('hide'));
@@ -1172,53 +1197,53 @@ function stSteps(el,id,D){
 }
 function stPencil(el,id,D,pr){
  let p,counted,shown;
- const status=()=>`Correct answers: <b>${pr.pc||0}</b> · ${pr.pencil?'<span class="good">✓ Pencil step complete</span> — keep practicing or move on to Check.':'Get 2 correct to complete this step.'}`;
+ const status=()=>t('Correct answers: <b>{0}</b> · ',pr.pc||0)+(pr.pencil?`<span class="good">${t('✓ Pencil step complete')}</span>${t(' — keep practicing or move on to Check.')}`:t('Get 2 correct to complete this step.'));
  const fresh=()=>{p=D.practice();counted=false;shown=false;draw();};
- const draw=()=>{el.innerHTML=`<div class="card"><div class="tag">Your turn</div><div class="pencilnote">✏️ <b>Pencil first:</b> work it out on paper — write each step and why. Then enter your answer.</div>
+ const draw=()=>{el.innerHTML=`<div class="card"><div class="tag">${t('Your turn')}</div><div class="pencilnote">✏️ ${t('<b>Pencil first:</b> work it out on paper — write each step and why. Then enter your answer.')}</div>
   <div class="prob">${p.q}</div>${p.fig||''}
   <div style="margin-top:8px">${p.type==='mc'?p.opts.map((o,i)=>`<button class="opt" data-o="${i}">${o}</button>`).join(''):p.fields.map((f,i)=>`<label class="fld">${f.label} <input data-f="${i}" autocomplete="off" inputmode="decimal"> ${f.unit||''}</label>`).join('')}</div>
-  <div class="row">${p.type==='mc'?'':'<button class="primary" data-a="check">Check</button>'}${p.hint?'<button data-a="hint">💡 Hint</button>':''}${p.sol?'<button data-a="sol">Show solution</button>':''}<button data-a="new">New problem ↻</button></div>
+  <div class="row">${p.type==='mc'?'':`<button class="primary" data-a="check">${t('btnCheck')}</button>`}${p.hint?`<button data-a="hint">${t('💡 Hint')}</button>`:''}${p.sol?`<button data-a="sol">${t('Show solution')}</button>`:''}<button data-a="new">${t('New problem ↻')}</button></div>
   <div class="fb"></div>${p.sol?`<div class="solbox" hidden>${p.sol.map(l=>lineHTML(l,p.raw,false)).join('')}</div>`:''}<div class="streak">${status()}</div></div>`;
   const inp=$('input',el);if(inp)inp.focus({preventScroll:true});};
  const win=()=>{if(!counted&&!shown){counted=true;pr.pc=(pr.pc||0)+1;save();if(pr.pc>=2)markStage(id,'pencil');}$('.streak',el).innerHTML=status();};
  el.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const fb=$('.fb',el);
-  if(b.dataset.o!==undefined){const i=+b.dataset.o;if(i===p.a){b.classList.add('right');fb.className='fb okk';fb.innerHTML='✓ Correct! '+(p.why||'');$$('.opt',el).forEach(x=>x.disabled=true);win();}else{b.classList.add('wrong');b.disabled=true;fb.className='fb no';fb.textContent='Not quite — look at the picture again and try another choice.';}return;}
+  if(b.dataset.o!==undefined){const i=+b.dataset.o;if(i===p.a){b.classList.add('right');fb.className='fb okk';fb.innerHTML=t('✓ Correct! ')+(p.why||'');$$('.opt',el).forEach(x=>x.disabled=true);win();}else{b.classList.add('wrong');b.disabled=true;fb.className='fb no';fb.textContent=t('Not quite — look at the picture again and try another choice.');}return;}
   const a=b.dataset.a;
   if(a==='new')fresh();
   if(a==='hint'){fb.className='fb';fb.innerHTML='💡 '+p.hint;}
   if(a==='sol'){shown=true;$('.solbox',el).hidden=false;}
   if(a==='check'){const res=p.fields.map((f,i)=>{const v=parseAns($(`[data-f="${i}"]`,el).value);return !isNaN(v)&&Math.abs(v-f.answer)<=(f.tol||0.011);});
    const blank=p.fields.some((f,i)=>!$(`[data-f="${i}"]`,el).value.trim());
-   if(blank){fb.className='fb no';fb.textContent='Enter an answer in every box first.';return;}
+   if(blank){fb.className='fb no';fb.textContent=t('Enter an answer in every box first.');return;}
    p.fields.forEach((f,i)=>$(`[data-f="${i}"]`,el).style.borderColor=res[i]?'#15803d':'#b91c1c');
-   if(res.every(Boolean)){fb.className='fb okk';fb.innerHTML='✓ Correct! Nice pencil work. Try another one with “New problem”.';win();}
-   else{fb.className='fb no';fb.textContent='Not yet. Check your work step by step, or tap 💡 Hint.';}}});
+   if(res.every(Boolean)){fb.className='fb okk';fb.innerHTML=t('✓ Correct! Nice pencil work. Try another one with “New problem”.');win();}
+   else{fb.className='fb no';fb.textContent=t('Not yet. Check your work step by step, or tap 💡 Hint.');}}});
  el.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('input')){const c=$('[data-a=check]',el);if(c)c.click();}});
  fresh();
 }
 function stCheck(el,id,D,pr){
  const sel=[];
- const draw=()=>{el.innerHTML=`<div class="card"><div class="tag">Quick check</div><p class="mute" style="margin-top:0">Answer all 3. Get at least 2 right to complete the lesson.</p>
+ const draw=()=>{el.innerHTML=`<div class="card"><div class="tag">${t('Quick check')}</div><p class="mute" style="margin-top:0">${t('Answer all 3. Get at least 2 right to complete the lesson.')}</p>
   ${D.check.map((c,i)=>`<div class="qq" data-q="${i}"><b>${i+1}. ${c.q}</b>${c.o.map((o,j)=>`<button class="opt" data-q="${i}" data-j="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}<div class="why">${c.why}</div></div>`).join('')}
-  <div class="row"><button class="primary" data-a="submit">Submit</button></div><div id="res"></div></div>`;};
+  <div class="row"><button class="primary" data-a="submit">${t('Submit')}</button></div><div id="res"></div></div>`;};
  draw();
  el.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
   if(b.dataset.j!==undefined){const q=+b.dataset.q;if(el.dataset.locked)return;sel[q]=+b.dataset.j;$$(`.opt[data-q="${q}"]`,el).forEach(x=>x.classList.toggle('sel',+x.dataset.j===sel[q]));return;}
-  if(b.dataset.a==='submit'){if(D.check.some((c,i)=>sel[i]===undefined)){$('#res',el).innerHTML='<p class="bad">Answer all 3 questions first.</p>';return;}
+  if(b.dataset.a==='submit'){if(D.check.some((c,i)=>sel[i]===undefined)){$('#res',el).innerHTML=`<p class="bad">${t('Answer all 3 questions first.')}</p>`;return;}
    el.dataset.locked=1;let score=0;
    D.check.forEach((c,i)=>{const ok=sel[i]===c.a;if(ok)score++;$(`.qq[data-q="${i}"]`,el).classList.add('shown');$$(`.opt[data-q="${i}"]`,el).forEach(x=>{const j=+x.dataset.j;x.classList.remove('sel');if(j===c.a)x.classList.add('right');else if(j===sel[i])x.classList.add('wrong');x.disabled=true;});});
    b.disabled=true;
    if(score>=2){pr.check=score;pr.done=true;save();markStage(id,'check');topProg();const nx=nextLesson(id);
-    $('#res',el).innerHTML=`<div class="done-banner">🎉 ${score}/3 — Lesson complete!${nx?` <a class="btn primary" href="#/l/${nx}/0" style="margin-left:8px">Next lesson: ${META[nx].title} ▶</a>`:''}</div>`;}
-   else $('#res',el).innerHTML=`<p class="bad">${score}/3. Read the explanations, review the Steps, then try again.</p><div class="row"><a class="btn" href="#/l/${id}/1">◀ Review Steps</a><button data-a="retry">Try again</button></div>`;}
+    $('#res',el).innerHTML=`<div class="done-banner">🎉 ${t('{0}/3 — Lesson complete!',score)}${nx?` <a class="btn primary" href="#/l/${nx}/0" style="margin-left:8px">${t('Next lesson: {0} ▶',META[nx].title)}</a>`:''}</div>`;}
+   else $('#res',el).innerHTML=`<p class="bad">${t('{0}/3. Read the explanations, review the Steps, then try again.',score)}</p><div class="row"><a class="btn" href="#/l/${id}/1">${t('◀ Review Steps')}</a><button data-a="retry">${t('Try again')}</button></div>`;}
   if(b.dataset.a==='retry'){delete el.dataset.locked;sel.length=0;draw();}});
 }
 
 function route(){const h=location.hash.replace(/^#\/?/,'').split('/');
  if(h[0]==='l'&&META[h[1]])CUR=META[h[1]].cat;else if(h[0]==='c'&&CATS.some(c=>c.k===h[1]))CUR=h[1];
- if(h[0]==='l'&&hasLesson(h[1])){const s=Math.max(0,Math.min(3,+h[2]||0));if(L[h[1]])renderLesson(h[1],s);else{app.innerHTML='<div class="wrap"><p class="mute">Loading lesson…</p></div>';ensureLesson(h[1]).then(()=>{if(L[h[1]])renderLesson(h[1],s);else renderHome();topProg();}).catch(()=>{app.innerHTML='<div class="wrap"><p class="bad">Could not load this lesson. Check your internet connection and refresh.</p></div>';});}}else{document.documentElement.style.setProperty('--acc',CATS.find(c=>c.k===CUR).c);renderHome();}
+ if(h[0]==='l'&&hasLesson(h[1])){const s=Math.max(0,Math.min(3,+h[2]||0));if(L[h[1]])renderLesson(h[1],s);else{app.innerHTML=`<div class="wrap"><p class="mute">${t('Loading lesson…')}</p></div>`;ensureLesson(h[1]).then(()=>{if(L[h[1]])renderLesson(h[1],s);else renderHome();topProg();}).catch(()=>{app.innerHTML=`<div class="wrap"><p class="bad">${t('Could not load this lesson. Check your internet connection and refresh.')}</p></div>`;});}}else{document.documentElement.style.setProperty('--acc',CATS.find(c=>c.k===CUR).c);renderHome();}
  topProg();window.scrollTo(0,0);}
-window.addEventListener('hashchange',route);route();
+window.addEventListener('hashchange',route);applyChrome();route();
 </script>
 </body>
 </html>
