@@ -358,7 +358,7 @@ const NEWC=[
  L5('Parametric, Polar, and Vectors (BC)','#4f46e5',['Derivatives of Parametric Equations','Arc Length of Parametric Curves','Vector-Valued Functions and Motion','Polar Curves and Their Derivatives','Area in Polar Coordinates']),
  L5('Infinite Sequences and Series (BC)','#475569',['Convergence of Series','Geometric Series and p-Series','Comparison and Ratio Tests','Alternating Series and Error Bound','Taylor and Maclaurin Polynomials','Power Series and Radius of Convergence'])]}];
 NEWC.forEach(c=>c.modules.forEach((m,i)=>m.n=i+1));COURSE.push(...NEWC);
-const KAC={id:'KA',cat:'ka',label:'Algebra 1 (Khan Academy units)',unit:'Unit',modules:[
+const KAC={id:'KA',cat:'ka',label:'Algebra 1',unit:'Unit',modules:[
  L5('Algebra foundations','#0f766e',['Variables and Evaluating Expressions','Writing Algebraic Expressions','Dependent and Independent Variables','Combining Like Terms','Equivalent Expressions','Division by Zero']),
  L5('Solving equations & inequalities','#2563eb',['Equations with Variables on Both Sides','Equations with Parentheses','Number of Solutions to Linear Equations','Equations with Unknown Coefficients','Multi-Step Inequalities','Compound Inequalities']),
  L5('Working with units','#0891b2',['Rate Conversion','Appropriate Units','Word Problems with Multiple Units']),
@@ -378,8 +378,8 @@ KAC.modules.forEach((m,i)=>m.n=i+1);COURSE.push(KAC);
 const KA_ALIAS={'KA-4-2':'1A-2-3','KA-4-4':'1A-2-2','KA-4-5':'1A-2-5','KA-5-1':'1A-2-4','KA-6-1':'1A-4-1','KA-6-2':'1A-4-2','KA-6-3':'1A-4-3','KA-6-4':'1A-4-4','KA-6-6':'1A-4-5','KA-7-1':'1A-3-3','KA-7-3':'1A-4-6','KA-8-1':'1A-2-7','KA-8-3':'1A-2-6','KA-8-5':'1A-3-4',
  'KA-9-1':'1A-3-5','KA-9-2':'1A-3-6','KA-9-3':'1B-1-4','KA-9-4':'1B-1-5','KA-12-1':'1B-5-1','KA-12-2':'1B-1-1','KA-12-3':'1B-1-2','KA-12-4':'1B-1-3','KA-13-1':'1B-2-4','KA-13-2':'1B-2-5','KA-13-5':'1B-3-2','KA-13-6':'1B-3-3',
  'KA-14-1':'1B-4-1','KA-14-2':'1B-4-4','KA-14-3':'1B-3-4','KA-14-4':'1B-4-2','KA-14-5':'1B-3-6','KA-14-6':'1B-3-5','KA-14-7':'1B-4-3'};
-const CATS=[{k:'alg1',n:'Algebra 1',c:'#2563eb'},{k:'ka',n:'Algebra 1 (Khan)',c:'#0f766e'},{k:'geo',n:'Geometry',c:'#059669'},{k:'alg2',n:'Algebra II',c:'#9333ea'},{k:'pre',n:'Pre-Calculus',c:'#d97706'},{k:'calc',n:'Calculus',c:'#e11d48'}];
-let CUR='alg1';
+const CATS=[{k:'ka',n:'Algebra 1',c:'#0f766e'},{k:'geo',n:'Geometry',c:'#059669'},{k:'alg2',n:'Algebra II',c:'#9333ea'},{k:'pre',n:'Pre-Calculus',c:'#d97706'},{k:'calc',n:'Calculus',c:'#e11d48'}];
+let CUR='ka';
 const ORDER=[];const META={};
 COURSE.forEach(c=>c.modules.forEach(m=>m.lessons.forEach((t,i)=>{const id=`${c.id}-${m.n}-${i+1}`;ORDER.push(id);META[id]={c:c.id,cat:c.cat,lab:c.label,u:c.unit||'Module',m:m.n,mt:m.title,n:i+1,title:t,color:m.color};})));
 
@@ -1341,6 +1341,9 @@ function stCheck(el,id,D,pr){
 }
 
 function route(){const h=location.hash.replace(/^#\/?/,'').split('/');
+ /* L4L tab removed: send old Algebra 1A/1B links to the matching Algebra 1 lesson, or to the course page */
+ if(h[0]==='l'&&META[h[1]]&&META[h[1]].cat==='alg1'){const k=Object.keys(KA_ALIAS).find(a=>KA_ALIAS[a]===h[1]);location.replace(k?`#/l/${k}/${h[2]||0}`:'#/c/ka');return;}
+ if(h[0]==='c'&&h[1]==='alg1'){location.replace('#/c/ka');return;}
  if(h[0]==='l'&&META[h[1]])CUR=META[h[1]].cat;else if(h[0]==='c'&&CATS.some(c=>c.k===h[1]))CUR=h[1];
  if(h[0]==='l'&&hasLesson(h[1])){const s=Math.max(0,Math.min(3,+h[2]||0));if(L[h[1]])renderLesson(h[1],s);else{app.innerHTML=`<div class="wrap"><p class="mute">${t('Loading lesson…')}</p></div>`;ensureLesson(h[1]).then(()=>{if(L[h[1]])renderLesson(h[1],s);else renderHome();topProg();}).catch(()=>{app.innerHTML=`<div class="wrap"><p class="bad">${t('Could not load this lesson. Check your internet connection and refresh.')}</p></div>`;});}}else{document.documentElement.style.setProperty('--acc',CATS.find(c=>c.k===CUR).c);renderHome();}
  topProg();window.scrollTo(0,0);}
