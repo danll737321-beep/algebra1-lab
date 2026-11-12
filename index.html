@@ -232,10 +232,30 @@ const NEWC=[
  L5('Parametric, Polar, and Vectors (BC)','#4f46e5',['Derivatives of Parametric Equations','Arc Length of Parametric Curves','Vector-Valued Functions and Motion','Polar Curves and Their Derivatives','Area in Polar Coordinates']),
  L5('Infinite Sequences and Series (BC)','#475569',['Convergence of Series','Geometric Series and p-Series','Comparison and Ratio Tests','Alternating Series and Error Bound','Taylor and Maclaurin Polynomials','Power Series and Radius of Convergence'])]}];
 NEWC.forEach(c=>c.modules.forEach((m,i)=>m.n=i+1));COURSE.push(...NEWC);
-const CATS=[{k:'alg1',n:'Algebra 1',c:'#2563eb'},{k:'geo',n:'Geometry',c:'#059669'},{k:'alg2',n:'Algebra II',c:'#9333ea'},{k:'pre',n:'Pre-Calculus',c:'#d97706'},{k:'calc',n:'Calculus',c:'#e11d48'}];
+const KAC={id:'KA',cat:'ka',label:'Algebra 1 (Khan Academy units)',unit:'Unit',modules:[
+ L5('Algebra foundations','#0f766e',['Variables and Evaluating Expressions','Writing Algebraic Expressions','Dependent and Independent Variables','Combining Like Terms','Equivalent Expressions','Division by Zero']),
+ L5('Solving equations & inequalities','#2563eb',['Equations with Variables on Both Sides','Equations with Parentheses','Number of Solutions to Linear Equations','Equations with Unknown Coefficients','Multi-Step Inequalities','Compound Inequalities']),
+ L5('Working with units','#0891b2',['Rate Conversion','Appropriate Units','Word Problems with Multiple Units']),
+ L5('Linear equations & graphs','#059669',['Two-Variable Linear Equations Intro','Slope','Horizontal and Vertical Lines','x- and y-Intercepts','Applying Intercepts and Slope']),
+ L5('Forms of linear equations','#d97706',['Intro to Slope-Intercept Form','Writing Slope-Intercept Equations','Point-Slope Form','Standard Form and Converting Between Forms']),
+ L5('Systems of equations','#ea580c',['Introduction to Systems of Equations','Solving Systems with Substitution','Solving Systems with Elimination','Equivalent Systems (Multiplying First)','Number of Solutions to Systems','Systems of Equations Word Problems']),
+ L5('Inequalities (systems & graphs)','#be123c',['Graphing Two-Variable Inequalities','Modeling with Linear Inequalities','Systems of Inequalities']),
+ L5('Functions','#9333ea',['Evaluating Functions and Function Notation','Domain and Range','Recognizing Functions','Maximum, Minimum, and Intervals','Interpreting Features of Graphs','Average Rate of Change','Intro to Inverse Functions']),
+ L5('Sequences','#7c3aed',['Introduction to Arithmetic Sequences','Constructing Arithmetic Sequences','Introduction to Geometric Sequences','Constructing Geometric Sequences']),
+ L5('Absolute value & piecewise functions','#db2777',['Graphs of Absolute Value Functions','Piecewise Functions']),
+ L5('Exponents & radicals','#c026d3',['Exponent Properties','Zero and Negative Exponents','Square Roots and Cube Roots','Simplifying Square Roots']),
+ L5('Exponential growth & decay','#4f46e5',['Exponential vs. Linear Growth','Exponential Expressions and Functions','Graphs of Exponential Functions','Exponential Growth and Decay Models']),
+ L5('Quadratics: Multiplying & factoring','#e11d48',['Multiplying Monomials by Polynomials','Multiplying Binomials','Special Products of Binomials','Introduction to Factoring (GCF)','Factoring x² + bx + c','Factoring by Grouping','Difference of Squares and Perfect Squares']),
+ L5('Quadratic functions & equations','#b45309',['Intro to Parabolas','Factored Form and Zeros','Solving by Taking Square Roots','Vertex Form and Transformations','Completing the Square','The Quadratic Formula','Standard Form and Features','Strategizing to Solve Quadratic Equations']),
+ L5('Irrational numbers','#475569',['Rational and Irrational Numbers','Sums and Products of Rational and Irrational Numbers','Proofs Concerning Irrational Numbers'])]};
+KAC.modules.forEach((m,i)=>m.n=i+1);COURSE.push(KAC);
+const KA_ALIAS={'KA-4-2':'1A-2-3','KA-4-4':'1A-2-2','KA-4-5':'1A-2-5','KA-5-1':'1A-2-4','KA-6-1':'1A-4-1','KA-6-2':'1A-4-2','KA-6-3':'1A-4-3','KA-6-4':'1A-4-4','KA-6-6':'1A-4-5','KA-7-1':'1A-3-3','KA-7-3':'1A-4-6','KA-8-1':'1A-2-7','KA-8-3':'1A-2-6','KA-8-5':'1A-3-4',
+ 'KA-9-1':'1A-3-5','KA-9-2':'1A-3-6','KA-9-3':'1B-1-4','KA-9-4':'1B-1-5','KA-12-1':'1B-5-1','KA-12-2':'1B-1-1','KA-12-3':'1B-1-2','KA-12-4':'1B-1-3','KA-13-1':'1B-2-4','KA-13-2':'1B-2-5','KA-13-5':'1B-3-2','KA-13-6':'1B-3-3',
+ 'KA-14-1':'1B-4-1','KA-14-2':'1B-4-4','KA-14-3':'1B-3-4','KA-14-4':'1B-4-2','KA-14-5':'1B-3-6','KA-14-6':'1B-3-5','KA-14-7':'1B-4-3'};
+const CATS=[{k:'alg1',n:'Algebra 1',c:'#2563eb'},{k:'ka',n:'Algebra 1 (Khan)',c:'#0f766e'},{k:'geo',n:'Geometry',c:'#059669'},{k:'alg2',n:'Algebra II',c:'#9333ea'},{k:'pre',n:'Pre-Calculus',c:'#d97706'},{k:'calc',n:'Calculus',c:'#e11d48'}];
 let CUR='alg1';
 const ORDER=[];const META={};
-COURSE.forEach(c=>c.modules.forEach(m=>m.lessons.forEach((t,i)=>{const id=`${c.id}-${m.n}-${i+1}`;ORDER.push(id);META[id]={c:c.id,cat:c.cat,lab:c.label,m:m.n,mt:m.title,n:i+1,title:t,color:m.color};})));
+COURSE.forEach(c=>c.modules.forEach(m=>m.lessons.forEach((t,i)=>{const id=`${c.id}-${m.n}-${i+1}`;ORDER.push(id);META[id]={c:c.id,cat:c.cat,lab:c.label,u:c.unit||'Module',m:m.n,mt:m.title,n:i+1,title:t,color:m.color};})));
 
 /* ============ graph grid ============ */
 let GID=0;
@@ -1099,9 +1119,11 @@ const STAGES=[{k:'pic',n:'Picture',i:'🖼'},{k:'steps',n:'Steps',i:'🪜'},{k:'
 const app=$('#app');
 const MODFILES={'1A-4':'js/1a-m4.js','1A-5':'js/1a-m5.js','1B-1':'js/1b-m1.js','1B-2':'js/1b-m2.js','1B-3':'js/1b-m3.js','1B-4':'js/1b-m4.js','1B-5':'js/1b-m5.js'};
 for(let i=1;i<=9;i++)MODFILES['GEO-'+i]=`js/geo-m${i}.js`;
-const PREREQ={GEO:'js/geo-core.js'};
+const PREREQ={GEO:'js/geo-core.js',KA:'js/ka-core.js'};
+for(const u of [1,2,3,4,5,6,7,8,10,11,13,14,15])MODFILES['KA-'+u]=`js/ka-u${u}.js`;
+function ensureLesson(id){if(L[id])return Promise.resolve();const src=KA_ALIAS[id];if(src)return ensureLesson(src).then(()=>{if(L[src]&&!L[id])L[id]=Object.assign({},L[src]);});return loadMod(modKey(id));}
 const modKey=id=>id.split('-').slice(0,2).join('-');
-const hasLesson=id=>!!L[id]||!!MODFILES[modKey(id)];
+const hasLesson=id=>!!L[id]||!!MODFILES[modKey(id)]||!!KA_ALIAS[id];
 const LOADED={};
 function loadJS(src){return LOADED[src]||(LOADED[src]=new Promise((res,rej)=>{const sc=document.createElement('script');sc.src=src;sc.onload=res;sc.onerror=()=>{delete LOADED[src];rej();};document.head.appendChild(sc);}));}
 function loadMod(k){if(!MODFILES[k])return Promise.resolve();const pre=PREREQ[k.split('-')[0]];return (pre?loadJS(pre):Promise.resolve()).then(()=>loadJS(MODFILES[k]));}
@@ -1118,13 +1140,13 @@ function renderHome(){
  :`<div class="mute" style="font-size:15px">Course map is ready: ${COURSE.filter(c=>c.cat===CUR).reduce((a,c)=>a+c.modules.length,0)} modules, ${ord.length} lessons. Interactive lessons coming soon.</div>`;
  app.innerHTML=`<div class="wrap">${tabs}<div class="card hero"><h1>${cat.n} Visual Lab</h1><p style="margin:4px 0">See the idea first. Then do it with your pencil.</p>
  <div class="flow"><span>🖼 1. Picture</span><span>🪜 2. Steps</span><span>✏️ 3. Pencil</span><span>✅ 4. Check</span></div>${hero}</div>
- ${COURSE.filter(c=>c.cat===CUR).map(c=>`<h2>${c.label}</h2><div class="mods">${c.modules.map(m=>`<div class="mod" style="--mc:${m.color}"><span class="mn">Module ${m.n}</span><b>${m.title}</b><ol>${m.lessons.map((t,i)=>{const id=`${c.id}-${m.n}-${i+1}`;return hasLesson(id)?`<li><a href="#/l/${id}/0"><span class="st ${isDone(id)?'d':''}">${isDone(id)?'✓':'○'}</span>${i+1}. ${t}</a></li>`:`<li class="soon"><span class="st">·</span>${i+1}. ${t}<small>soon</small></li>`;}).join('')}</ol></div>`).join('')}</div>`).join('')}</div>`;
+ ${COURSE.filter(c=>c.cat===CUR).map(c=>`<h2>${c.label}</h2><div class="mods">${c.modules.map(m=>`<div class="mod" style="--mc:${m.color}"><span class="mn">${c.unit||'Module'} ${m.n}</span><b>${m.title}</b><ol>${m.lessons.map((t,i)=>{const id=`${c.id}-${m.n}-${i+1}`;return hasLesson(id)?`<li><a href="#/l/${id}/0"><span class="st ${isDone(id)?'d':''}">${isDone(id)?'✓':'○'}</span>${i+1}. ${t}</a></li>`:`<li class="soon"><span class="st">·</span>${i+1}. ${t}<small>soon</small></li>`;}).join('')}</ol></div>`).join('')}</div>`).join('')}</div>`;
 }
 
 function renderLesson(id,stage){
  const M=META[id],D=L[id],pr=prog(id);document.documentElement.style.setProperty('--acc',M.color);
  const nx=nextLesson(id);
- app.innerHTML=`<div class="wrap"><a href="#/c/${M.cat}">← All ${CATS.find(c=>c.k===M.cat).n} lessons</a><div class="crumb">${M.lab} · Module ${M.m}: ${M.mt} · Lesson ${M.n}</div><h1>${M.title}</h1><div class="goal">🎯 ${D.goal}</div>
+ app.innerHTML=`<div class="wrap"><a href="#/c/${M.cat}">← All ${CATS.find(c=>c.k===M.cat).n} lessons</a><div class="crumb">${M.lab} · ${M.u} ${M.m}: ${M.mt} · Lesson ${M.n}</div><h1>${M.title}</h1><div class="goal">🎯 ${D.goal}</div>
  <nav class="stepper">${STAGES.map((s,i)=>`<a class="pill ${i===stage?'on':''} ${pr[s.k]?'done':''}" data-k="${s.k}" href="#/l/${id}/${i}"><span class="ic">${s.i} </span>${s.n}</a>`).join('')}</nav>
  <section id="stage"></section>
  <div class="navrow">${stage>0?`<a class="btn" href="#/l/${id}/${stage-1}">◀ ${STAGES[stage-1].n}</a>`:'<span></span>'}${stage<3?`<a class="btn primary" href="#/l/${id}/${stage+1}">Next: ${STAGES[stage+1].n} ▶</a>`:(nx?`<a class="btn" href="#/l/${nx}/0">Next lesson ▶</a>`:`<a class="btn" href="#/c/${M.cat}">All lessons</a>`)}</div></div>`;
@@ -1194,7 +1216,7 @@ function stCheck(el,id,D,pr){
 
 function route(){const h=location.hash.replace(/^#\/?/,'').split('/');
  if(h[0]==='l'&&META[h[1]])CUR=META[h[1]].cat;else if(h[0]==='c'&&CATS.some(c=>c.k===h[1]))CUR=h[1];
- if(h[0]==='l'&&hasLesson(h[1])){const s=Math.max(0,Math.min(3,+h[2]||0));if(L[h[1]])renderLesson(h[1],s);else{app.innerHTML='<div class="wrap"><p class="mute">Loading lesson…</p></div>';loadMod(modKey(h[1])).then(()=>{if(L[h[1]])renderLesson(h[1],s);else renderHome();topProg();}).catch(()=>{app.innerHTML='<div class="wrap"><p class="bad">Could not load this lesson. Check your internet connection and refresh.</p></div>';});}}else{document.documentElement.style.setProperty('--acc',CATS.find(c=>c.k===CUR).c);renderHome();}
+ if(h[0]==='l'&&hasLesson(h[1])){const s=Math.max(0,Math.min(3,+h[2]||0));if(L[h[1]])renderLesson(h[1],s);else{app.innerHTML='<div class="wrap"><p class="mute">Loading lesson…</p></div>';ensureLesson(h[1]).then(()=>{if(L[h[1]])renderLesson(h[1],s);else renderHome();topProg();}).catch(()=>{app.innerHTML='<div class="wrap"><p class="bad">Could not load this lesson. Check your internet connection and refresh.</p></div>';});}}else{document.documentElement.style.setProperty('--acc',CATS.find(c=>c.k===CUR).c);renderHome();}
  topProg();window.scrollTo(0,0);}
 window.addEventListener('hashchange',route);route();
 </script>
