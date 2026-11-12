@@ -359,6 +359,30 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,s
 .unit-diagnostic{border-color:var(--alg-border);background:#f8fafc}.unit-diagnostic button{font:inherit;font-size:14px;min-height:42px}.unit-callout{border-left-color:var(--alg-teal);background:#effaf7}
 @media(max-width:680px){.unit-start-row{align-items:stretch;flex-direction:column;gap:8px}.unit-start-btn{width:100%;justify-content:center}.unit-lesson{min-height:0}.unit-feature{border-left-width:4px}}
 /* ============ END ALGEBRA 1 UX CONSISTENCY PASS ============ */
+
+/* ============ LEFT COURSE NAVIGATION ============ */
+.home-layout{display:grid;grid-template-columns:248px minmax(0,1fr);gap:26px;align-items:start;max-width:1320px}
+.course-sidebar{position:sticky;top:82px;max-height:calc(100vh - 100px);overflow:auto;background:rgba(255,255,255,.88);border:1px solid #e2e8f0;border-radius:16px;padding:16px;box-shadow:0 5px 18px rgba(15,23,42,.045)}
+.sidebar-heading{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin:2px 8px 8px}
+.sidebar-courses,.sidebar-units{display:grid;gap:4px}
+.sidebar-course,.sidebar-unit{display:block;text-decoration:none;color:#334155;border-radius:10px;padding:9px 10px;line-height:1.35}
+.sidebar-course{font-weight:700;font-size:14px}
+.sidebar-course:hover,.sidebar-unit:hover{background:#eff6ff;color:#1d4ed8}
+.sidebar-course.active{background:#eaf2ff;color:#1d4ed8;box-shadow:inset 3px 0 #2563eb}
+.sidebar-units-heading{margin-top:22px}
+.sidebar-unit{border-left:2px solid #e2e8f0;margin-left:8px;padding:8px 10px}
+.sidebar-unit span{display:block;font-size:12px;font-weight:800;color:#0f766e}
+.sidebar-unit small{display:block;font-size:12px;color:#64748b;margin-top:2px}
+.home-main{min-width:0}
+.home-main>.hero{margin-top:0}
+.home-main .unit-feature{margin-top:18px}
+.home-main .course-intro{margin-top:28px}
+.interactive-tools-heading{margin:34px 0 10px;padding-top:22px;border-top:1px solid #e2e8f0}
+.interactive-tools-heading h2{margin:0 0 4px;font-size:22px}
+.interactive-tools-heading p{margin:0;color:#64748b;font-size:14px}
+@media(max-width:900px){.home-layout{grid-template-columns:210px minmax(0,1fr);gap:16px}.course-sidebar{padding:12px}}
+@media(max-width:680px){.home-layout{display:block}.course-sidebar{position:static;max-height:none;margin-bottom:14px;padding:12px}.sidebar-courses{display:flex;overflow-x:auto;padding-bottom:4px}.sidebar-course{white-space:nowrap;flex:none}.sidebar-units{display:flex;overflow-x:auto;padding-bottom:4px}.sidebar-unit{min-width:155px;margin-left:0}.sidebar-units-heading{margin-top:14px}.home-main>.hero{margin-top:0}}
+/* ============ END LEFT COURSE NAVIGATION ============ */
 </style>
 </head>
 <body>
@@ -1488,13 +1512,13 @@ function renderHome(){
   const next=ready.find(id=>!isDone(id))||ready[0];
   const pct=ready.length?Math.round(finished/ready.length*100):0;
   const unitLabel=t((c.unit||'Module')+' {0}',m.n);
-  return `<article class="mod" style="--mc:${m.color}"><span class="mn">${unitLabel}</span><b>${mt(c.id+'-'+m.n,m.title)}</b><div class="module-progress"><div class="module-progress-top"><span>${t('{0} of {1} available lessons',finished,ready.length)}</span><span>${pct}%</span></div><div class="module-progress-track" role="progressbar" aria-label="${unitLabel} ${t('progress')}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><div class="module-progress-fill" style="width:${pct}%"></div></div></div><ol class="module-lessons">${m.lessons.map((title,i)=>{const id=ids[i];return hasLesson(id)?`<li><a href="#/l/${id}/0"><span class="st ${isDone(id)?'d':''}" aria-hidden="true">${isDone(id)?'✓':'○'}</span>${i+1}. ${lt(id)}</a></li>`:`<li class="soon"><span class="st" aria-hidden="true">·</span>${i+1}. ${lt(id)}<small>${window.t('soon')}</small></li>`;}).join('')}</ol><div class="module-foot">${next?`<span class="module-status">${finished===ready.length?t('Unit completed'):finished?t('In progress'):t('Not started')}</span><a class="btn ${finished===ready.length?'':'primary'}" href="#/l/${next}/0">${finished===ready.length?t('Review unit'):finished?t('Continue unit'):t('Start unit')} →</a>`:`<span class="module-empty">${t('Lessons coming soon')}</span>`}</div></article>`;
+  return `<article class="mod" id="unit-${c.id}-${m.n}" style="--mc:${m.color}"><span class="mn">${unitLabel}</span><b>${mt(c.id+'-'+m.n,m.title)}</b><div class="module-progress"><div class="module-progress-top"><span>${t('{0} of {1} available lessons',finished,ready.length)}</span><span>${pct}%</span></div><div class="module-progress-track" role="progressbar" aria-label="${unitLabel} ${t('progress')}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><div class="module-progress-fill" style="width:${pct}%"></div></div></div><ol class="module-lessons">${m.lessons.map((title,i)=>{const id=ids[i];return hasLesson(id)?`<li><a href="#/l/${id}/0"><span class="st ${isDone(id)?'d':''}" aria-hidden="true">${isDone(id)?'✓':'○'}</span>${i+1}. ${lt(id)}</a></li>`:`<li class="soon"><span class="st" aria-hidden="true">·</span>${i+1}. ${lt(id)}<small>${window.t('soon')}</small></li>`;}).join('')}</ol><div class="module-foot">${next?`<span class="module-status">${finished===ready.length?t('Unit completed'):finished?t('In progress'):t('Not started')}</span><a class="btn ${finished===ready.length?'':'primary'}" href="#/l/${next}/0">${finished===ready.length?t('Review unit'):finished?t('Continue unit'):t('Start unit')} →</a>`:`<span class="module-empty">${t('Lessons coming soon')}</span>`}</div></article>`;
  }).join('')}</div></section>`).join('');
- app.innerHTML=`<div class="wrap">${tabs}<div class="card hero"><h1>${t('{0} Visual Lab',t(cat.n))}</h1><p style="margin:4px 0">${t('See the idea first. Then do it with your pencil.')}</p>
+ app.innerHTML=`<div class="wrap home-layout"><aside class="course-sidebar" aria-label="${t('Course navigation')}"><div class="sidebar-heading">${t('Courses')}</div><nav class="sidebar-courses" aria-label="${t('Course list')}">${CATS.map(c=>`<a class="sidebar-course ${c.k===CUR?'active':''}" href="#/c/${c.k}" ${c.k===CUR?'aria-current="page"':''}>${t(c.n)}</a>`).join('')}</nav><div class="sidebar-heading sidebar-units-heading">${t('Units')}</div><nav class="sidebar-units" aria-label="${t('Unit list')}">${COURSE.filter(c=>c.cat===CUR).map(c=>c.modules.map(m=>`<a class="sidebar-unit" href="#unit-${c.id}-${m.n}"><span>${t((c.unit||'Module')+' {0}',m.n)}</span><small>${mt(c.id+'-'+m.n,m.title)}</small></a>`).join('')).join('')}</nav></aside><main class="home-main"><div class="card hero"><h1>${t('{0} Visual Lab',t(cat.n))}</h1><p style="margin:4px 0">${t('See the idea first. Then do it with your pencil.')}</p>
  <div class="flow">${STAGES.map((x,i)=>`<span>${x.i} ${i+1}. ${t(x.n)}</span>`).join('')}</div>${hero}${t('zhNote')?`<div class="mute" style="font-size:13px;margin-top:8px">${t('zhNote')}</div>`:''}</div>
  ${CUR==='ka'?unit4Card:''}
- ${courseIntro}
- ${CUR==='ka'?`<section class="card slope-lab" id="slope-lab"><div class="slope-head"><div><h2>${t('Slope Explorer')}</h2><div class="mute" style="font-size:14px">${t('Change the slope and y-intercept. Watch the line move.')}</div></div><span class="tag">${t('INTERACTIVE')}</span></div><div class="slope-grid"><div><div class="slope-plot" id="slope-plot"></div><div class="slope-legend"><span><i class="slope-dot"></i> ${t('Y-intercept (b)')}</span><span>🟠 Rise / Run</span></div></div><div class="slope-controls"><div class="slope-control"><label for="slope-m">${t('Slope (m)')} <output id="slope-m-out">1</output></label><input id="slope-m" type="range" min="-3" max="3" step="0.5" value="1"></div><div class="slope-control"><label for="slope-b">${t('Y-intercept (b)')} <output id="slope-b-out">0</output></label><input id="slope-b" type="range" min="-4" max="4" step="1" value="0"></div><div class="slope-equation" id="slope-eq">y = x</div><div class="slope-insight" id="slope-insight" aria-live="polite"></div></div></div></section>`:''}
+ <div class="course-intro"><div><h2>${t('Your Learning Path')}</h2><p>${t('Work through each unit in order, or choose a lesson to review.')}</p></div><div class="course-stats"><span class="course-stat"><b>${courseUnits}</b> ${t('units')}</span><span class="course-stat"><b>${courseLessons}</b> ${t('lessons')}</span><span class="course-stat"><b>${av.length}</b> ${t('available')}</span></div></div>
+ ${CUR==='ka'?`<section class="interactive-tools-heading"><h2>${t('Interactive Learning Tools')}</h2><p>${t('Use these visual tools to explore and practice key ideas.')}</p></section><section class="card slope-lab" id="slope-lab"><div class="slope-head"><div><h2>${t('Slope Explorer')}</h2><div class="mute" style="font-size:14px">${t('Change the slope and y-intercept. Watch the line move.')}</div></div><span class="tag">${t('INTERACTIVE')}</span></div><div class="slope-grid"><div><div class="slope-plot" id="slope-plot"></div><div class="slope-legend"><span><i class="slope-dot"></i> ${t('Y-intercept (b)')}</span><span>🟠 Rise / Run</span></div></div><div class="slope-controls"><div class="slope-control"><label for="slope-m">${t('Slope (m)')} <output id="slope-m-out">1</output></label><input id="slope-m" type="range" min="-3" max="3" step="0.5" value="1"></div><div class="slope-control"><label for="slope-b">${t('Y-intercept (b)')} <output id="slope-b-out">0</output></label><input id="slope-b" type="range" min="-4" max="4" step="1" value="0"></div><div class="slope-equation" id="slope-eq">y = x</div><div class="slope-insight" id="slope-insight" aria-live="polite"></div></div></div></section>`:''}
  ${CUR==='ka'?`<div class="visual-labs">
  <section class="visual-lab" id="tiles-lab"><div class="visual-lab-head"><div><div class="lab-kicker">${t('VISUAL MODEL 01')}</div><h2>${t('Algebra Tiles')}</h2><div class="mute" style="font-size:13px">${t('Build an expression with positive and negative tiles.')}</div></div><span class="tag">${t('INTERACTIVE')}</span></div>
  <div class="tile-stage"><div class="tile-group"><div class="tile-group-title">${t('Your tiles')}</div><div class="tile-row" id="tile-row" aria-live="polite"></div><div class="mute" id="tile-count" style="font-size:12px;margin-top:8px"></div></div></div>
@@ -1507,7 +1531,7 @@ function renderHome(){
  <div class="balance-explain" id="balance-explain" aria-live="polite"></div><div class="row" style="justify-content:space-between;align-items:center"><span class="mute" id="balance-step" style="font-size:12px"></span><span class="good" id="balance-proof" style="font-size:12px"></span></div>
  <div class="balance-controls"><button class="primary" id="balance-next">${t('Next step')} →</button></div></section>
  </div>`:''}
- ${modules}</div>`;
+ ${modules}</main></div>`;
 
  if(CUR==='ka'){mountSlopeExplorer();mountAlgebraTiles();mountBalanceLab();}
 }
