@@ -1497,13 +1497,13 @@ function mountBalanceLab(){
 function renderHome(){
  const cat=CATS.find(c=>c.k===CUR),ord=ORDER.filter(inCat),av=avail.filter(inCat),done=av.filter(isDone).length,nid=av.find(id=>!isDone(id))||av[0],anyDone=done>0;
  const tabs=`<nav class="tabs" aria-label="Course selection" style="--tc:${cat.c}">${CATS.map(c=>{const n=avail.filter(id=>META[id].cat===c.k).length;return `<a class="${c.k===CUR?'on':''}" href="#/c/${c.k}" ${c.k===CUR?'aria-current="page"':''}>${t(c.n)}${n?'':`<small>${t('soon')}</small>`}</a>`;}).join('')}</nav>`;
+ const unit4Ids=['KA-4-1','KA-4-2','KA-4-3','KA-4-4','KA-4-5'];
+ const unit4Done=unit4Ids.filter(isDone).length;
  const hero=av.length?`${CUR==='ka'?`<a class="btn primary" href="#/u/linear-equations-graphs">${unit4Done?t('Continue Unit 4'):t('Start Unit 4')} →</a>`:`<a class="btn primary" href="#/l/${nid}/0">${anyDone?t('Continue'):t('Start')}: ${lt(nid)} ▶</a>`}
  <div class="bar" role="progressbar" aria-label="${t('Course progress')}" aria-valuemin="0" aria-valuemax="${av.length}" aria-valuenow="${done}"><i style="width:${av.length?done/av.length*100:0}%"></i></div><div class="mute" style="font-size:14px">${t('{0} of {1} lessons complete',done,av.length)}${av.length<ord.length?t(' · {0} lessons open now, more coming soon',av.length):''}</div>`
  :`<div class="mute" style="font-size:15px">${t('Course map is ready: {0} modules, {1} lessons. Interactive lessons coming soon.',COURSE.filter(c=>c.cat===CUR).reduce((a,c)=>a+c.modules.length,0),ord.length)}</div>`;
  const courseUnits=COURSE.filter(c=>c.cat===CUR).reduce((sum,c)=>sum+c.modules.length,0);
  const courseLessons=ord.length;
- const unit4Ids=['KA-4-1','KA-4-2','KA-4-3','KA-4-4','KA-4-5'];
- const unit4Done=unit4Ids.filter(isDone).length;
  const unit4Card=`<section class="unit-feature" aria-labelledby="unit4-feature-title"><div><span class="unit-eyebrow">${t('START HERE')} · ${t('ALGEBRA 1')}</span><h2 id="unit4-feature-title">${t('Unit 4: Linear Equations & Graphs')}</h2><p>${t('Connect equations, slope, and graphs. Learn how a linear relationship appears in different forms.')}</p><div class="unit-feature-meta"><span>${unit4Ids.length} ${t('lessons')}</span><span>${unit4Done}/${unit4Ids.length} ${t('completed')}</span><span>${t('Visual models + practice + checks')}</span></div></div><a class="btn primary" href="#/u/linear-equations-graphs">${t('Start Unit 4')} →</a></section>`;
  const courseIntro=`<div class="course-intro"><div><h2>${t('Your learning path')}</h2><p>${t('Work through each unit in order, or choose a lesson to review.')}</p></div><div class="course-stats"><span class="course-stat"><b>${courseUnits}</b> ${t('units')}</span><span class="course-stat"><b>${courseLessons}</b> ${t('lessons')}</span><span class="course-stat"><b>${av.length}</b> ${t('available')}</span></div></div>`;
  const modules=COURSE.filter(c=>c.cat===CUR).map(c=>`<section class="course-section" aria-label="${t(c.label)}"><h2>${t(c.label)}</h2><div class="mods">${c.modules.map(m=>{
