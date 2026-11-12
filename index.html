@@ -1348,7 +1348,6 @@ function mountAlgebraTiles(){
  const root=$('#tiles-lab');if(!root)return;
  let xp=2,xn=0,up=3,un=0;
  const row=$('#tile-row',root),expr=$('#tile-expression',root),feedback=$('#tile-feedback',root);
- const fmt=n=>n<0?'− '+Math.abs(n):String(n);
  function draw(){
   const tiles=[];
   for(let i=0;i<Math.min(xp,8);i++)tiles.push('<span class="alg-tile xpos" aria-label="positive x tile">x</span>');
@@ -1358,7 +1357,7 @@ function mountAlgebraTiles(){
   row.innerHTML=tiles.join('')||'<span class="mute">No tiles yet. Add a tile to begin.</span>';
   const x=xp-xn,c=up-un;
   const xPart=x===0?'':x===1?'x':x===-1?'−x':x<0?'− '+Math.abs(x)+'x':x+'x';
-  const cPart=c===0?'':c<0?'− '+Math.abs(c):'+ '+c;
+  const cPart=c===0?'':c<0?'− '+Math.abs(c):xPart?'+ '+c:String(c);
   expr.textContent=(xPart+(xPart&&cPart?' ':'')+cPart)||'0';
   const pairs=Math.min(xp,xn)+Math.min(up,un);
   feedback.textContent=pairs?t('You have {0} zero pair(s). A positive and a negative tile cancel to make 0.',pairs):t('Combine like tiles: x-tiles with x-tiles, and unit tiles with unit tiles.');
@@ -1387,7 +1386,7 @@ function mountBalanceLab(){
   const q=states[stage];left.textContent=q.l;right.textContent=q.r;ex.textContent=q.msg;
   beam.setAttribute('transform','rotate(0 180 58)');
   next.textContent=stage===2?'↺ '+t('Try another time'):t('Next step')+' →';
-  $('#balance-step',root).textContent=t('Step {0} of 2',stage);
+  $('#balance-step',root).textContent=stage===0?t('Starting equation'):t('Step {0} of 2',stage);
   $('#balance-proof',root).textContent=stage===2?'✓ '+t('Solution: x = 4'):t('Keep both sides equal');
  }
  next.addEventListener('click',()=>{
@@ -1407,7 +1406,7 @@ function renderHome(){
  <div class="flow">${STAGES.map((x,i)=>`<span>${x.i} ${i+1}. ${t(x.n)}</span>`).join('')}</div>${hero}${t('zhNote')?`<div class="mute" style="font-size:13px;margin-top:8px">${t('zhNote')}</div>`:''}</div>
  ${CUR==='ka'?`<section class="card slope-lab" id="slope-lab"><div class="slope-head"><div><h2>${t('Slope Explorer')}</h2><div class="mute" style="font-size:14px">${t('Change the slope and y-intercept. Watch the line move.')}</div></div><span class="tag">INTERACTIVE</span></div><div class="slope-grid"><div><div class="slope-plot" id="slope-plot"></div><div class="slope-legend"><span><i class="slope-dot"></i> ${t('Y-intercept (b)')}</span><span>🟠 Rise / Run</span></div></div><div class="slope-controls"><div class="slope-control"><label for="slope-m">${t('Slope (m)')} <output id="slope-m-out">1</output></label><input id="slope-m" type="range" min="-3" max="3" step="0.5" value="1"></div><div class="slope-control"><label for="slope-b">${t('Y-intercept (b)')} <output id="slope-b-out">0</output></label><input id="slope-b" type="range" min="-4" max="4" step="1" value="0"></div><div class="slope-equation" id="slope-eq">y = x</div><div class="slope-insight" id="slope-insight" aria-live="polite"></div></div></div></section>`:''}
 
- ${CUR==='ka'?\`<div class="visual-labs">
+ ${CUR==='ka'?`<div class="visual-labs">
  <section class="visual-lab" id="tiles-lab"><div class="visual-lab-head"><div><div class="lab-kicker">VISUAL MODEL 01</div><h2>${t('Algebra Tiles')}</h2><div class="mute" style="font-size:13px">${t('Build an expression with positive and negative tiles.')}</div></div><span class="tag">INTERACTIVE</span></div>
  <div class="tile-stage"><div class="tile-group"><div class="tile-group-title">${t('Your tiles')}</div><div class="tile-row" id="tile-row" aria-live="polite"></div><div class="mute" id="tile-count" style="font-size:12px;margin-top:8px"></div></div></div>
  <div class="tile-expression" id="tile-expression" aria-live="polite">2x + 3</div>
@@ -1418,7 +1417,7 @@ function renderHome(){
  <div class="balance-eq"><div class="balance-side" id="balance-left">2x + 3</div><div class="equals">=</div><div class="balance-side" id="balance-right">11</div></div>
  <div class="balance-explain" id="balance-explain" aria-live="polite"></div><div class="row" style="justify-content:space-between;align-items:center"><span class="mute" id="balance-step" style="font-size:12px"></span><span class="good" id="balance-proof" style="font-size:12px"></span></div>
  <div class="balance-controls"><button class="primary" id="balance-next">${t('Next step')} →</button></div></section>
- </div>\`:''}
+ </div>`:''}
  ${COURSE.filter(c=>c.cat===CUR).map(c=>`<h2>${t(c.label)}</h2><div class="mods">${c.modules.map(m=>`<div class="mod" style="--mc:${m.color}"><span class="mn">${t((c.unit||'Module')+' {0}',m.n)}</span><b>${mt(c.id+'-'+m.n,m.title)}</b><ol>${m.lessons.map((t,i)=>{const id=`${c.id}-${m.n}-${i+1}`;return hasLesson(id)?`<li><a href="#/l/${id}/0"><span class="st ${isDone(id)?'d':''}">${isDone(id)?'✓':'○'}</span>${i+1}. ${lt(id)}</a></li>`:`<li class="soon"><span class="st">·</span>${i+1}. ${lt(id)}<small>${window.t('soon')}</small></li>`;}).join('')}</ol></div>`).join('')}</div>`).join('')}</div>`;
 
  if(CUR==='ka'){mountSlopeExplorer();mountAlgebraTiles();mountBalanceLab();}
