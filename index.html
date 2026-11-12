@@ -190,17 +190,15 @@ const COURSE=[
 const L5=(t,c,ls)=>({title:t,color:c,lessons:ls});
 const NEWC=[
 {id:'GEO',cat:'geo',label:'Geometry',modules:[
- L5('Tools of Geometry','#2563eb',['Points, Lines, and Planes','Segment Length and Midpoints','Angle Measures and Angle Bisectors','Inductive and Deductive Reasoning']),
- L5('Transformations and Symmetry','#0891b2',['Translations','Reflections','Rotations','Compositions of Rigid Motions','Symmetry']),
- L5('Lines, Angles, and Proof','#059669',['Parallel Lines and Transversals','Proving Lines Are Parallel','Perpendicular Lines','Slopes of Parallel and Perpendicular Lines','Writing Two-Column Proofs']),
- L5('Triangle Congruence','#d97706',['Congruent Figures and Rigid Motions','SSS and SAS Congruence','ASA and AAS Congruence','HL Congruence','Using Congruent Triangles (CPCTC)']),
- L5('Properties of Triangles','#0d9488',['Interior and Exterior Angles','Isosceles and Equilateral Triangles','Triangle Inequalities','Perpendicular and Angle Bisectors','Medians and Altitudes','Midsegments']),
- L5('Quadrilaterals and Coordinate Proof','#9333ea',['Properties of Parallelograms','Conditions for Parallelograms','Rectangles, Rhombuses, and Squares','Trapezoids and Kites','Coordinate Proofs']),
- L5('Similarity','#db2777',['Dilations','Similar Figures','AA Similarity','Triangle Proportionality Theorem','Similarity and the Pythagorean Theorem']),
- L5('Right Triangles and Trigonometry','#e11d48',['Pythagorean Theorem and Its Converse','Special Right Triangles','The Tangent Ratio','Sine and Cosine Ratios','Solving Right Triangles','Law of Sines and Law of Cosines']),
- L5('Circles','#4f46e5',['Central and Inscribed Angles','Tangents and Circumscribed Angles','Chords, Secants, and Tangents','Arc Length and Radian Measure','Sector Area','Equations of Circles']),
- L5('Area, Surface Area, and Volume','#475569',['Area on the Coordinate Plane','Cross Sections and Solids of Rotation','Volume of Prisms and Cylinders','Volume of Pyramids and Cones','Volume of Spheres','Surface Area','Modeling with Density']),
- L5('Probability','#ca8a04',['Sample Spaces and Basic Probability','Permutations and Combinations','Independent Events','Conditional Probability','Two-Way Tables'])]},
+ L5('Performing Transformations','#2563eb',['Intro to Euclidean Geometry','Translations','Rotations','Reflections','Dilations']),
+ L5('Transformation Properties and Proofs','#0891b2',['Rigid Transformations Overview','Properties Preserved by Dilations','Defining Transformations Precisely','Symmetry','Proofs with Transformations']),
+ L5('Congruence','#059669',['Transformations and Congruence','Triangle Congruence Criteria','Theorems about Triangles','Theorems about Quadrilaterals','Geometric Constructions']),
+ L5('Similarity','#d97706',['Definitions of Similarity','Triangle Similarity Criteria','Solving Similar Triangles','Angle Bisector Theorem','Modeling with Similar Triangles']),
+ L5('Right Triangles and Trigonometry','#0d9488',['Pythagorean Theorem and Proofs','Special Right Triangles','Introduction to the Trig Ratios','Solving for a Side','Solving for an Angle','Sine and Cosine of Complementary Angles','Modeling with Right Triangles']),
+ L5('Analytic Geometry','#9333ea',['Distance and Midpoints','Dividing Line Segments','Problem Solving with Distance','Parallel and Perpendicular Lines','Equations of Parallel and Perpendicular Lines']),
+ L5('Conic Sections','#db2777',['Graphs of Circles','Standard Equation of a Circle','Expanded Equation of a Circle','Focus and Directrix of a Parabola']),
+ L5('Circles','#e11d48',['Circle Basics and Arc Measure','Arc Length and Radians','Sectors','Inscribed Angles','Inscribed Shapes','Properties of Tangents']),
+ L5('Solid Geometry','#475569',['Cross Sections and Solids of Revolution','Volume of Prisms and Cylinders','Volume of Pyramids, Cones, and Spheres',"Cavalieri's Principle",'Density'])]},
 {id:'A2',cat:'alg2',label:'Algebra II',modules:[
  L5('Functions and Transformations','#2563eb',['Analyzing Functions','Parent Functions and Transformations','Piecewise and Absolute Value Functions','Inverse Functions']),
  L5('Quadratics and Complex Numbers','#0891b2',['Quadratic Functions in Vertex Form','Solving Quadratic Equations','Complex Numbers','Quadratics with Complex Solutions','Linear–Quadratic Systems']),
@@ -222,15 +220,17 @@ const NEWC=[
  L5('Conic Sections','#e11d48',['Parabolas','Ellipses','Hyperbolas','Systems with Conics']),
  L5('Matrices and Systems','#4f46e5',['Systems in Three Variables','Matrix Operations','Inverse Matrices and Determinants']),
  L5('Sequences, Series, and Limits','#475569',['Sequences and Series','Mathematical Induction','The Binomial Theorem','Introduction to Limits'])]},
-{id:'CALC',cat:'calc',label:'Calculus',modules:[
+{id:'CALC',cat:'calc',label:'Calculus (AB + BC)',modules:[
  L5('Limits and Continuity','#2563eb',['Limits from Graphs and Tables','Limit Laws and Algebra','Limits at Infinity','The Squeeze Theorem','Continuity and the IVT']),
  L5('Derivatives','#0891b2',['Average vs. Instantaneous Rate of Change','The Definition of the Derivative','Power, Sum, and Constant Rules','Derivatives of sin, cos, eˣ, and ln x','Product and Quotient Rules','Differentiability']),
  L5('Chain Rule, Implicit and Inverse','#059669',['The Chain Rule','Implicit Differentiation','Derivatives of Inverse Functions','Inverse Trig Derivatives','Higher-Order Derivatives']),
  L5('Applications of Derivatives','#d97706',['Derivatives in Context','Position, Velocity, and Acceleration','Related Rates','Linear Approximation',"L'Hôpital's Rule"]),
  L5('Analyzing Functions','#0d9488',['Mean Value Theorem','Extreme Values and Critical Points','First Derivative Test','Concavity and the Second Derivative Test','Curve Sketching','Optimization']),
- L5('Integration','#9333ea',['Riemann Sums','The Definite Integral','Fundamental Theorem of Calculus','Antiderivatives','u-Substitution','Accumulation Functions']),
- L5('Differential Equations','#db2777',['Modeling with Differential Equations','Slope Fields','Separation of Variables','Exponential Growth and Decay Models']),
- L5('Applications of Integration','#e11d48',['Average Value of a Function','Motion with Integrals','Area Between Curves','Volume: Disks and Washers','Volume: Cross Sections'])]}];
+ L5('Integration','#9333ea',['Riemann Sums','The Definite Integral','Fundamental Theorem of Calculus','Antiderivatives','u-Substitution','Accumulation Functions','Integration by Parts (BC)','Partial Fractions and Improper Integrals (BC)']),
+ L5('Differential Equations','#db2777',['Modeling with Differential Equations','Slope Fields','Separation of Variables','Exponential Growth and Decay Models',"Euler's Method (BC)",'Logistic Models (BC)']),
+ L5('Applications of Integration','#e11d48',['Average Value of a Function','Motion with Integrals','Area Between Curves','Volume: Disks and Washers','Volume: Cross Sections','Arc Length (BC)']),
+ L5('Parametric, Polar, and Vectors (BC)','#4f46e5',['Derivatives of Parametric Equations','Arc Length of Parametric Curves','Vector-Valued Functions and Motion','Polar Curves and Their Derivatives','Area in Polar Coordinates']),
+ L5('Infinite Sequences and Series (BC)','#475569',['Convergence of Series','Geometric Series and p-Series','Comparison and Ratio Tests','Alternating Series and Error Bound','Taylor and Maclaurin Polynomials','Power Series and Radius of Convergence'])]}];
 NEWC.forEach(c=>c.modules.forEach((m,i)=>m.n=i+1));COURSE.push(...NEWC);
 const CATS=[{k:'alg1',n:'Algebra 1',c:'#2563eb'},{k:'geo',n:'Geometry',c:'#059669'},{k:'alg2',n:'Algebra II',c:'#9333ea'},{k:'pre',n:'Pre-Calculus',c:'#d97706'},{k:'calc',n:'Calculus',c:'#e11d48'}];
 let CUR='alg1';
