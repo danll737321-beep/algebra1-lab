@@ -427,6 +427,97 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,s
  .unit-select select{font:inherit;font-size:16px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--ink);padding:11px 12px;border:1px solid #cbd5e1;border-radius:12px;background:#fff;width:100%}
  .unit-panel{padding:16px}.cp-top .btn{width:100%;text-align:center}
 }
+
+/* ============ KHAN-INSPIRED MINIMAL COURSE UI ============ */
+body.course-minimal{--ink:#202124;--mute:#5f6368;--line:#dadce0;--bg:#fff;--acc:#1865f2;background:#fff;color:#202124;font-family:Arial,ui-sans-serif,system-ui,sans-serif;letter-spacing:0;line-height:1.55}
+body.course-minimal header.top{min-height:60px;background:#fff;border-bottom:1px solid #e8eaed;box-shadow:none;backdrop-filter:none;padding:8px clamp(16px,3vw,36px)}
+body.course-minimal .brand{font-size:18px;font-weight:750;letter-spacing:-.02em;color:#202124}
+body.course-minimal .brand span{color:#1865f2}
+body.course-minimal .topprog{color:#5f6368;font-size:13px}
+body.course-minimal .wrap.course-page{max-width:1240px;padding:18px clamp(16px,2.5vw,32px) 64px}
+body.course-minimal .course-tabs{display:flex;gap:22px;overflow-x:auto;white-space:nowrap;border-bottom:1px solid #e8eaed;margin:0 0 18px;padding:0 2px;scrollbar-width:thin}
+body.course-minimal .course-tabs a{background:none;border:0;border-radius:0;padding:10px 2px 12px;color:#5f6368;font-size:14px;font-weight:600}
+body.course-minimal .course-tabs a.on{background:none;border:0;border-bottom:3px solid #1865f2;color:#1865f2}
+body.course-minimal .course-tabs a small{margin-left:5px;color:#80868b}
+body.course-minimal .course-progress.card{background:#fff;border:0;border-bottom:1px solid #e8eaed;border-radius:0;box-shadow:none;margin:0 0 18px;padding:8px 0 20px}
+body.course-minimal .cp-top{align-items:center}
+body.course-minimal .cp-top h1{font-size:clamp(26px,3vw,34px);font-weight:700;letter-spacing:-.035em;color:#202124}
+body.course-minimal .cp-top p{font-size:15px;color:#5f6368}
+body.course-minimal .course-progress .flow{display:flex;gap:18px;flex-wrap:wrap;margin:12px 0 8px}
+body.course-minimal .course-progress .flow span{border:0;background:none;border-radius:0;padding:0;color:#5f6368;font-size:13px;font-weight:600}
+body.course-minimal .bar{height:7px;background:#e8eaed;margin:12px 0 6px}
+body.course-minimal .bar i{background:#14a38b}
+body.course-minimal .cp-top .btn{min-height:40px;padding:8px 16px;border-radius:6px;background:#1865f2;border-color:#1865f2;box-shadow:none;font-size:14px}
+body.course-minimal .home-layout{grid-template-columns:250px minmax(0,1fr);gap:34px;max-width:none}
+body.course-minimal .course-sidebar{top:76px;max-height:calc(100vh - 92px);padding:4px 18px 12px 0;border:0;border-right:1px solid #e8eaed;border-radius:0;background:#fff;box-shadow:none}
+body.course-minimal .sidebar-heading{margin:8px 0 10px;color:#80868b;font-size:11px;letter-spacing:.07em}
+body.course-minimal .side-unit{border-radius:0;background:transparent;box-shadow:none}
+body.course-minimal .sidebar-unit{border:0;border-left:3px solid transparent;border-radius:5px;margin:0;padding:9px 10px}
+body.course-minimal .sidebar-unit.active{border-left-color:#1865f2;background:#f1f6fe}
+body.course-minimal .sidebar-unit span{font-size:12px;color:#202124;font-weight:700}
+body.course-minimal .sidebar-unit span em{font-size:11px;color:#80868b;font-weight:500}
+body.course-minimal .sidebar-unit small{font-size:12px;color:#5f6368}
+body.course-minimal .su-bar{height:4px;background:#e8eaed}
+body.course-minimal .su-bar b{background:#14a38b}
+body.course-minimal .side-lessons{padding-left:10px;margin:2px 0 8px}
+body.course-minimal .side-lessons a{padding:6px 8px;color:#5f6368;font-size:12px}
+body.course-minimal .side-lessons a.cur{color:#1865f2;background:#f5f8ff}
+body.course-minimal .home-main{min-width:0}
+body.course-minimal .unit-panel{background:#fff;border:0;border-top:0;border-radius:0;padding:4px 0 0;box-shadow:none}
+body.course-minimal .unit-panel .unit-kicker{font-size:11px;letter-spacing:.06em;color:#5f6368;font-weight:700}
+body.course-minimal .unit-panel h2{margin:5px 0 8px;color:#202124;font-size:clamp(23px,2.5vw,30px);font-weight:700;letter-spacing:-.035em}
+body.course-minimal .unit-panel .unit-progress{height:7px;background:#e8eaed;margin:12px 0 7px}
+body.course-minimal .unit-panel .unit-progress>i{background:#14a38b}
+body.course-minimal .unit-panel-row{margin:6px 0 16px;color:#5f6368}
+body.course-minimal .unit-panel-row .btn{min-height:40px;padding:8px 15px;border-radius:6px;background:#1865f2;border-color:#1865f2;box-shadow:none;font-size:14px}
+body.course-minimal .unit-lesson-list{display:block;border-top:1px solid #e8eaed}
+body.course-minimal .unit-lesson-list a,body.course-minimal .unit-lesson-list li.soon{min-height:58px;padding:12px 6px;border:0;border-bottom:1px solid #e8eaed;border-radius:0;background:#fff;gap:14px}
+body.course-minimal .unit-lesson-list a:hover{background:#f8faff;border-color:#e8eaed}
+body.course-minimal .unit-lesson-list b{font-size:15px;font-weight:600;color:#202124}
+body.course-minimal .unit-lesson-num{width:28px;height:28px;flex:0 0 28px;border-radius:50%;background:#f1f3f4;color:#5f6368;font-size:12px}
+body.course-minimal .unit-lesson-num.d{background:#e6f4ea;color:#137333}
+body.course-minimal .unit-lesson-list .tag{margin-left:auto;color:#1865f2;font-size:11px}
+body.course-minimal .interactive-tools-heading{margin:30px 0 10px;padding:20px 0 0;border-top:1px solid #e8eaed}
+body.course-minimal .interactive-tools-heading h2{margin:0 0 3px;color:#202124;font-size:20px;font-weight:700;letter-spacing:-.02em}
+body.course-minimal .interactive-tools-heading p{color:#5f6368;font-size:13px}
+body.course-minimal .unit-goals{gap:18px;margin:22px 0;border-top:1px solid #e8eaed;border-bottom:1px solid #e8eaed;padding:12px 0}
+body.course-minimal .unit-goal{border:0;border-left:3px solid #d2e3fc;border-radius:0;background:#fff;box-shadow:none;padding:8px 12px}
+body.course-minimal .unit-goal b{font-size:13px;color:#202124}
+body.course-minimal .unit-goal span{font-size:12px;color:#5f6368}
+body.course-minimal .unit-section{margin:24px 0}
+body.course-minimal .unit-section>h2{font-size:19px;color:#202124}
+body.course-minimal .unit-diagnostic{padding:16px;border:1px solid #dadce0;border-radius:8px;background:#fff}
+body.course-minimal .unit-diagnostic button{border-radius:6px;box-shadow:none}
+body.course-minimal .unit-callout{padding:12px 14px;border-left:3px solid #14a38b;border-radius:0;background:#f6fbfa;color:#3c4043}
+body.course-minimal .slope-lab,body.course-minimal .visual-lab{background:#fff;border:1px solid #dadce0;border-radius:8px;box-shadow:none}
+body.course-minimal .slope-plot,body.course-minimal .slope-control,body.course-minimal .tile-group,body.course-minimal .balance-visual{border-color:#e8eaed;border-radius:6px;box-shadow:none}
+body.course-minimal .slope-equation,body.course-minimal .tile-expression{background:#f5f8ff;border-color:#d2e3fc;border-radius:6px;box-shadow:none}
+body.course-minimal button,body.course-minimal .btn{border-radius:6px;box-shadow:none}
+body.course-minimal button.primary,body.course-minimal .btn.primary{background:#1865f2;border-color:#1865f2;box-shadow:none}
+body.course-minimal footer{background:#fff;border-top:1px solid #e8eaed;color:#80868b}
+@media(max-width:900px){body.course-minimal .home-layout{grid-template-columns:210px minmax(0,1fr);gap:22px}}
+@media(max-width:680px){
+ body.course-minimal .wrap.course-page{padding:14px 14px 52px}
+ body.course-minimal .course-tabs{gap:18px;margin-bottom:14px}
+ body.course-minimal .course-progress{padding:6px 0 16px}
+ body.course-minimal .course-progress .flow{gap:10px 14px}
+ body.course-minimal .home-layout{display:block}
+ body.course-minimal .course-sidebar{display:none}
+ body.course-minimal .unit-select{display:flex;gap:6px;margin:0 0 16px;color:#5f6368;font-size:11px}
+ body.course-minimal .unit-select select{border:1px solid #dadce0;border-radius:6px;padding:10px 12px;background:#fff;color:#202124;font-size:15px}
+ body.course-minimal .unit-panel{padding:0}
+ body.course-minimal .cp-top{display:block}
+ body.course-minimal .cp-top .btn{width:auto;margin-top:12px}
+ body.course-minimal .unit-panel-row{align-items:flex-start}
+ body.course-minimal .unit-panel-row .btn{width:auto}
+ body.course-minimal .unit-goals{grid-template-columns:1fr;gap:6px}
+ body.course-minimal .unit-goal{padding:8px 10px}
+ body.course-minimal .unit-lesson-list a,body.course-minimal .unit-lesson-list li.soon{min-height:54px;padding:10px 4px}
+ body.course-minimal .visual-labs{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){body.course-minimal *{scroll-behavior:auto;transition:none!important}}
+/* ============ END KHAN-INSPIRED MINIMAL COURSE UI ============ */
+
 </style>
 </head>
 <body>
@@ -1561,6 +1652,7 @@ function catUnits(cat){const r=[];COURSE.filter(c=>c.cat===cat).forEach(c=>c.mod
 function unitHref(cat,i){return `#/c/${cat}/u/${i+1}`;}
 function unitIndexOf(id){const M=META[id];return catUnits(M.cat).findIndex(u=>u.key===M.c+'-'+M.m);}
 function renderHome(ui){
+ document.body.classList.toggle('course-minimal',CUR==='ka');
  const cat=CATS.find(c=>c.k===CUR),units=catUnits(CUR),av=avail.filter(inCat),ord=ORDER.filter(inCat),done=av.filter(isDone).length;
  const nid=av.find(id=>!isDone(id))||av[0];
  if(!(ui>=0&&ui<units.length))ui=nid?Math.max(0,unitIndexOf(nid)):0;
@@ -1578,13 +1670,13 @@ function renderHome(ui){
  const pick=`<label class="unit-select"><span>${t('Units')}</span><select aria-label="${t('Unit list')}" onchange="location.hash=this.value">${units.map((u,i)=>{const s=uStat(u);return `<option value="${unitHref(CUR,i)}" ${i===ui?'selected':''}>${t((u.c.unit||'Module')+' {0}',u.m.n)}: ${mt(u.key,u.m.title)}${s.r.length?` (${s.f}/${s.r.length})`:''}</option>`;}).join('')}</select></label>`;
  const s=uStat(U),upct=s.r.length?Math.round(s.f/s.r.length*100):0,unext=s.r.find(id=>!isDone(id))||s.r[0];
  const tools=(TOOLS[U.key]||[]),ex=EXTRAS[U.key];
- const panel=`<section class="unit-panel" style="--mc:${U.m.color}"><span class="unit-kicker">${t(cat.n)} · ${t((U.c.unit||'Module')+' {0}',U.m.n)}</span><h2>${mt(U.key,U.m.title)}</h2>
+ const panel=`<section class="unit-panel unit-panel-${U.key.toLowerCase()}" style="--mc:${U.m.color}"><span class="unit-kicker">${t(cat.n)} · ${t((U.c.unit||'Module')+' {0}',U.m.n)}</span><h2>${mt(U.key,U.m.title)}</h2>
  ${s.r.length?`<div class="unit-progress" role="progressbar" aria-label="${t('Unit progress')}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${upct}"><i style="width:${upct}%"></i></div><div class="unit-panel-row"><span class="mute">${t('{0} of {1} available lessons',s.f,s.r.length)} · ${upct}%</span><a class="btn primary" href="#/l/${unext}/0">${s.f===s.r.length?t('Review unit'):s.f?t('Continue unit'):t('Start unit')} →</a></div>`:`<p class="mute">${t('Lessons coming soon')}</p>`}
  <ol class="unit-lesson-list">${U.ids.map((id,i)=>hasLesson(id)?`<li><a href="#/l/${id}/0"><span class="unit-lesson-num ${isDone(id)?'d':''}">${isDone(id)?'✓':i+1}</span><b>${lt(id)}</b>${id===nid?`<small class="tag">${t('Next')}</small>`:''}</a></li>`:`<li class="soon"><span class="unit-lesson-num">${i+1}</span><b>${lt(id)}</b><small>${t('soon')}</small></li>`).join('')}</ol></section>
  ${tools.length?`<section class="interactive-tools-heading"><h2>${t('Interactive Learning Tools')}</h2><p>${t('Use these visual tools to explore and practice key ideas.')}</p></section>${tools.map(x=>x.h()).join('')}`:''}
  ${ex?ex.h():''}
  <div class="navrow" style="margin:22px 0">${ui>0?`<a class="btn" href="${unitHref(CUR,ui-1)}">◀ ${t('Previous unit')}</a>`:'<span></span>'}${ui<units.length-1?`<a class="btn" href="${unitHref(CUR,ui+1)}">${t('Next unit')} ▶</a>`:'<span></span>'}</div>`;
- app.innerHTML=`<div class="wrap course-page">${tabs}${progress}${pick}<div class="home-layout">${side}<main class="home-main">${panel}</main></div></div>`;
+ app.innerHTML=`<div class="wrap course-page course-${CUR}">${tabs}${progress}${pick}<div class="home-layout">${side}<main class="home-main">${panel}</main></div></div>`;
  tools.forEach(x=>x.m());if(ex)ex.m();
 }
 function mountUnit4Diag(){
@@ -1599,6 +1691,7 @@ function mountUnit4Diag(){
  $('#diag-next').addEventListener('click',()=>{if(!answered)return;if(qIndex<2){qIndex++;drawQ();}else{$('#unit-diagnostic').innerHTML=`<b>${t('Starting point:')} ${score}/3</b><p>${score===3?t('You are ready to begin Unit 4.'):t('Review the explanations above, then begin with Lesson 1. You can revisit this check anytime.')}</p><a class="btn primary" href="#/l/KA-4-1/0">${t('Start Lesson 1')} →</a>`;}});drawQ();
 }
 function renderLesson(id,stage){
+ document.body.classList.remove('course-minimal');
  const M=META[id],D=L[id],pr=prog(id);document.documentElement.style.setProperty('--acc',M.color);
  const nx=nextLesson(id);
  app.innerHTML=`<div class="wrap"><a href="${unitHref(M.cat,unitIndexOf(id))}">← ${t(M.u+' {0}',M.m)}: ${mt(M.c+'-'+M.m,M.mt)}</a><div class="crumb">${t(M.lab)} · ${t(M.u+' {0}',M.m)}: ${mt(M.c+'-'+M.m,M.mt)} · ${t('Lesson {0}',M.n)}</div><h1>${lt(id)}${ZHON()?`<span class="h1en">${M.title}</span>`:''}</h1><div class="goal">🎯 ${D.goal}</div>
