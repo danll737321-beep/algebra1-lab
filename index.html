@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HS Math Visual Lab</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Huninn&display=swap" rel="stylesheet">
 <style>
 :root{--ink:#1f2937;--mute:#6b7280;--line:#e5e7eb;--bg:#f6f5f1;--x:#2563eb;--k:#ea580c;--ok:#15803d;--bad:#b91c1c;--rise:#7c3aed;--run:#059669;--acc:#2563eb}
 *{box-sizing:border-box}
@@ -502,6 +502,31 @@ button.primary:hover,.btn.primary:hover{background:var(--kb-d);border-color:var(
 .stepper .pill:hover{color:var(--kb);background:none}
 .stepper .pill.done:not(.on){color:var(--k-ink)}
 @media(max-width:680px){.course-tabs a{padding:12px 12px 10px;font-size:14px}.unit-select select{border-radius:4px;border-color:var(--k-line)}}
+
+/* ============ SOFT ROUNDED THEME (final layer) ============ */
+:root{--kb:#3b82f6;--kb-d:#2563eb;--kb-soft:#eef4ff;--k-ink:#1f2937;--k-mute:#6b7280;--k-line:#e8eaee;--k-bg:#f8f9fb;--acc:#3b82f6;--alg-blue:#3b82f6;--r:16px;--rf:"Nunito","Huninn","jf-openhuninn","Noto Sans TC",ui-rounded,"SF Pro Rounded",system-ui,sans-serif}
+body,h1,h2,h3,.brand,button,.btn,input,select,textarea{font-family:var(--rf)}
+body{line-height:1.7;color:var(--k-ink);-webkit-font-smoothing:antialiased}
+h1{font-weight:800;letter-spacing:-.01em}h2,h3{font-weight:800}
+.brand{font-weight:900}
+header.top{border-bottom:1px solid var(--k-line)}
+.card,.hero,.visual-lab,.slope-lab,.unit-diagnostic,.unit-goal,.unit-callout,.unit-hero{border:1px solid var(--k-line);border-radius:var(--r);padding:20px 22px}
+.course-progress{border:0;border-bottom:1px solid var(--k-line);border-radius:0;padding:4px 0 22px}
+button,.btn,.langbtn{border-radius:999px;padding-left:18px;padding-right:18px;font-weight:800}
+button.opt{border-radius:14px}
+input,select,textarea{border-radius:12px}
+.course-tabs a,.course-tabs a.on{border-bottom-width:3px;font-weight:800}
+.course-tabs a.on{border-radius:0}
+.bar,.unit-progress,.bar>i,.unit-progress>i,.unit-panel .unit-progress>i,.su-bar,.su-bar b{border-radius:999px}
+.sidebar-unit,.sidebar-unit.active,.side-lessons a,.side-lessons li.soon{border-radius:12px}
+.unit-lesson-list{border-radius:var(--r)}
+.unit-lesson-list a,.unit-lesson-list li.soon{padding:15px 18px}
+.unit-callout,.goal{border-left:0;border-radius:var(--r);background:var(--kb-soft)}
+.pencilnote{border-radius:14px;border-style:solid}
+.tag,.lab-kicker,.unit-kicker,.unit-eyebrow,.sidebar-heading{font-weight:800;letter-spacing:.05em}
+.stepper .pill,.stepper .pill.on{border-bottom-width:3px;font-weight:800}
+.fb{border-radius:12px}
+svg text{font-family:var(--rf)}
 </style>
 </head>
 <body>
