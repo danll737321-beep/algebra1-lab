@@ -1,4 +1,4 @@
-/* Khan Algebra 2 · Unit 8 · Logarithms */
+/* Algebra 2 · Unit 8 · Logarithms */
 (function(){const {sliders,graphLab,chooser,ex,q,mc,num,nz,curve,TOOLS,nf,sup,fr,hline,vline}=A2;
 const lg=(b,x)=>Math.log(x)/Math.log(b);
 const LOG=(b,x)=>`log<sub>${b}</sub>(${x})`;
@@ -22,7 +22,7 @@ function mountModel(el){graphLab(el,{g:{x0:0,x1:30,y0:0,y1:1000,u:16,uy:0.3,lab:
  curves:V=>[{f:t=>200*(1+V.r/100)**t}],extra:(G,V)=>{const t=Math.log(V.T/200)/Math.log(1+V.r/100);return hline(G,V.T,'#f59e0b')+(t<=30?gdot(G,t,V.T,'#e11d48',7,'t ≈ '+t.toFixed(2)):'');},
  eq:V=>`200(${nf(1+V.r/100)})<sup>t</sup> = ${V.T}`,read:V=>{const t=Math.log(V.T/200)/Math.log(1+V.r/100);return `Divide: (${nf(1+V.r/100)})<sup>t</sup> = ${nf(V.T/200)} → t = log(${nf(V.T/200)}) / log(${nf(1+V.r/100)}) ≈ <b>${t.toFixed(2)} years</b>.<br><span class="mute">Steps: isolate the power, take logs, divide.</span>`;}});}
 
-L['A2-8-1']={goal:'I can rewrite between exponential and logarithmic form and evaluate simple logs.',
+L['A2-8-2']={goal:'I can rewrite between exponential and logarithmic form and evaluate simple logs.',
  life:{title:'Earthquakes and decibels',html:'A magnitude-7 earthquake shakes about <b>10 times</b> harder than a magnitude 6, and 100 times harder than a 5. The Richter scale is a <b>logarithm</b>: it records the exponent, not the huge number. Logs answer “what power?”'},
  see:[{title:'Exponent ladder',hint:'Choose the base and the exponent.',mount:mountIntro}],
  vocab:[['Logarithm','log_b(x) = y means bʸ = x.'],['Base b','b > 0 and b ≠ 1.'],['Common log','log x means log₁₀ x.']],
@@ -33,7 +33,7 @@ L['A2-8-1']={goal:'I can rewrite between exponential and logarithmic form and ev
   if(y===0)return num(`Evaluate <b>${LOG(b,1)}</b>.`,[['value =',0]],'Any base to the 0 power is 1.',[[`${b}⁰ = 1`,'']]);return mc(`Which is the log form of <b>${b}${sup(y)} = ${X}</b>?`,`${LOG(b,X)} = ${fmtNeg(y)}`,[`${LOG(b,fmtNeg(y))} = ${X}`,`${LOG(X,b)} = ${fmtNeg(y)}`,`log<sub>${fmtNeg(y)}</sub>(${X}) = ${b}`],'The base stays the base; the log equals the exponent.');},
  check:[q('log₅(25) = ?',['5','2','10','1/2'],1,'5² = 25.'),q('log(1000) = ?',['3','100','10','4'],0,'10³.'),q('log₂(1/8) = ?',['3','−3','1/3','−1/3'],1,'2⁻³ = 1/8.')]};
 
-L['A2-8-2']={goal:'I can explain where e comes from and evaluate natural logarithms.',
+L['A2-8-3']={goal:'I can explain where e comes from and evaluate natural logarithms.',
  life:{title:'The limit of compounding',html:'Put $1 in an account paying 100% a year. Compound once: $2. Monthly: $2.61. Daily: $2.7146. Every instant: <b>$2.71828… = e</b>. Continuous growth anywhere in nature — populations, cooling, radioactive decay — uses e.'},
  see:[{title:'Compound more and more often',hint:'Slide n up. Watch the value approach e.',mount:mountE}],
  vocab:[['e','≈ 2.71828, the limit of (1 + 1/n)ⁿ.'],['Natural log ln x','log base e: ln x = y ⇔ eʸ = x.'],['Continuous growth','A = Pe<sup>rt</sup>.']],
@@ -44,7 +44,7 @@ L['A2-8-2']={goal:'I can explain where e comes from and evaluate natural logarit
   const P_=rand(1,9)*100,r=rand(2,8),t=rand(2,10);const A=P_*Math.exp(r/100*t);return num(`$${P_} grows at ${r}% compounded continuously for ${t} years. Find A = Pe<sup>rt</sup> (nearest cent).`,[['A =',+A.toFixed(2),0.02]],'r as a decimal.',[[`A = ${P_}e<sup>${nf(r/100)}·${t}</sup> = ${P_}e<sup>${nf(r*t/100)}</sup>`,'Substitute.'],[`≈ $${A.toFixed(2)}`,'Calculator.']]);},
  check:[q('e ≈ ?',['3.14','2.718','1.618','2.5'],1,'Euler’s number.'),q('ln(1) = ?',['1','e','0','undefined'],2,'e⁰ = 1.'),q('ln x is log base…',['10','2','e','x'],2,'Natural log.')]};
 
-L['A2-8-3']={goal:'I can use the product, quotient, and power properties of logarithms.',
+L['A2-8-4']={goal:'I can use the product, quotient, and power properties of logarithms.',
  life:{title:'Slide rules',html:'Before calculators, engineers multiplied with <b>slide rules</b>: two rulers marked in logs. Sliding one along the other <b>adds lengths</b>, and adding logs <b>multiplies numbers</b>. The Apollo astronauts carried slide rules to the Moon.'},
  see:[{title:'Log scale: add lengths to multiply',hint:'Choose a and b. Read the product.',mount:mountSlide}],
  vocab:[['Product rule','log(MN) = log M + log N.'],['Quotient rule','log(M/N) = log M − log N.'],['Power rule','log(Mᵖ) = p·log M.']],
@@ -57,7 +57,7 @@ L['A2-8-3']={goal:'I can use the product, quotient, and power properties of loga
   const p=rand(2,5);return num(`Given ${LOG(b,'M')} = ${m}, find <b>${LOG(b,'M'+sup(p))}</b>.`,[['value =',p*m]],'Power rule: multiply.',[[`${p} · ${m} = ${p*m}`,'']]);},
  check:[q('log 2 + log 5 = ?',['log 7','1','log 2.5','10'],1,'log 10 = 1.'),q('log₃(x⁴) = ?',['4log₃x','(log₃x)⁴','log₃4x','3⁴x'],0,'Power rule.'),q('ln a − ln b = ?',['ln(a − b)','ln(a/b)','ln a / ln b','ln(ab)'],1,'Quotient rule.')]};
 
-L['A2-8-4']={goal:'I can use the change of base formula to evaluate any logarithm.',
+L['A2-8-5']={goal:'I can use the change of base formula to evaluate any logarithm.',
  life:{title:'Calculators only know two bases',html:'Your calculator has <b>log</b> (base 10) and <b>ln</b> (base e). How do you find log₃(50)? The change-of-base formula converts any base into one your calculator knows: log₃50 = log 50 / log 3 ≈ 3.56.'},
  see:[{title:'Change the base',hint:'Pick b and x. Compare the ratio with the check.',mount:mountCOB}],
  vocab:[['Change of base','log_b x = log x / log b = ln x / ln b.'],['Check','b^(answer) should give x back.'],['Estimate','Find the powers of b just below and above x.']],
@@ -67,7 +67,7 @@ L['A2-8-4']={goal:'I can use the change of base formula to evaluate any logarith
  practice(){const b=pick([2,3,4,5,6,7]),x=rand(10,500);const v=lg(b,x);return num(`Use change of base: <b>${LOG(b,x)}</b> ≈ ? (nearest hundredth)`,[['value ≈',+v.toFixed(2),0.011]],`log(${x}) / log(${b}).`,[[`log ${x} / log ${b} = ${Math.log10(x).toFixed(4)} / ${Math.log10(b).toFixed(4)}`,'Formula.'],[`≈ ${v.toFixed(2)}`,'Divide.']]);},
  check:[q('log₂(10) = ?',['log 2 / log 10','log 10 / log 2','10/2','ln 2'],1,'Input on top.'),q('log₂(10) is between…',['2 and 3','3 and 4','4 and 5','1 and 2'],1,'2³ = 8, 2⁴ = 16.'),q('ln 9 / ln 3 = ?',['3','2','ln 3','6'],1,'log₃9 = 2.')]};
 
-L['A2-8-5']={goal:'I can solve exponential equations by taking logarithms.',
+L['A2-8-6']={goal:'I can solve exponential equations by taking logarithms.',
  life:{title:'No common base? Use logs',html:'5ˣ = 40 has no nice common base. Logs bring the exponent down: x·log 5 = log 40, so <b>x = log 40 / log 5 ≈ 2.29</b>. This one move solves almost every exponential equation.'},
  see:[{title:'Graph meets target',hint:'Change b and c. The intersection is the solution.',mount:mountSolveG}],
  vocab:[['Take log of both sides','Keeps the equation balanced.'],['Bring down the exponent','log(bˣ) = x·log b.'],['Isolate first','Get the power alone before taking logs.']],
@@ -77,7 +77,7 @@ L['A2-8-5']={goal:'I can solve exponential equations by taking logarithms.',
  practice(){const a=rand(1,5),b=pick([2,3,5,1.5,4]),c=rand(2,9)*a*rand(2,6);const x=lg(b,c/a);return num(`Solve <b>${a===1?'':a+'·'}${b}<sup>x</sup> = ${c}</b> (nearest hundredth).`,[['x ≈',+x.toFixed(2),0.011]],a===1?'Take log of both sides.':`Divide by ${a} first.`,[[`${b}<sup>x</sup> = ${nf(c/a)}`,'Isolate.'],[`x = log ${nf(c/a)} / log ${b} ≈ ${x.toFixed(2)}`,'Logs.']]);},
  check:[q('Solve 10ˣ = 7',['log 7','7/10','ln 7','0.7'],0,'Definition of log.'),q('First step for 4·3ˣ = 20?',['take logs','divide by 4','multiply by 3','subtract 4'],1,'Isolate the power.'),q('Solve eˣ = 1',['1','e','0','undefined'],2,'e⁰ = 1.')]};
 
-L['A2-8-6']={goal:'I can solve real-world exponential models for time.',
+L['A2-8-7']={goal:'I can solve real-world exponential models for time.',
  life:{title:'How long until…?',html:'An investment of $200 grows 5% a year. When does it reach $500? Set 200(1.05)ᵗ = 500, isolate, and take logs: <b>t ≈ 18.8 years</b>. Doubling time, half-life, and “when will it reach…” questions all work this way.'},
  see:[{title:'When does it reach the target?',hint:'Change the rate and the target.',mount:mountModel}],
  vocab:[['Solve for t','Isolate the exponential, take logs, divide.'],['Doubling time','Solve a·bᵗ = 2a → t = log 2 / log b.'],['Interpret','Round in context (years, hours, …).']],
@@ -86,6 +86,26 @@ L['A2-8-6']={goal:'I can solve real-world exponential models for time.',
  mistake:{bad:'200(1.05)ᵗ = 500 → 1.05ᵗ = 300',good:'1.05ᵗ = 2.5',why:'200 multiplies, so <b>divide</b> by 200 — don’t subtract.'},
  practice(){const P_=rand(1,9)*100,r=rand(2,12),k=pick([1.5,2,2.5,3,4]);const t=Math.log(k)/Math.log(1+r/100);return num(`$${P_} grows ${r}% per year. After how many years will it reach $${nf(P_*k)}? (nearest tenth)`,[['t ≈',+t.toFixed(1),0.051]],'Divide by the start value, then take logs.',[[`${nf(1+r/100)}<sup>t</sup> = ${k}`,'Isolate.'],[`t = log ${k} / log ${nf(1+r/100)} ≈ ${t.toFixed(1)}`,'Logs.']]);},
  check:[q('Doubling time with growth factor 1.1 per year ≈',['7.3 yr','10 yr','20 yr','2 yr'],0,'log 2 / log 1.1.'),q('In a·bᵗ = c, first divide by…',['b','a','c','t'],1,'Isolate bᵗ.'),q('Does the start amount affect doubling time?',['yes','no','only if large','only if decay'],1,'It cancels.')]};
+
+const INV=[{n:'f(x) = 2x + 1',f:x=>2*x+1,g:x=>(x-1)/2,gn:'f⁻¹(x) = (x − 1)/2'},{n:'f(x) = x³',f:x=>x**3,g:x=>Math.sign(x)*Math.abs(x)**(1/3),gn:'f⁻¹(x) = ∛x'},{n:'f(x) = 2ˣ',f:x=>2**x,g:x=>x<=0?NaN:Math.log2(x),gn:'f⁻¹(x) = log₂x'},{n:'f(x) = x², x ≥ 0',f:x=>x<0?NaN:x*x,g:x=>x<0?NaN:Math.sqrt(x),gn:'f⁻¹(x) = √x'}];
+function mountInv(el){let k=0;el.innerHTML=`<div class="row">${INV.map((x,i)=>`<button data-iv="${i}" class="${i?'':'sel'}">${x.n}</button>`).join('')}</div><div class="iv-b"></div>`;
+ const sp=graphLab($('.iv-b',el),{g:{x0:-6,x1:6,y0:-6,y1:6,u:30,lab:1},params:[{k:'a',l:'a',min:-2,max:2.5,step:.25,v:1}],
+  curves:()=>[{f:x=>x,col:'#9ca3af',w:2,dash:'6 5'},{f:INV[k].f},{f:INV[k].g,col:'#f59e0b'}],
+  extra:(G,V)=>{const F=INV[k],y=F.f(V.a);if(!isFinite(y)||Math.abs(y)>6)return '';return A2.seg2(G,[V.a,y],[y,V.a],'#e11d48',2,'4 4')+gdot(G,V.a,y,'#2563eb',7,`(${nf(V.a)}, ${nf(y)})`)+gdot(G,y,V.a,'#f59e0b',7,`(${nf(y)}, ${nf(V.a)})`);},
+  eq:()=>`<span style="color:#2563eb">${INV[k].n}</span> &nbsp; <span style="color:#f59e0b">${INV[k].gn}</span>`,
+  read:V=>{const y=INV[k].f(V.a);return isFinite(y)?`f(${nf(V.a)}) = ${nf(y)}, so f⁻¹(${nf(y)}) = ${nf(V.a)}. The inverse <b>swaps inputs and outputs</b>: every point (a, b) becomes (b, a) — a reflection over the dashed line y = x.`:`a = ${nf(V.a)} is not in the domain of f here.`+(k===3?' <span class="mute">x² needs x ≥ 0 so that it passes the horizontal-line test and has an inverse.</span>':'');}});
+ el.addEventListener('click',e=>{const b=e.target.closest('[data-iv]');if(!b)return;k=+b.dataset.iv;$$('[data-iv]',el).forEach(x=>x.classList.toggle('sel',x===b));sp.run();});}
+
+L['A2-8-1']={goal:'I can find and graph the inverse of a function and check it with composition.',
+ life:{title:'Undo button',html:'A thermometer app converts °C to °F with F = 1.8C + 32. Going back, °F to °C, is the <b>inverse</b> function: C = (F − 32)/1.8. Logarithms are exactly this idea — the undo button for exponential functions.'},
+ see:[{title:'Function and inverse mirror each other',hint:'Pick a function and slide a. Watch (a, b) and (b, a).',mount:mountInv}],
+ vocab:[['Inverse function f⁻¹','Undoes f: if f(a) = b then f⁻¹(b) = a.'],['Find it','Swap x and y, then solve for y.'],['Check','f(f⁻¹(x)) = x and f⁻¹(f(x)) = x.'],['One-to-one','Passes the horizontal-line test; needed for an inverse.']],
+ examples:[ex('Example 1','Find the inverse of f(x) = (x + 4)/3.',[['x = (y + 4)/3','Swap x and y.'],['3x = y + 4 → y = 3x − 4','Solve for y.'],['f⁻¹(x) = 3x − 4','']]),
+  ex('Example 2','Check: f(x) = x³ − 1, g(x) = ∛(x + 1).',[['f(g(x)) = (∛(x + 1))³ − 1 = x','Composition gives x.'],['g is the inverse of f ✓','']])],
+ mistake:{bad:'f⁻¹(x) = 1/f(x)',good:'f⁻¹ undoes f',why:'The −1 is not an exponent here. 1/f(x) is the reciprocal, a different thing.'},
+ practice(){const a=nz(-5,5),b=rand(-9,9);if(Math.random()<.5){const c=rand(-10,10);return num(`f(x) = ${a===1?'':a===-1?'−':a}x ${b<0?'−':'+'} ${Math.abs(b)}. Find f⁻¹(${c}).`,[[`f⁻¹(${c}) =`,(c-b)/a,0.011]],`Solve ${a}x ${b<0?'−':'+'} ${Math.abs(b)} = ${c}.`,[[`x = (${c} − ${P(b)})/${P(a)} = ${fr(c-b,a)}`,'Undo +b, then ÷a.']]);}
+  const x=rand(-6,6);return num(`f(${x}) = ${a*x+b}. What is f⁻¹(${a*x+b})?`,[['value =',x]],'The inverse swaps input and output.',[[`f⁻¹(${a*x+b}) = ${x}`,'']]);},
+ check:[q('Inverse of f(x) = x + 7?',['x − 7','7 − x','1/(x + 7)','−x − 7'],0,''),q('Graphs of f and f⁻¹ are reflections over…',['x-axis','y-axis','y = x','origin'],2,''),q('The inverse of 10ˣ is…',['x/10','log x','x¹⁰','√x'],1,'')]};
 
 TOOLS['A2-8']={title:'Log scale (slide rule)',hint:'Adding log-lengths multiplies the numbers.',mount:mountSlide};
 })();
