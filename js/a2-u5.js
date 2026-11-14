@@ -1,4 +1,4 @@
-/* Khan Algebra 2 · Unit 5 · Polynomial graphs */
+/* Algebra 2 · Unit 5 · Polynomial graphs */
 (function(){const {ps,pmul,peval,sliders,graphLab,chooser,ex,q,mc,num,nz,curve,TOOLS,nf,sup}=A2;
 const fact=(a,rs)=>(a===1?'':a===-1?'−':nf(a))+rs.map(r=>r===0?'x':`(x ${r<0?'+':'−'} ${Math.abs(r)})`).join('');
 const factM=(a,rs,ms)=>(a===1?'':a===-1?'−':nf(a))+rs.map((r,i)=>(r===0?'x':`(x ${r<0?'+':'−'} ${Math.abs(r)})`)+(ms[i]>1?sup(ms[i]):'')).join('');

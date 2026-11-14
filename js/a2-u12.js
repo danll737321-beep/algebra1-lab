@@ -1,73 +1,156 @@
-/* Khan Algebra 2 · Unit 12 · Modeling */
-(function(){const {sliders,graphLab,chooser,ex,q,mc,num,nz,curve,TOOLS,nf,hline,vline,stepper,fr}=A2;
-function mCombo(el){graphLab(el,{g:{x0:0,x1:100,y0:-500,y1:2500,u:4.4,uy:0.11,lab:20,laby:500,gs:10,gsy:250,xl:'items sold x',yl:'dollars'},params:[{k:'p',l:'price per item $',min:10,max:40,v:25},{k:'F',l:'fixed cost $',min:0,max:1000,step:50,v:600},{k:'v',l:'cost per item $',min:2,max:20,v:10}],
- curves:V=>[{f:x=>V.p*x,col:'#059669'},{f:x=>V.F+V.v*x,col:'#e11d48'},{f:x=>V.p*x-V.F-V.v*x,col:'#2563eb',w:4}],
- extra:(G,V)=>{const be=V.F/(V.p-V.v);return V.p>V.v&&be<=100?gdot(G,be,0,'#1f2937',7,'break-even x ≈ '+nf(be)):'';},
- eq:V=>`<span style="color:#059669">R(x) = ${V.p}x</span> &nbsp; <span style="color:#e11d48">C(x) = ${V.F} + ${V.v}x</span> &nbsp; <span style="color:#2563eb">P(x) = R(x) − C(x) = ${V.p-V.v}x − ${V.F}</span>`,
- read:V=>V.p>V.v?`Profit is the <b>difference</b> of two functions. Each item adds $${V.p-V.v} of profit; you need <b>${Math.ceil(V.F/(V.p-V.v))} items</b> to cover the $${V.F} fixed cost.`:'Price ≤ cost per item: profit never becomes positive.'});}
-function mFeatures(el){const h=t=>-4.9*t*t+19.6*t+2;graphLab(el,{g:{x0:0,x1:5,y0:0,y1:25,u:80,uy:14,lab:1,laby:5,gsy:5,xl:'time (s)',yl:'height (m)'},params:[{k:'t',l:'time t (s)',min:0,max:4.1,step:.1,v:1}],
- curves:()=>[{f:x=>x>4.1?NaN:h(x)}],extra:(G,V)=>gdot(G,2,h(2),'#f59e0b',7,'max (2, 21.6)')+gdot(G,0,2,'#059669',6,'start')+gdot(G,V.t,h(V.t),'#e11d48',7),
- eq:()=>'h(t) = −4.9t² + 19.6t + 2',read:V=>`At t = ${nf(V.t)} s the ball is <b>${nf(h(V.t))} m</b> high and <b>${V.t<2?'rising':V.t>2?'falling':'at the top'}</b>.<br>Features: y-intercept 2 m (launch height) · maximum 21.6 m at t = 2 s · increasing on (0, 2), decreasing after · hits the ground (zero) near t ≈ 4.10 s. Domain in context: 0 ≤ t ≤ 4.10.`});}
-function mSolveFor(el){stepper(el,[{t:'A = P(1 + r)ᵗ for r',steps:[{h:'<div class="eqline math">A = P(1 + r)<sup>t</sup></div>',n:'Goal: get r alone. Undo operations in reverse order.'},{h:'<div class="eqline math">A/P = (1 + r)<sup>t</sup></div>',n:'Divide by P.'},{h:'<div class="eqline math">(A/P)<sup>1/t</sup> = 1 + r</div>',n:'Raise both sides to 1/t (undo the power).'},{h:'<div class="eqline math">r = (A/P)<sup>1/t</sup> − 1</div>',n:'Subtract 1.'}]},
- {t:'V = πr²h for r',steps:[{h:'<div class="eqline math">V = πr²h</div>',n:'r is squared and multiplied by π and h.'},{h:'<div class="eqline math">V/(πh) = r²</div>',n:'Divide by πh.'},{h:'<div class="eqline math">r = √(V/(πh))</div>',n:'Square root (r > 0 for a length).'}]},
- {t:'1/f = 1/a + 1/b for b',steps:[{h:'<div class="eqline math">1/f − 1/a = 1/b</div>',n:'Isolate the term with b.'},{h:'<div class="eqline math">(a − f)/(af) = 1/b</div>',n:'Combine the fractions.'},{h:'<div class="eqline math">b = af/(a − f)</div>',n:'Take reciprocals.'}]},
- {t:'T = 2π√(L/g) for L',steps:[{h:'<div class="eqline math">T/(2π) = √(L/g)</div>',n:'Divide by 2π.'},{h:'<div class="eqline math">T²/(4π²) = L/g</div>',n:'Square both sides.'},{h:'<div class="eqline math">L = gT²/(4π²)</div>',n:'Multiply by g.'}]}]);}
-function mFence(el){graphLab(el,{g:{x0:0,x1:50,y0:0,y1:700,u:9,uy:0.5,lab:10,laby:100,gs:5,gsy:100,xl:'width w (m)',yl:'area (m²)'},params:[{k:'L',l:'fence length (m)',min:40,max:100,step:4,v:80},{k:'w',l:'width w',min:1,max:49,v:12}],
- curves:V=>[{f:w=>w>V.L/2?NaN:w*(V.L/2-w)}],extra:(G,V)=>{const ww=Math.min(V.w,V.L/2);return gdot(G,ww,ww*(V.L/2-ww),'#e11d48',7)+gdot(G,V.L/4,(V.L/4)**2,'#f59e0b',6,'max');},
- eq:V=>`A(w) = w(${V.L/2} − w)`,read:V=>{const w=Math.min(V.w,V.L/2),l=V.L/2-w;return `Perimeter 2w + 2ℓ = ${V.L} → ℓ = ${V.L/2} − w. With w = ${w}: ℓ = ${l}, area = <b>${w*l} m²</b>.<br>Two variables (w and ℓ) tied by one constraint become one function of w. The best rectangle is a <b>square</b>: w = ${V.L/4}, area ${(V.L/4)**2} m².`;}});}
-function mTrip(el){sliders(el,[{k:'d',l:'distance (mi)',min:50,max:600,step:10,v:300},{k:'m',l:'mpg',min:15,max:50,v:30},{k:'p',l:'gas $/gal',min:3,max:7,step:.1,v:4.5},{k:'n',l:'people sharing',min:1,max:5,v:2}],V=>{const g=V.d/V.m,C=g*V.p;
-  $('.tr-r',el).innerHTML=`<div class="eqline math">cost per person = d·p / (m·n)</div>gallons = ${V.d}/${V.m} = ${nf(g)} · total = ${nf(g)} × $${nf(V.p)} = <b>$${C.toFixed(2)}</b> · per person = <b>$${(C/V.n).toFixed(2)}</b><br><span class="mute">Cost goes <b>up</b> with distance and price (they multiply on top) and <b>down</b> with mpg and riders (they divide on the bottom). Double the distance → double the cost; double the mpg → half the cost.</span>`;},`<div class="readout tr-r"></div>`).run();}
+/* Algebra 2 · Unit 12 · Trigonometry */
+(function(){const {sliders,graphLab,chooser,circleFig,piTicks,ex,q,mc,num,nz,curve,TOOLS,nf,hline,vline,fr}=A2;
+const PI=Math.PI,rad=d=>d*PI/180;
+/* exact values table */
+const EX={0:['1','0','0'],30:['√3/2','1/2','√3/3'],45:['√2/2','√2/2','1'],60:['1/2','√3/2','√3'],90:['0','1','undefined']};
+function exact(d){d=((d%360)+360)%360;const q_=Math.floor(d/90),r=d%90;let ref=r,qc=q_;if(r===0){const T={0:['1','0','0'],90:['0','1','undefined'],180:['−1','0','0'],270:['0','−1','undefined']};return T[d];}
+ const refA=[d,180-d,d-180,360-d][q_];const v=EX[refA];if(!v)return null;const sc=[[1,1],[-1,1],[-1,-1],[1,-1]][q_];const sg=(s,x)=>s<0?'−'+x:x;return [sg(sc[0],v[0]),sg(sc[1],v[1]),sg(sc[0]*sc[1],v[2])];}
+function radStr(d){const g=gcd(d,180);const n=d/g,m=180/g;if(!d)return '0';return `${n===1?'':n}π${m===1?'':'/'+m}`;}
+function mUnit(el){sliders(el,[{k:'d',l:'angle θ (degrees)',min:0,max:360,step:5,v:40}],V=>{const t=rad(V.d);$('.uc-g',el).innerHTML=circleFig(t);
+  $('.uc-r',el).innerHTML=`θ = <b>${V.d}°</b>. The point on the unit circle is (<span style="color:#059669;font-weight:800">cos θ</span>, <span style="color:#2563eb;font-weight:800">sin θ</span>) = (<b>${nf(Math.cos(t))}</b>, <b>${nf(Math.sin(t))}</b>).<br><span class="mute">Green = horizontal distance = cos θ; blue = vertical = sin θ. Angles start on the positive x-axis and turn <b>counterclockwise</b>. Quadrant ${V.d%90===0?'— on an axis':Math.floor(V.d/90)%4+1}: cos ${Math.cos(t)>1e-9?'+':Math.cos(t)<-1e-9?'−':'0'}, sin ${Math.sin(t)>1e-9?'+':Math.sin(t)<-1e-9?'−':'0'}.</span>`;},`<div class="uc-g"></div><div class="readout uc-r"></div>`).run();}
+function mRad(el){sliders(el,[{k:'d',l:'angle (degrees)',min:0,max:360,step:15,v:90}],V=>{const t=rad(V.d);$('.rd-g',el).innerHTML=circleFig(t);
+  $('.rd-r',el).innerHTML=`<div class="eqline math">${V.d}° = ${V.d}·π/180 = <b>${radStr(V.d)}</b> ≈ ${t.toFixed(3)} rad</div>The red arc has length <b>${t.toFixed(3)}</b> radius-lengths. One radian is the angle whose arc equals one radius (≈ 57.3°).<br><span class="mute">A full turn is 2π ≈ 6.283 radii of arc, so 360° = 2π rad and 180° = π rad.</span>`;},`<div class="rd-g"></div><div class="readout rd-r"></div>`).run();}
+function mPyth(el){sliders(el,[{k:'d',l:'θ (degrees)',min:0,max:360,step:5,v:35}],V=>{const t=rad(V.d),c=Math.cos(t),s=Math.sin(t);$('.py-g',el).innerHTML=circleFig(t,{arc:false});
+  $('.py-r',el).innerHTML=`<div class="eqline math">(${nf(s)})² + (${nf(c)})² = ${(s*s).toFixed(4)} + ${(c*c).toFixed(4)} = <b>${(s*s+c*c).toFixed(4)}</b></div>The blue and green legs and the radius make a right triangle with hypotenuse 1, so by Pythagoras: <b>sin²θ + cos²θ = 1</b> for every angle.<br><span class="mute">Use it to find one value from the other: if sin θ = 3/5, then cos θ = ±4/5 (sign from the quadrant).</span>`;},`<div class="py-g"></div><div class="readout py-r"></div>`).run();}
+const SPEC=[0,30,45,60,90,120,135,150,180,210,225,240,270,300,315,330];
+function mSpecial(el){chooser(el,SPEC.map(d=>({t:d+'°',html:()=>{const e=exact(d);return circleFig(rad(d),{W:260})+`<div class="readout"><b>${d}° = ${radStr(d)}</b>: &nbsp; cos = <b>${e[0]}</b>, sin = <b>${e[1]}</b>, tan = <b>${e[2]}</b><br><span class="mute">Reference angle ${[d,180-d,d-180,360-d][Math.floor(d/90)%4]%90===0&&d%90===0?'— on an axis':[d,180-d,d-180,360-d][Math.floor(d/90)%4]+'°'}. The quadrant sets the signs; the reference angle sets the numbers (30°: ½ and √3/2; 45°: √2/2 both).</span></div>`;}})),2);}
+function mGraphs(el){let fn=0;const F=[{n:'sin',f:Math.sin,col:'#2563eb'},{n:'cos',f:Math.cos,col:'#059669'},{n:'tan',f:Math.tan,col:'#9333ea'}];el.innerHTML=`<div class="row">${F.map((x,i)=>`<button data-fn="${i}">y = ${x.n} x</button>`).join('')}</div><div class="gr-s"></div>`;
+ const sp=sliders($('.gr-s',el),[{k:'t',l:'x (degrees)',min:0,max:360,step:5,v:60}],V=>{const t=rad(V.t),f=F[fn];const G=grid({x0:-1,x1:7,y0:-3,y1:3,u:52,uy:40,lab:100,laby:1});
+  let s=curve(G,x=>{if(fn===2&&Math.abs(Math.cos(x))<0.03)return NaN;return f.f(x);},f.col,3);if(fn===2)s+=vline(G,PI/2,'#e11d48')+vline(G,3*PI/2,'#e11d48');const y=f.f(t);if(isFinite(y)&&Math.abs(y)<3.2)s+=gdot(G,t,y,'#e11d48',7);s+=piTicks(G,0,2);
+  $('.gr-c',el).innerHTML=circleFig(t,{W:200});$('.gr-g',el).innerHTML=G.svg(s);
+  $('.gr-r',el).innerHTML=fn===2?`tan x = sin x / cos x = <b>${Math.abs(Math.cos(t))<1e-9?'undefined':nf(Math.tan(t))}</b>. Asymptotes where cos x = 0 (x = π/2, 3π/2). Period π.`:`${f.n} ${V.t}° = <b>${nf(f.f(t))}</b> — the ${fn?'horizontal (green)':'vertical (blue)'} length on the circle, unrolled onto the graph. Range −1 to 1, period 2π.`;},`<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px"><div class="gr-c" style="flex:0 0 200px"></div><div class="gr-g" style="flex:1 1 300px"></div></div><div class="readout gr-r"></div>`);
+ el.addEventListener('click',e=>{const b=e.target.closest('[data-fn]');if(!b)return;fn=+b.dataset.fn;$$('[data-fn]',el).forEach(x=>x.classList.toggle('sel',x===b));sp.run();});$('[data-fn]',el).classList.add('sel');sp.run();}
+const G2={x0:-1,x1:13,y0:-6,y1:6,u:30,uy:24,lab:100,laby:1};
+function mAMP(el){graphLab(el,{g:G2,params:[{k:'A',l:'amplitude A',min:0.5,max:4,step:.5,v:2},{k:'B',l:'B',min:0.5,max:3,step:.5,v:1},{k:'D',l:'midline D',min:-2,max:2,step:.5,v:0}],
+ curves:V=>[{f:Math.sin,col:'#9ca3af',w:2,dash:'6 5'},{f:x=>V.A*Math.sin(V.B*x)+V.D}],extra:(G,V)=>hline(G,V.D,'#059669')+hline(G,V.D+V.A,'#f59e0b','2 4')+hline(G,V.D-V.A,'#f59e0b','2 4')+piTicks(G,0,4),
+ eq:V=>`y = ${nf(V.A)} sin(${V.B===1?'':nf(V.B)}x)${V.D?(V.D<0?' − ':' + ')+nf(Math.abs(V.D)):''}`,
+ read:V=>`Amplitude <b>${nf(V.A)}</b> (half the max-to-min distance). Midline <b>y = ${nf(V.D)}</b> (green). Max ${nf(V.D+V.A)}, min ${nf(V.D-V.A)}. Period = 2π/B = <b>${radStr(Math.round(360/V.B))}</b>${360%V.B===0?'':' ≈ '+(2*PI/V.B).toFixed(2)}.`});}
+function mShiftT(el){graphLab(el,{g:G2,params:[{k:'A',l:'A',min:-3,max:3,step:.5,v:2},{k:'B',l:'B',min:0.5,max:2,step:.5,v:1},{k:'C',l:'phase shift h',min:-3,max:3,step:.25,v:1},{k:'D',l:'D',min:-2,max:2,step:.5,v:1}],
+ curves:V=>[{f:Math.cos,col:'#9ca3af',w:2,dash:'6 5'},{f:x=>V.A*Math.cos(V.B*(x-V.C))+V.D}],extra:(G,V)=>hline(G,V.D,'#059669')+gdot(G,V.C,V.A+V.D,'#e11d48',7,'start of cycle')+piTicks(G,0,4),
+ eq:V=>`y = ${V.A===1?'':V.A===-1?'−':nf(V.A)}cos(${V.B===1?'':nf(V.B)}${V.C?`(x ${V.C<0?'+':'−'} ${nf(Math.abs(V.C))})`:'x'})${V.D?(V.D<0?' − ':' + ')+nf(Math.abs(V.D)):''}`,
+ read:V=>`Starting from y = cos x: ${V.A<0?'<b>flip</b> and ':''}stretch to amplitude ${nf(Math.abs(V.A))}, period 2π/${nf(V.B)} ≈ ${(2*PI/V.B).toFixed(2)}, shift <b>${nf(Math.abs(V.C))} ${V.C>=0?'right':'left'}</b> and <b>${nf(Math.abs(V.D))} ${V.D>=0?'up':'down'}</b>.<br><span class="mute">The red dot is where the shifted cosine cycle begins (at a ${V.A>0?'maximum':'minimum'}).</span>`});}
+function mMatch(el){let T;const nt=()=>{T={A:pick([1,1.5,2,3]),B:pick([0.5,1,2]),D:pick([-1,0,1,2])};};nt();
+ const host=document.createElement('div');el.appendChild(host);
+ const sp=graphLab(host,{g:G2,params:[{k:'A',l:'A',min:0.5,max:3,step:.5,v:1},{k:'B',l:'B',min:0.5,max:2,step:.5,v:1},{k:'D',l:'D',min:-2,max:2,step:.5,v:0}],
+  curves:V=>[{f:x=>T.A*Math.sin(T.B*x)+T.D,col:'#f59e0b',w:6},{f:x=>V.A*Math.sin(V.B*x)+V.D,col:'#2563eb',w:2.5}],extra:G=>piTicks(G,0,4),eq:V=>`your graph: y = ${nf(V.A)} sin(${nf(V.B)}x) + ${nf(V.D)}`,
+  read:V=>V.A===T.A&&V.B===T.B&&V.D===T.D?`<span class="good">🎯 Match! Amplitude ${T.A}, period ${(2*PI/T.B).toFixed(2)} (B = ${T.B}), midline y = ${T.D}.</span>`:`Match the thick orange target. Read its <b>midline</b> (middle height), <b>amplitude</b> (top − middle), and <b>period</b> (length of one full wave).`});
+ const b=document.createElement('div');b.className='row';b.innerHTML='<button>New target ↻</button>';el.appendChild(b);b.addEventListener('click',()=>{nt();sp.run();});}
+function mFerris(el){sliders(el,[{k:'r',l:'radius (m)',min:5,max:25,v:15},{k:'T',l:'minutes per turn',min:2,max:12,v:8},{k:'t',l:'time t (min)',min:0,max:24,step:.25,v:2}],V=>{const c=V.r+2,h=t=>-V.r*Math.cos(2*PI*t/V.T)+c;const a=2*PI*V.t/V.T;
+  const W=180,cx=90,cy=95,R=70,px=cx+R*Math.sin(a),py=cy+R*Math.cos(a);
+  $('.fw-w',el).innerHTML=`<svg viewBox="0 0 ${W} 190" class="fig" style="max-width:180px"><circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="#94a3b8" stroke-width="3"/><line x1="${cx}" y1="${cy}" x2="${px}" y2="${py}" stroke="#64748b" stroke-width="2"/><line x1="0" y1="${cy+R+8}" x2="${W}" y2="${cy+R+8}" stroke="#374151" stroke-width="2"/><circle cx="${px}" cy="${py}" r="9" fill="#e11d48"/></svg>`;
+  const G=grid({x0:0,x1:24,y0:0,y1:55,u:14,uy:4,lab:4,laby:10,gsy:10,xl:'t (min)',yl:'height (m)'});$('.fw-g',el).innerHTML=G.svg(curve(G,h)+hline(G,c,'#059669')+gdot(G,V.t,h(V.t),'#e11d48',7));
+  $('.fw-r',el).innerHTML=`<div class="eqline math">h(t) = −${V.r} cos(2πt/${V.T}) + ${c}</div>At t = ${V.t} min the rider is <b>${nf(h(V.t))} m</b> high.<br>Amplitude = radius ${V.r}; midline = axle height ${c} (2 m platform + ${V.r}); period = ${V.T} min; −cos because you board at the <b>bottom</b>.`;},`<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px"><div class="fw-w" style="flex:0 0 180px"></div><div class="fw-g" style="flex:1 1 320px"></div></div><div class="readout fw-r"></div>`).run();}
 
-L['A2-12-1']={goal:'I can model situations by adding, subtracting, multiplying, or composing functions.',
- life:{title:'Running a bake sale',html:'Your <b>revenue</b> is price × cookies sold. Your <b>cost</b> is a fixed booth fee plus ingredients per cookie. <b>Profit = revenue − cost</b> — a new function built from two simpler ones.'},
- see:[{title:'Revenue, cost, profit',hint:'Change the price and costs. Find the break-even point.',mount:mCombo}],
- vocab:[['(f + g)(x)','f(x) + g(x); also −, ×, ÷.'],['Composition f(g(x))','Output of g becomes input of f.'],['Break-even','Where profit = 0 (revenue = cost).']],
- examples:[ex('Example 1','R(x) = 12x, C(x) = 200 + 4x. Write P(x) and find the break-even point.',[['P(x) = 12x − (200 + 4x) = 8x − 200','Subtract the whole cost.'],['8x − 200 = 0 → x = 25','25 items.']]),
-  ex('Example 2','A shirt costs c dollars. Tax: T(c) = 1.08c; coupon: D(c) = c − 5. Coupon first, then tax?',[['T(D(c)) = 1.08(c − 5)','Composition, inside first.']])],
- mistake:{bad:'P(x) = 12x − 200 + 4x',good:'12x − 200 − 4x',why:'Subtract the <b>whole</b> cost function: use parentheses.'},
- practice(){const p=rand(8,30),F=rand(2,20)*50,v=rand(2,p-2);if(Math.random()<.5){const x=rand(10,200);return num(`R(x) = ${p}x and C(x) = ${F} + ${v}x. Find the profit P(${x}).`,[[`P(${x}) =`,(p-v)*x-F]],'P = R − C.',[[`P(x) = ${p-v}x − ${F}`,'Subtract.'],[`P(${x}) = ${(p-v)*x-F}`,'Evaluate.']]);}
-  const a=rand(2,5),b=rand(-5,5),x=rand(-4,4);return num(`f(x) = ${a}x ${b<0?'−':'+'} ${Math.abs(b)} and g(x) = x². Find f(g(${x})) and g(f(${x})).`,[[`f(g(${x})) =`,a*x*x+b],[`g(f(${x})) =`,(a*x+b)**2]],'Work from the inside out.',[[`g(${x}) = ${x*x}, f(${x*x}) = ${a*x*x+b}`,'f(g(x)).'],[`f(${x}) = ${a*x+b}, g(${a*x+b}) = ${(a*x+b)**2}`,'g(f(x)).']]);},
- check:[q('R(x) = 10x, C(x) = 50 + 6x. Break-even x?',['5','12.5','50','8'],1,'4x = 50.'),q('f(x) = x + 1, g(x) = 2x. f(g(3)) = ?',['7','8','6','5'],0,'g(3) = 6, f(6) = 7.'),q('Profit function = ?',['R + C','R − C','R · C','C − R'],1,'')]};
+L['A2-12-2']={goal:'I can find the coordinates of a point on the unit circle as (cos θ, sin θ).',
+ life:{title:'A Ferris wheel seat',html:'Picture a Ferris wheel with radius 1. As it turns through angle θ, your seat is <b>cos θ</b> right of the center and <b>sin θ</b> above it. The unit circle extends sine and cosine from right-triangle angles to <b>any</b> angle.'},
+ see:[{title:'Turn around the unit circle',hint:'Slide θ all the way around. Watch the signs change by quadrant.',mount:mUnit}],
+ vocab:[['Unit circle','Circle of radius 1 centered at the origin.'],['cos θ','x-coordinate of the point at angle θ.'],['sin θ','y-coordinate.'],['Standard position','Start on the positive x-axis, turn counterclockwise.']],
+ examples:[ex('Example 1','Coordinates at θ = 90° and 180°',[['90°: (0, 1) → cos 90° = 0, sin 90° = 1','Straight up.'],['180°: (−1, 0) → cos 180° = −1','Straight left.']]),
+  ex('Example 2','Signs of cos and sin at θ = 200°',[['200° is in quadrant III','Between 180° and 270°.'],['cos < 0, sin < 0','Left and down.']])],
+ mistake:{bad:'Point is (sin θ, cos θ)',good:'(cos θ, sin θ)',why:'Alphabetical order matches (x, y): <b>c</b>os before <b>s</b>in.'},
+ practice(){const d=pick([0,90,180,270,360]);const c=Math.round(Math.cos(rad(d))),s=Math.round(Math.sin(rad(d)));if(Math.random()<.5)return num(`Find cos ${d}° and sin ${d}° from the unit circle.`,[[`cos ${d}° =`,c],[`sin ${d}° =`,s]],'Where is the point after turning '+d+'°?',[[`(${c}, ${s})`,'On an axis.']]);
+  const D=rand(1,359);const qd=D%90===0?null:Math.floor(D/90)+1;if(!qd)return num(`sin ${D}° = ?`,[['sin =',Math.round(Math.sin(rad(D)))]],'On an axis.',[[`${Math.round(Math.sin(rad(D)))}`,'']]);const sg=['cos +, sin +','cos −, sin +','cos −, sin −','cos +, sin −'];return mc(`θ = ${D}°. Which signs are correct?`,sg[qd-1],sg,`${D}° is in quadrant ${qd}.`);},
+ check:[q('Point at θ = 0°?',['(0, 1)','(1, 0)','(−1, 0)','(0, 0)'],1,''),q('sin 270° = ?',['1','0','−1','undefined'],2,'Straight down.'),q('In quadrant II…',['cos > 0, sin > 0','cos < 0, sin > 0','cos < 0, sin < 0','cos > 0, sin < 0'],1,'Left and up.')]};
 
-L['A2-12-2']={goal:'I can interpret key features of a function (intercepts, max/min, intervals, domain) in context.',
- life:{title:'Reading a launch',html:'A ball’s height is h(t) = −4.9t² + 19.6t + 2. Each feature of the graph <b>means something</b>: the y-intercept is the launch height, the maximum is the peak, the zero is when it lands, and the domain stops when the ball hits the ground.'},
- see:[{title:'Features of a projectile',hint:'Slide the time. Is the ball rising or falling?',mount:mFeatures}],
- vocab:[['Intercepts','Where the graph meets the axes; often start values or end times.'],['Maximum / minimum','Highest / lowest output.'],['Increasing interval','Inputs where the output goes up.'],['Domain in context','Inputs that make sense in the situation.']],
- examples:[ex('Example 1','What does h(0) = 2 mean?',[['At time 0 the ball is 2 m high','Launch height.']]),
-  ex('Example 2','A car’s value V(t) = 30000(0.85)ᵗ. Is t = −3 in the domain?',[['No: t counts years since purchase, so t ≥ 0','Context limits the domain.']])],
- mistake:{bad:'The maximum of h is at t = 21.6',good:'max height 21.6 m at t = 2 s',why:'Keep inputs and outputs straight: the max is an <b>output</b> value reached at an <b>input</b>.'},
- practice(){const v=pick([9.8,14.7,19.6,24.5,29.4]),h0=rand(0,10);const tp=v/9.8,hm=-4.9*tp*tp+v*tp+h0;return num(`h(t) = −4.9t² + ${v}t + ${h0} (meters, seconds). Find the time of the maximum and the maximum height.`,[['t =',tp,0.011],['max height =',+hm.toFixed(3),0.011]],'t = −b/(2a).',[[`t = −${v}/(2·−4.9) = ${nf(tp)}`,'Vertex.'],[`h(${nf(tp)}) = ${nf(hm)} m`,'Evaluate.']]);},
- check:[q('h(t) = −5t² + 20t. When does it land (t > 0)?',['2','4','5','20'],1,'−5t(t − 4).'),q('The y-intercept of a cost function usually means…',['the fixed cost','the max profit','break-even','the rate'],0,''),q('Population P(t) increasing on (0, 5) means…',['it grew during the first 5 years','it was 5','it shrank','5 people'],0,'')]};
+L['A2-12-3']={goal:'I can convert between degrees and radians and explain what a radian measures.',
+ life:{title:'Measuring with the radius',html:'Wrap the radius of a wheel around its edge: the angle it covers is <b>1 radian</b> (≈ 57.3°). A full turn takes 2π radius-lengths — that’s why 360° = 2π rad. Physics, engineering, and calculus all use radians.'},
+ see:[{title:'Arc length in radius units',hint:'Turn the angle and read the arc length in radians.',mount:mRad}],
+ vocab:[['Radian','Angle whose arc length equals the radius.'],['Degrees → radians','multiply by π/180.'],['Radians → degrees','multiply by 180/π.']],
+ examples:[ex('Example 1','Convert 135° to radians.',[['135 · π/180 = 3π/4','Simplify 135/180 = 3/4.']]),
+  ex('Example 2','Convert 5π/6 to degrees.',[['5π/6 · 180/π = 150°','π cancels.']])],
+ mistake:{bad:'π = 180 so π ≈ 180',good:'π rad = 180°',why:'π is still ≈ 3.14; it’s the <b>angle</b> π radians that equals 180°.'},
+ practice(){const d=pick([30,45,60,90,120,135,150,180,210,225,240,270,300,315,330,360]);const g=gcd(d,180);if(Math.random()<.5)return num(`Convert <b>${d}°</b> to radians. Write it as (p/q)π in lowest terms.`,[['p =',d/g],['q =',180/g]],'Multiply by π/180.',[[`${d}π/180 = ${radStr(d)}`,'Simplify.']]);
+  return num(`Convert <b>${radStr(d)}</b> radians to degrees.`,[['degrees =',d]],'Multiply by 180/π.',[[`${radStr(d)} · 180/π = ${d}°`,'']]);},
+ check:[q('π/2 rad = ?',['90°','180°','45°','360°'],0,''),q('1 radian ≈ ?',['1°','57.3°','3.14°','90°'],1,''),q('300° = ?',['5π/3','3π/5','10π/3','5π/6'],0,'300/180 = 5/3.')]};
 
-L['A2-12-3']={goal:'I can rearrange formulas to solve for a chosen variable.',
- life:{title:'Using a formula backwards',html:'The interest formula A = P(1 + r)ᵗ gives the final amount. But if you know you turned $1000 into $1500 in 6 years, you want the <b>rate</b>. Solving the formula for r answers that question — and every similar one.'},
- see:[{title:'Solve for the variable',hint:'Pick a formula and step through it.',mount:mSolveFor}],
- vocab:[['Literal equation','An equation with several variables.'],['Undo in reverse','Peel off the operations applied last first.'],['Inverse operations','+ ↔ −, × ↔ ÷, power ↔ root, exp ↔ log.']],
- examples:[ex('Example 1','Solve P = 2ℓ + 2w for w.',[['P − 2ℓ = 2w',''],['w = (P − 2ℓ)/2','']]),
-  ex('Example 2','Solve A = Pe<sup>rt</sup> for t.',[['A/P = e<sup>rt</sup>',''],['ln(A/P) = rt → t = ln(A/P)/r','']])],
- mistake:{bad:'V = πr²h → r = V/(πh)',good:'r = √(V/(πh))',why:'r was squared; after dividing you still have r², so take the square root.'},
- practice(){const P_=rand(1,9)*1000,r=pick([0.04,0.05,0.06,0.08,0.1]),t=rand(2,10);const A=P_*(1+r)**t;return num(`Solve A = P(1 + r)ᵗ for r, then use it: $${P_} grew to $${A.toFixed(2)} in ${t} years. Find r as a percent (nearest tenth).`,[['r % =',r*100,0.06]],'r = (A/P)^(1/t) − 1.',[[`r = (${A.toFixed(2)}/${P_})<sup>1/${t}</sup> − 1`,'Formula.'],[`≈ ${nf(r)} = ${nf(r*100)}%`,'Evaluate.']]);},
- check:[q('Solve d = rt for t',['t = d − r','t = d/r','t = r/d','t = dr'],1,''),q('Solve A = πr² for r',['A/π','√(A/π)','(A/π)²','√A/π²'],1,''),q('Solve y = mx + b for x',['(y − b)/m','y/m − b','(y + b)/m','m(y − b)'],0,'')]};
+L['A2-12-4']={goal:'I can use the Pythagorean identity sin²θ + cos²θ = 1 to find missing trig values.',
+ life:{title:'One value gives the other',html:'If a satellite’s position angle has sin θ = 0.6, you don’t need the angle to find cos θ: since the point lies on a circle of radius 1, <b>cos²θ = 1 − 0.36 = 0.64</b>, so cos θ = ±0.8.'},
+ see:[{title:'The triangle inside the circle',hint:'Move θ. The sum is always 1.',mount:mPyth}],
+ vocab:[['Pythagorean identity','sin²θ + cos²θ = 1.'],['sin²θ','Means (sin θ)².'],['Choosing ±','Use the quadrant to choose the sign.']],
+ examples:[ex('Example 1','sin θ = 5/13, θ in quadrant II. Find cos θ.',[['cos²θ = 1 − 25/169 = 144/169','Identity.'],['cos θ = −12/13','Negative in quadrant II.']]),
+  ex('Example 2','cos θ = −0.6, θ in quadrant III. Find sin θ and tan θ.',[['sin θ = −0.8','sin² = 0.64; negative in III.'],['tan θ = −0.8/−0.6 = 4/3','']])],
+ mistake:{bad:'sin θ + cos θ = 1',good:'sin²θ + cos²θ = 1',why:'At 45°: sin + cos ≈ 1.41, but the <b>squares</b> add to 1.'},
+ practice(){const T=pick([[3,4,5],[5,12,13],[8,15,17],[7,24,25]]);const qd=rand(1,4);const sgnC=[1,-1,-1,1][qd-1],sgnS=[1,1,-1,-1][qd-1];const giveSin=Math.random()<.5;
+  return num(`${giveSin?`sin θ = ${sgnS<0?'−':''}${T[0]}/${T[2]}`:`cos θ = ${sgnC<0?'−':''}${T[0]}/${T[2]}`}, and θ is in quadrant ${qd}. Find ${giveSin?'cos θ':'sin θ'}.`,[[giveSin?'cos θ =':'sin θ =',(giveSin?sgnC:sgnS)*T[1]/T[2],0.002]],'Use sin²θ + cos²θ = 1, then the quadrant sign.',[[`${giveSin?'cos':'sin'}²θ = 1 − ${T[0]*T[0]}/${T[2]*T[2]} = ${T[1]*T[1]}/${T[2]*T[2]}`,'Identity.'],[`${giveSin?'cos':'sin'} θ = ${(giveSin?sgnC:sgnS)<0?'−':''}${T[1]}/${T[2]}`,`Sign from quadrant ${qd}.`]]);},
+ check:[q('sin²40° + cos²40° = ?',['0','1','40','depends'],1,''),q('cos θ = 0.8, θ in quadrant IV. sin θ = ?',['0.6','−0.6','0.2','−0.2'],1,''),q('If sin θ = 1, cos θ = ?',['1','−1','0','undefined'],2,'')]};
 
-L['A2-12-4']={goal:'I can write and use an equation that relates two variables in a context, including constraints.',
- life:{title:'Best garden for your fence',html:'You have 80 m of fence. Width and length can trade off, but the <b>constraint</b> 2w + 2ℓ = 80 ties them together. Substituting turns two variables into one function: A(w) = w(40 − w). Now you can find the biggest garden.'},
- see:[{title:'Fixed perimeter, changing area',hint:'Change the fence length and the width.',mount:mFence}],
- vocab:[['Constraint','An equation the variables must satisfy.'],['Substitute','Use the constraint to write one variable in terms of the other.'],['Optimize','Find the input giving the max or min output.']],
- examples:[ex('Example 1','Two numbers sum to 20. Maximize their product.',[['y = 20 − x → P = x(20 − x)','Constraint.'],['vertex x = 10 → P = 100','Both numbers 10.']]),
-  ex('Example 2','Tickets: adults $12, kids $8, total $480. Write the relationship.',[['12a + 8k = 480','Two-variable equation.'],['k = 60 − 1.5a','Solve for k.']])],
- mistake:{bad:'Perimeter 80 → ℓ = 80 − w',good:'ℓ = 40 − w',why:'Two widths and two lengths: 2w + 2ℓ = 80, so w + ℓ = 40.'},
- practice(){const L_=rand(10,40)*4;const w=rand(2,L_/2-2);return num(`A rectangle has perimeter ${L_} m. Write its area in terms of width w, then find the area when w = ${w} and the largest possible area.`,[[`A(${w}) =`,w*(L_/2-w)],['max area =',(L_/4)**2]],`ℓ = ${L_/2} − w; max at w = ${L_/4}.`,[[`A(w) = w(${L_/2} − w)`,'Constraint.'],[`A(${w}) = ${w*(L_/2-w)}; A(${L_/4}) = ${(L_/4)**2}`,'Evaluate.']]);},
- check:[q('Perimeter 60: ℓ in terms of w?',['60 − w','30 − w','60 − 2w','w − 30'],1,''),q('Rectangle with perimeter P and max area is a…',['long strip','square','triangle','circle'],1,''),q('3x + 2y = 12 solved for y?',['y = 6 − 1.5x','y = 12 − 3x','y = 4 − x','y = 1.5x − 6'],0,'')]};
+L['A2-12-5']={goal:'I can find exact trig values of special angles (multiples of 30° and 45°) in all quadrants.',
+ life:{title:'Exact beats approximate',html:'Engineers and test writers love 30°, 45°, and 60° because their sines and cosines are <b>exact</b>: ½, √2/2, √3/2. Learn one quadrant and use symmetry + signs for the rest of the circle.'},
+ see:[{title:'Special-angle explorer',hint:'Click any angle. Notice the repeating numbers.',mount:mSpecial}],
+ vocab:[['Reference angle','Acute angle to the x-axis.'],['30°–60°–90°','sides 1, √3, 2 → ½ and √3/2.'],['45°–45°–90°','sides 1, 1, √2 → √2/2.'],['ASTC','Quadrants where All / Sin / Tan / Cos are positive.']],
+ examples:[ex('Example 1','Find cos 150°.',[['reference angle 30°',''],['cos 30° = √3/2; quadrant II → negative','cos 150° = −√3/2']]),
+  ex('Example 2','Find sin(7π/4).',[['7π/4 = 315°, reference 45°',''],['quadrant IV → sin negative','−√2/2']])],
+ mistake:{bad:'sin 30° = √3/2',good:'½',why:'At 30° the point is low on the circle, so the height (sine) is the small value, ½.'},
+ practice(){const d=pick(SPEC.filter(x=>x%90));const e=exact(d);const which=rand(0,1);const vals=['1/2','√2/2','√3/2','−1/2','−√2/2','−√3/2'];return mc(`Exact value of <b>${which?'sin':'cos'} ${d}°</b>?`,e[which],vals,`Reference angle ${[d,180-d,d-180,360-d][Math.floor(d/90)]}°; quadrant ${Math.floor(d/90)+1} sets the sign.`);},
+ check:[q('cos 60° = ?',['√3/2','1/2','√2/2','1'],1,''),q('sin 225° = ?',['√2/2','−√2/2','−1/2','1/2'],1,'Quadrant III.'),q('tan 45° = ?',['1','√3','0','√2/2'],0,'')]};
 
-L['A2-12-5']={goal:'I can use formulas with several variables and describe how changing one variable affects the result.',
- life:{title:'Road-trip budget',html:'Gas cost per person = distance × price ÷ (mpg × riders). Four variables, one formula. Knowing which variables are <b>multiplied</b> and which <b>divide</b> tells you instantly how a change — a better car, one more friend — moves the cost.'},
- see:[{title:'Road-trip calculator',hint:'Change each variable. Which ones raise the cost?',mount:mTrip}],
- vocab:[['Direct variation','y = kx: double x → double y.'],['Inverse variation','y = k/x: double x → half y.'],['Joint variation','y = kxz: varies with a product.']],
- examples:[ex('Example 1','Density ρ = m/V. Mass triples, volume doubles. New density?',[['(3m)/(2V) = 1.5 · m/V','×1.5.']]),
-  ex('Example 2','Kinetic energy E = ½mv². Speed doubles. Energy?',[['½m(2v)² = 4 · ½mv²','4 times as much.']])],
- mistake:{bad:'v doubles → E = ½mv² doubles',good:'E quadruples',why:'v is <b>squared</b>: 2² = 4.'},
- practice(){const k=pick([2,3,4]),t=pick([['E = ½mv²','v',2],['A = πr²','r',2],['V = s³','s',3],['F = k/d²','d',-2],['I = P/(4πr²)','r',-2]]);const f=k**t[2];return num(`In <b>${t[0]}</b>, ${t[1]} is multiplied by ${k} (everything else fixed). The result is multiplied by?`,[['factor =',f,0.0011]],`${t[1]} appears with power ${t[2]}.`,[[`${k}${A2.sup(t[2])} = ${fr(...(t[2]<0?[1,k**-t[2]]:[f,1]))}`,'Raise the factor to that power.']]);},
- check:[q('y = 5x/z. x doubles, z doubles. y…',['doubles','halves','unchanged','×4'],2,''),q('Area of a circle when r triples?',['×3','×6','×9','×27'],2,''),q('Travel time = d/s. Speed doubles →',['time doubles','time halves','same','time ×4'],1,'')]};
+L['A2-12-6']={goal:'I can graph y = sin x, y = cos x, and y = tan x and describe their key features.',
+ life:{title:'Unrolling the circle',html:'Track the height of a point on a spinning wheel over time and you draw a <b>sine wave</b>. Track its horizontal position and you draw a <b>cosine wave</b>. Sound, light, tides, and alternating current all follow these shapes.'},
+ see:[{title:'Circle → graph',hint:'Pick a function and slide x.',mount:mGraphs}],
+ vocab:[['Period','Length of one full cycle: 2π for sin and cos, π for tan.'],['Range','sin, cos: [−1, 1]; tan: all reals.'],['Asymptotes of tan','x = π/2 + kπ (where cos x = 0).']],
+ examples:[ex('Example 1','Key points of y = sin x on [0, 2π]',[['(0, 0), (π/2, 1), (π, 0), (3π/2, −1), (2π, 0)','Zero, max, zero, min, zero.']]),
+  ex('Example 2','Where is tan x undefined on [0, 2π]?',[['cos x = 0 at π/2 and 3π/2','Vertical asymptotes.']])],
+ mistake:{bad:'cos x starts at 0 like sin x',good:'cos 0 = 1',why:'Cosine starts at its <b>maximum</b>; it is the sine wave shifted left π/2.'},
+ practice(){const k=pick([0,1,2,3,4]);const x=k*PI/2,lbl=['0','π/2','π','3π/2','2π'][k];const f=pick(['sin','cos']);const v=Math.round(f==='sin'?Math.sin(x):Math.cos(x));return num(`From the graph of y = ${f} x, find ${f}(${lbl}).`,[['value =',v]],'Use the key points: zero, max, zero, min, zero (sin) or max, zero, min, zero, max (cos).',[[`${f}(${lbl}) = ${v}`,'Key point.']]);},
+ check:[q('Period of y = cos x?',['π','2π','π/2','1'],1,''),q('Max of y = sin x?',['π/2','1','2π','∞'],1,''),q('tan x has asymptotes at…',['x = 0','x = π/2 + kπ','x = kπ','none'],1,'')]};
 
-TOOLS['A2-12']={title:'Revenue, cost, and profit',hint:'Change price and costs; find the break-even point.',mount:mCombo};
+L['A2-12-7']={goal:'I can find the amplitude, midline, and period of y = A sin(Bx) + D.',
+ life:{title:'Tides',html:'At one beach the water rises 2 m above and falls 2 m below an average level of 3 m, repeating every 12.4 hours. That is a sinusoid with <b>amplitude 2</b>, <b>midline y = 3</b>, and <b>period 12.4 h</b>.'},
+ see:[{title:'Amplitude, midline, period',hint:'Change A, B, D. Compare with the dashed y = sin x.',mount:mAMP}],
+ vocab:[['Amplitude |A|','Distance from the midline to a max.'],['Midline y = D','The horizontal line through the middle.'],['Period 2π/B','Horizontal length of one cycle.']],
+ examples:[ex('Example 1','y = 3 sin(2x) − 1',[['amplitude 3, midline y = −1',''],['period 2π/2 = π','max 2, min −4']]),
+  ex('Example 2','A graph has max 7, min 1, and repeats every 4π.',[['midline (7 + 1)/2 = 4, amplitude 3',''],['B = 2π/4π = ½ → y = 3 sin(½x) + 4','One possible equation.']])],
+ mistake:{bad:'Amplitude = max − min',good:'(max − min)/2',why:'Amplitude is measured from the <b>midline</b>, not from the minimum.'},
+ practice(){const A=rand(1,6),B=pick([1,2,3,4,0.5]),D=rand(-4,4);if(Math.random()<.5)return num(`y = ${A} sin(${B===1?'':nf(B)}x) ${D<0?'−':'+'} ${Math.abs(D)}. Find the maximum and minimum values.`,[['max =',D+A],['min =',D-A]],'Midline ± amplitude.',[[`midline ${D}, amplitude ${A}`,''],[`max ${D+A}, min ${D-A}`,'']]);
+  return num(`A sinusoid has max ${D+A} and min ${D-A}. Find the amplitude and the midline value.`,[['amplitude =',A],['midline y =',D]],'Amplitude = (max − min)/2; midline = (max + min)/2.',[[`(${D+A} − ${P(D-A)})/2 = ${A}`,'Amplitude.'],[`(${D+A} + ${P(D-A)})/2 = ${D}`,'Midline.']]);},
+ check:[q('Period of y = sin(4x)?',['4π','π/2','π/4','8π'],1,'2π/4.'),q('Midline of y = 2cos x + 5?',['y = 2','y = 5','y = 7','y = 3'],1,''),q('Amplitude of y = −3 sin x?',['−3','3','6','1/3'],1,'Always positive.')]};
+
+L['A2-12-8']={goal:'I can describe and apply all transformations of y = A cos(B(x − h)) + D, including phase shift.',
+ life:{title:'Daylight hours',html:'In Los Angeles, daylight is longest around June 21 and shortest around December 21. A cosine model of daylight needs a <b>phase shift</b> so its maximum lands on the right day — the same idea as shifting any function right by h.'},
+ see:[{title:'Full sinusoid transformation',hint:'Change A, B, h, D. Watch the red cycle start point.',mount:mShiftT}],
+ vocab:[['Phase shift h','Horizontal shift; cos(B(x − h)) moves right h.'],['Factor out B','cos(2x − π) = cos(2(x − π/2)) → shift π/2, not π.'],['A < 0','Reflection over the midline.']],
+ examples:[ex('Example 1','Describe y = 2cos(x − π/3) + 1',[['amplitude 2, period 2π',''],['shift π/3 right, 1 up','Max at x = π/3.']]),
+  ex('Example 2','Phase shift of y = sin(3x + π)',[['3x + π = 3(x + π/3)','Factor out B.'],['π/3 to the left','']])],
+ mistake:{bad:'sin(2x − π) is shifted π right',good:'π/2 right',why:'Factor first: 2x − π = 2(x − π/2).'},
+ practice(){const B=pick([1,2,3,4]),k=rand(1,5),s=pick([1,-1]);const h=s*k/B;return num(`Find the phase shift of <b>y = cos(${B===1?'':B}x ${s>0?'−':'+'} ${k})</b>. (Positive = right, negative = left; decimals OK.)`,[['shift h =',+h.toFixed(4),0.011]],'Factor out B from the inside.',[[`${B===1?'':B}x ${s>0?'−':'+'} ${k} = ${B}(x ${s>0?'−':'+'} ${fr(k,B)})`,'Factor.'],[`h = ${fr(s*k,B)}`,s>0?'right':'left']]);},
+ check:[q('y = sin(x + π/4) shifts…',['π/4 right','π/4 left','up π/4','down π/4'],1,''),q('y = −cos x has a … at x = 0',['max','min','zero','asymptote'],1,'Flipped.'),q('Phase shift of cos(2x − π/2)?',['π/2 right','π/4 right','π/2 left','π right'],1,'2(x − π/4).')]};
+
+L['A2-12-9']={goal:'I can write the equation of a sinusoid from its graph or key features.',
+ life:{title:'Reverse engineering a wave',html:'A sound engineer sees a wave on a screen and needs its equation. Read the <b>midline</b> (middle), the <b>amplitude</b> (top − middle), and the <b>period</b> (one full wave); then B = 2π/period. Three readings, one formula.'},
+ see:[{title:'Match the target wave',hint:'Adjust A, B, D until your blue curve sits on the orange one.',mount:mMatch}],
+ vocab:[['From a graph','D = (max + min)/2, A = (max − min)/2, B = 2π/period.'],['sin or cos?','Starts at the midline going up → sin; starts at a max → cos.'],['Check a point','Plug a key point into your equation.']],
+ examples:[ex('Example','A graph has max 5 at x = 0, min −1 at x = π.',[['D = 2, A = 3',''],['period 2π → B = 1','Max to min is half a period.'],['starts at max → y = 3cos x + 2','']])],
+ mistake:{bad:'Period = distance from max to min',good:'max to next max',why:'Max to min is only <b>half</b> a period.'},
+ practice(){const per=pick([[PI,'π',2],[2*PI,'2π',1],[4*PI,'4π',0.5],[PI/2,'π/2',4],[2*PI/3,'2π/3',3]]);return num(`A sinusoid repeats every <b>${per[1]}</b>. In y = A sin(Bx) + D, what is B (B &gt; 0)?`,[['B =',per[2]]],'B = 2π / period.',[[`B = 2π / ${per[1]} = ${per[2]}`,'']]);},
+ check:[q('Max 10, min 2: midline?',['y = 4','y = 6','y = 8','y = 12'],1,''),q('Period 6 → B = ?',['6','π/3','3π','π/6'],1,'2π/6.'),q('Graph starts at a max at x = 0: use…',['sin','cos','tan','−sin'],1,'')]};
+
+L['A2-12-10']={goal:'I can build and interpret sinusoidal models of periodic real-world situations.',
+ life:{title:'Ferris wheel ride',html:'You board a Ferris wheel at the bottom. Your height goes up and down in a perfect wave: <b>amplitude</b> = radius, <b>midline</b> = axle height, <b>period</b> = time per turn. Starting at the bottom means a <b>−cos</b> model.'},
+ see:[{title:'Ferris wheel model',hint:'Change the radius and the time per turn. Slide t.',mount:mFerris}],
+ vocab:[['Sinusoidal model','y = A sin(B(t − h)) + D or A cos(…) + D.'],['B from period','B = 2π / period.'],['Starting point','Bottom → −cos; middle going up → sin; top → cos.']],
+ examples:[ex('Example 1','Wheel: radius 20 m, axle 22 m high, 10 min per turn, board at bottom.',[['h(t) = −20cos(2πt/10) + 22','A = 20, D = 22, B = π/5.'],['h(2.5) = −20cos(π/2) + 22 = 22 m','Quarter turn: level with the axle.']]),
+  ex('Example 2','Temperature: high 30°C at 3 pm, low 14°C at 3 am.',[['D = 22, A = 8, period 24 h',''],['T(t) = 8cos(2π(t − 15)/24) + 22','Max at t = 15.']])],
+ mistake:{bad:'B = period',good:'B = 2π/period',why:'B counts cycles per 2π units, not the period itself.'},
+ practice(){const r=rand(5,25),T=rand(4,12),k=pick([0.25,0.5,0.75,1]);const c=r+2;const h=-r*Math.cos(2*PI*k)+c;return num(`A Ferris wheel has radius ${r} m, its axle is ${c} m high, and one turn takes ${T} min. You board at the bottom. Height after <b>${nf(k*T)} min</b>?`,[['height =',+h.toFixed(4),0.05]],`That is ${k} of a turn.`,[[`h(t) = −${r}cos(2πt/${T}) + ${c}`,'Model.'],[`h(${nf(k*T)}) = −${r}cos(${nf(2*k)}π) + ${c} = ${nf(h)}`,'Evaluate.']]);},
+ check:[q('Ferris wheel radius 12 → amplitude?',['24','12','6','1'],1,''),q('One turn every 5 min → B = ?',['5','2π/5','5/2π','10π'],1,''),q('Board at the bottom → model uses…',['sin','cos','−cos','tan'],2,'')]};
+
+function mountRT(el){sliders(el,[{k:'t',l:'angle θ (°)',min:5,max:85,v:35},{k:'r',l:'hypotenuse',min:1,max:10,v:5}],V=>{const t=rad(V.t),o=V.r*Math.sin(t),a=V.r*Math.cos(t);const S=230/V.r*0.95,W=280,H=o*S+50,X=x=>30+x*S,Y=y=>H-25-y*S;
+ const s=`<polygon points="${X(0)},${Y(0)} ${X(a)},${Y(0)} ${X(a)},${Y(o)}" fill="#fef3c7" stroke="#1f2937" stroke-width="2.5"/><rect x="${X(a)-12}" y="${Y(0)-12}" width="12" height="12" fill="none" stroke="#1f2937"/>
+ <text x="${X(a/2)}" y="${Y(0)+18}" text-anchor="middle" font-weight="800" fill="#059669">adj ${nf(a)}</text><text x="${X(a)+6}" y="${Y(o/2)}" font-weight="800" fill="#2563eb">opp ${nf(o)}</text><text x="${X(a/2)-10}" y="${Y(o/2)-8}" text-anchor="end" font-weight="800" fill="#1f2937">hyp ${V.r}</text>
+ <path d="M${X(0)+26} ${Y(0)} A 26 26 0 0 0 ${X(0)+26*Math.cos(t)} ${Y(0)-26*Math.sin(t)}" fill="none" stroke="#ea580c" stroke-width="2.5"/><text x="${X(0)+32}" y="${Y(0)-8}" font-size="12" fill="#ea580c" font-weight="800">θ</text>`;
+ $('.rt-g',el).innerHTML=`<svg viewBox="0 0 ${W+60} ${H}" class="fig" style="max-width:340px">${s}</svg>`;
+ $('.rt-r',el).innerHTML=`sin θ = opp/hyp = ${nf(o)}/${V.r} = <b>${nf(Math.sin(t))}</b> · cos θ = adj/hyp = <b>${nf(Math.cos(t))}</b> · tan θ = opp/adj = <b>${nf(Math.tan(t))}</b><br>Change the hypotenuse: the ratios <b>don’t change</b> (similar triangles). With hypotenuse <b>1</b>, the legs are exactly cos θ and sin θ — that is the triangle inside the unit circle in the next lesson.`;},`<div class="rt-g"></div><div class="readout rt-r"></div>`).run();}
+
+L['A2-12-1']={goal:'I can use SOH-CAH-TOA to find sides and angles of right triangles, and connect it to the unit circle.',
+ life:{title:'How tall is the tree?',html:'Stand 20 m from a tree and look up 35° to its top: height = 20·tan 35° ≈ <b>14 m</b>. Right-triangle trig from Geometry is the starting point; this unit stretches it from acute angles to <b>every</b> angle using a circle.'},
+ see:[{title:'Ratios stay the same',hint:'Change the angle and the hypotenuse.',mount:mountRT}],
+ vocab:[['SOH-CAH-TOA','sin = opp/hyp, cos = adj/hyp, tan = opp/adj.'],['Inverse trig','sin⁻¹, cos⁻¹, tan⁻¹ give the angle from a ratio.'],['Hypotenuse 1','Legs become cos θ and sin θ.']],
+ examples:[ex('Example 1','Hypotenuse 12, angle 40°. Find the opposite side.',[['sin 40° = opp/12','SOH.'],['opp = 12 sin 40° ≈ 7.71','']]),
+  ex('Example 2','Legs 5 (opposite) and 8 (adjacent). Find θ.',[['tan θ = 5/8','TOA.'],['θ = tan⁻¹(0.625) ≈ 32.0°','']])],
+ mistake:{bad:'cos θ = opp/hyp',good:'adj/hyp',why:'CAH: <b>C</b>os = <b>A</b>djacent / <b>H</b>ypotenuse. Adjacent is the leg touching θ.'},
+ practice(){const t=rand(15,75),h=rand(4,20);if(Math.random()<.5){const w=pick(['opp','adj']);const v=w==='opp'?h*Math.sin(rad(t)):h*Math.cos(rad(t));return num(`A right triangle has hypotenuse ${h} and angle θ = ${t}°. Find the ${w==='opp'?'side opposite':'side adjacent to'} θ (nearest tenth).`,[['side ≈',+v.toFixed(1),0.051]],w==='opp'?'SOH: opp = hyp · sin θ.':'CAH: adj = hyp · cos θ.',[[`${h} · ${w==='opp'?'sin':'cos'} ${t}° ≈ ${v.toFixed(1)}`,'']]);}
+  const o=rand(2,12),a=rand(2,12),ang=Math.atan2(o,a)*180/PI;return num(`Legs: ${o} opposite θ and ${a} adjacent to θ. Find θ (nearest tenth of a degree).`,[['θ ≈',+ang.toFixed(1),0.051]],'TOA, then tan⁻¹.',[[`tan θ = ${o}/${a}`,'TOA.'],[`θ = tan⁻¹(${nf(o/a)}) ≈ ${ang.toFixed(1)}°`,'Inverse tangent.']]);},
+ check:[q('sin θ = ?',['adj/hyp','opp/hyp','opp/adj','hyp/opp'],1,''),q('If hypotenuse = 1, the vertical leg equals…',['cos θ','sin θ','tan θ','1'],1,''),q('tan 45° = ?',['0','1','√2','undefined'],1,'')]};
+
+TOOLS['A2-12']={title:'Circle to graph',hint:'Slide x around the circle and watch sin, cos, or tan unroll.',mount:mGraphs};
 })();

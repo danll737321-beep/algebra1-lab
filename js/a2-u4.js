@@ -1,4 +1,4 @@
-/* Khan Algebra 2 · Unit 4 · Polynomial division */
+/* Algebra 2 · Unit 4 · Polynomial division */
 (function(){const {ps,mono,pmul,peval,synth,sliders,graphLab,areaTable,ex,q,mc,num,nz,stepper,TOOLS,nf,sup}=A2;
 function synTable(co,r){const {q:qq,rem}=synth(co,r);const mid=[''];let c=0;co.forEach((k,i)=>{if(i){mid.push(fmtNeg(c*r));}c=c*r+k;});
  return `<table class="t" style="margin:8px auto;font-size:1.1em"><tr><th rowspan="3" style="border-right:3px solid #374151">${fmtNeg(r)}</th>${co.map(k=>`<td>${fmtNeg(k)}</td>`).join('')}</tr><tr>${mid.map(v=>`<td style="color:#2563eb">${v}</td>`).join('')}</tr><tr style="border-top:3px solid #374151">${qq.map(v=>`<td><b>${fmtNeg(v)}</b></td>`).join('')}<td style="background:#fee2e2"><b>${fmtNeg(rem)}</b></td></tr></table>`;}
@@ -68,6 +68,32 @@ L['A2-4-4']={goal:'I can use the remainder theorem: the remainder of p(x) ÷ (x 
  mistake:{bad:'Remainder of p(x) ÷ (x + 2) is p(2)',good:'p(−2)',why:'x + 2 = x − (−2), so a = −2.'},
  practice(){const co=[rand(1,3),rand(-4,4),rand(-6,6),rand(-9,9)],a=nz(-3,3);return num(`Find the remainder when <b>${ps(co)}</b> is divided by <b>(x ${a<0?'+':'−'} ${Math.abs(a)})</b>.`,[['remainder =',peval(co,a)]],`Evaluate p(${a}).`,[[`p(${a}) = ${co.map((k,i)=>`${fmtNeg(k)}${3-i?`(${a})${sup(3-i>1?3-i:'')}`:''}`).join(' + ')}`,'Substitute.'],[`= ${peval(co,a)}`,'Remainder theorem.']]);},
  check:[q('p(3) = 0 means…',['x + 3 is a factor','x − 3 is a factor','3 is the remainder','p has no zeros'],1,'Factor theorem.'),q('Remainder of (x² + 4) ÷ (x − 1)?',['4','5','3','0'],1,'p(1) = 5.'),q('Remainder of x¹⁰⁰ ÷ (x − 1)?',['0','1','100','−1'],1,'1¹⁰⁰ = 1.')]};
+
+const ZP=[{co:[1,-6,11,-6],t:'x³ − 6x² + 11x − 6'},{co:[2,-3,-11,6],t:'2x³ − 3x² − 11x + 6'},{co:[1,0,-7,-6],t:'x³ − 7x − 6'},{co:[1,-2,1,-2],t:'x³ − 2x² + x − 2'},{co:[1,1,-4,-4],t:'x³ + x² − 4x − 4'}];
+function divs(n){n=Math.abs(n);const r=[];for(let i=1;i<=n;i++)if(n%i===0)r.push(i);return r;}
+function cands(co){const p=divs(co[co.length-1]),qq=divs(co[0]);const S=new Set();p.forEach(a=>qq.forEach(b=>{S.add(a/b);S.add(-a/b);}));return [...S].sort((x,y)=>x-y);}
+const fracStr=v=>{for(let d=1;d<=6;d++){const n=v*d;if(Math.abs(n-Math.round(n))<1e-9)return d===1?fmtNeg(Math.round(n)):fmtNeg(Math.round(n))+'/'+d;}return nf(v);};
+function mountHunt(el){let pi=0,pick_=null;const draw=()=>{const co=ZP[pi].co,C=cands(co);
+ let out=`<div class="row">${ZP.map((p,i)=>`<button data-zp="${i}" class="${i===pi?'sel':''}">${p.t}</button>`).join('')}</div>
+ <p style="margin:6px 0"><b>Step 1 — list candidates</b> ±(factors of ${Math.abs(co[3])}) / (factors of ${Math.abs(co[0])}):</p><div class="row">${C.map(c=>{const z=Math.abs(peval(co,c))<1e-9;return `<button data-c="${c}" class="${pick_===c?'sel':''}" style="${pick_!==null&&pick_===c?(z?'border-color:#059669;color:#059669':'border-color:#e11d48;color:#e11d48'):''}">${fracStr(c)}</button>`;}).join('')}</div>`;
+ if(pick_!==null){const {q:Q,rem}=synth(co,pick_);out+=`<p style="margin:6px 0"><b>Step 2 — test ${fracStr(pick_)} with synthetic division</b></p>${synTable(co,pick_)}`;
+  if(Math.abs(rem)>1e-9)out+=`<div class="readout"><span class="bad">Remainder ${nf(rem)} ≠ 0</span> → ${fracStr(pick_)} is not a zero. Try another candidate.</div>`;
+  else{const [a,b,c]=Q,D=b*b-4*a*c,h=-b/(2*a),s=Math.sqrt(Math.abs(D))/(2*a);const rest=D>=0?[fracStr(h-s),fracStr(h+s)]:[`${nf(h)} − ${nf(Math.abs(s))}i`,`${nf(h)} + ${nf(Math.abs(s))}i`];
+   out+=`<div class="readout"><span class="good">Remainder 0 → x = ${fracStr(pick_)} is a zero.</span><br><b>Step 3 —</b> the quotient ${ps(Q)} is a quadratic: use the quadratic formula → x = ${rest.join(', ')}.<br>All <b>3</b> zeros: ${fracStr(pick_)}, ${rest.join(', ')}. <span class="mute">Degree 3 → exactly 3 zeros counting complex ones (Fundamental Theorem of Algebra).</span></div>`;}}
+ else out+='<div class="readout">Click a candidate to test it.</div>';el.innerHTML=out;};
+ el.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.zp!==undefined){pi=+b.dataset.zp;pick_=null;}else if(b.dataset.c!==undefined)pick_=+b.dataset.c;draw();});draw();}
+
+L['A2-4-5']={goal:'I can find all zeros of a polynomial using the Rational Root Theorem, synthetic division, and the quadratic formula.',
+ life:{title:'Finding where a design breaks even',html:'A box-design formula gives volume as a cubic. To find the sizes that make it exactly 0 (or any target), you need <b>every</b> zero. Guessing at random is hopeless — the Rational Root Theorem gives a short list of candidates to test.'},
+ see:[{title:'Zero hunt',hint:'Pick a polynomial, test candidates, then finish with the quadratic formula.',mount:mountHunt}],
+ vocab:[['Rational Root Theorem','Any rational zero p/q has p dividing the constant term and q dividing the leading coefficient.'],['Fundamental Theorem of Algebra','A degree-n polynomial has exactly n complex zeros (counting multiplicity).'],['Depressed polynomial','The quotient left after dividing out a known zero.']],
+ examples:[ex('Example 1','Find all zeros of x³ − 7x − 6.',[['candidates ±1, ±2, ±3, ±6','Factors of 6 over factors of 1.'],['test −1: remainder 0 → quotient x² − x − 6','Synthetic division.'],['x² − x − 6 = (x − 3)(x + 2) → zeros −1, −2, 3','Factor the quadratic.']]),
+  ex('Example 2','Find all zeros of x³ − 2x² + x − 2.',[['test 2: remainder 0 → quotient x² + 1','Synthetic division.'],['x² + 1 = 0 → x = ±i','Complex pair.'],['zeros 2, i, −i','3 zeros for degree 3.']])],
+ mistake:{bad:'Candidates for 2x³ + … + 6 are only ±1, ±2, ±3, ±6',good:'also ±1/2, ±3/2',why:'Divide by the factors of the <b>leading coefficient</b> (1 and 2), too.'},
+ practice(){if(Math.random()<.3){const n=rand(3,7);return num(`How many complex zeros (counting multiplicity) does a polynomial of degree ${n} have?`,[['zeros =',n]],'Fundamental Theorem of Algebra.',[[`${n}`,'Degree n → n zeros.']]);}
+  let r;do r=[rand(-5,5),rand(-5,5),rand(-5,5)];while(new Set(r).size<3||r.includes(0));const co=pmul(pmul([1,-r[0]],[1,-r[1]]),[1,-r[2]]);const s=[...r].sort((a,b)=>a-b);
+  return num(`Find all zeros of <b>${ps(co)}</b> (smallest to largest).`,[['x₁ =',s[0]],['x₂ =',s[1]],['x₃ =',s[2]]],`Candidates are factors of ${Math.abs(co[3])}. Test with synthetic division, then factor the quadratic.`,[[`one zero: ${r[0]}`,'Remainder 0.'],[`quotient ${ps(pmul([1,-r[1]],[1,-r[2]]))}`,'Depressed polynomial.'],[s.join(', '),'All zeros.']]);},
+ check:[q('Possible rational zeros of 3x³ + x − 2 include…',['±2/3','±3/2','±6','±1/2'],0,'p | 2, q | 3.'),q('A degree-4 polynomial has how many complex zeros?',['2','3','4','up to 4 real only'],2,'FTA.'),q('If 1 + 2i is a zero of a real polynomial, so is…',['1 − 2i','−1 + 2i','2 + i','−1 − 2i'],0,'Conjugate pairs.')]};
 
 TOOLS['A2-4']={title:'Synthetic division table',hint:'Pick a polynomial and slide r. Remainder 0 means you found a factor.',mount:mountSynth};
 })();

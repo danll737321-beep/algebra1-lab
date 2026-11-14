@@ -1,4 +1,4 @@
-/* Khan Algebra 2 · Unit 9 · Transformations of functions */
+/* Algebra 2 · Unit 9 · Transformations of functions */
 (function(){const {graphLab,chooser,ex,q,mc,num,nz,curve,TOOLS,nf,vline,hline}=A2;
 const cbrt=x=>Math.sign(x)*Math.abs(x)**(1/3);
 const PAR={sq:{n:'x²',f:x=>x*x},abs:{n:'|x|',f:Math.abs},sqrt:{n:'√x',f:x=>x<0?NaN:Math.sqrt(x)},cbrt:{n:'∛x',f:cbrt},cube:{n:'x³',f:x=>x**3},exp:{n:'2ˣ',f:x=>2**x},log:{n:'log₂x',f:x=>x<=0?NaN:Math.log2(x)}};
