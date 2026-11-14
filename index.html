@@ -534,6 +534,7 @@ svg text{font-family:var(--rf)}
 <main id="app"></main>
 <footer>Picture to Pencil: See It → Move It → Write It → Prove It · Algebra 1 · Geometry · Algebra II · Pre-Calculus · Calculus</footer>
 <script src="js/zh.js"></script>
+<script src="js/zh-a2.js"></script>
 <script>
 /* ============ helpers ============ */
 const $=(s,el=document)=>el.querySelector(s);
@@ -621,16 +622,20 @@ const NEWC=[
  L5('Conic Sections','#db2777',['Graphs of Circles','Standard Equation of a Circle','Expanded Equation of a Circle','Focus and Directrix of a Parabola']),
  L5('Circles','#e11d48',['Circle Basics and Arc Measure','Arc Length and Radians','Sectors','Inscribed Angles','Inscribed Shapes','Properties of Tangents']),
  L5('Solid Geometry','#475569',['Cross Sections and Solids of Revolution','Volume of Prisms and Cylinders','Volume of Pyramids, Cones, and Spheres',"Cavalieri's Principle",'Density'])]},
-{id:'A2',cat:'alg2',label:'Algebra II',modules:[
- L5('Functions and Transformations','#2563eb',['Analyzing Functions','Parent Functions and Transformations','Piecewise and Absolute Value Functions','Inverse Functions']),
- L5('Quadratics and Complex Numbers','#0891b2',['Quadratic Functions in Vertex Form','Solving Quadratic Equations','Complex Numbers','Quadratics with Complex Solutions','Linear–Quadratic Systems']),
- L5('Polynomial Functions','#059669',['Graphing Polynomial Functions','Polynomial Operations','Dividing Polynomials','Factor and Remainder Theorems','Finding All Roots','Polynomial Identities']),
- L5('Rational Functions','#d97706',['Graphing Simple Rational Functions','Asymptotes and Holes','Multiplying and Dividing Rational Expressions','Adding and Subtracting Rational Expressions','Solving Rational Equations']),
- L5('Radical Functions and Rational Exponents','#0d9488',['nth Roots and Rational Exponents','Properties of Rational Exponents','Graphing Square Root and Cube Root Functions','Solving Radical Equations']),
- L5('Exponential and Logarithmic Functions','#9333ea',['Exponential Growth and Decay','The Number e','Logarithms as Inverses','Properties of Logarithms','Solving Exponential and Logarithmic Equations','Exponential Models']),
- L5('Sequences and Series','#db2777',['Arithmetic Sequences and Series','Geometric Sequences and Series','Infinite Geometric Series','Sigma Notation and Recursive Rules']),
- L5('Trigonometric Functions','#e11d48',['Angles and Radian Measure','The Unit Circle','Graphing Sine and Cosine','Graphing Tangent','Transformations of Trig Graphs','Modeling Periodic Phenomena']),
- L5('Statistics and Inference','#475569',['Sampling and Data Collection','Normal Distributions','Margin of Error','Experiments and Significance'])]},
+{id:'A2',cat:'alg2',label:'Algebra II',unit:'Unit',modules:[
+ L5('Polynomial arithmetic','#2563eb',['Intro to Polynomials','Adding and Subtracting Polynomials','Multiplying Monomials by Polynomials','Multiplying Binomials by Polynomials','Special Products of Polynomials']),
+ L5('Complex numbers','#7c3aed',['The Imaginary Unit i','Complex Numbers Introduction','The Complex Plane','Adding and Subtracting Complex Numbers','Multiplying Complex Numbers','Quadratic Equations with Complex Solutions']),
+ L5('Polynomial factorization','#059669',['Factoring Monomials','Greatest Common Factor','Taking Common Factors','Factoring Higher-Degree Polynomials','Factoring Using Structure','Polynomial Identities','Geometric Series']),
+ L5('Polynomial division','#0891b2',['Dividing Polynomials by x','Dividing Quadratics by Linear Factors','Dividing Polynomials by Linear Factors','The Polynomial Remainder Theorem']),
+ L5('Polynomial graphs','#d97706',['Zeros of Polynomials','Positive and Negative Intervals of Polynomials','End Behavior of Polynomials','Putting It All Together']),
+ L5('Rational exponents & radicals','#c026d3',['Rational Exponents','Properties of Exponents (Rational Exponents)','Evaluating Exponents and Radicals','Equivalent Forms of Exponential Expressions','Solving Exponential Equations Using Exponent Properties']),
+ L5('Exponential models','#4f46e5',['Interpreting the Rate of Change of Exponential Models','Constructing Exponential Models from Rate of Change','Advanced Interpretation of Exponential Models']),
+ L5('Logarithms','#9333ea',['Introduction to Logarithms','The Constant e and the Natural Logarithm','Properties of Logarithms','The Change of Base Formula','Solving Exponential Equations with Logarithms','Solving Exponential Models']),
+ L5('Transformations of functions','#0d9488',['Shifting Functions','Reflecting Functions','Symmetry of Functions','Scaling Functions','Putting It All Together','Graphs of Square and Cube Root Functions','Graphs of Exponential Functions','Graphs of Logarithmic Functions']),
+ L5('Equations','#ea580c',['Rational Equations','Square-Root Equations','Extraneous Solutions','Cube-Root Equations','Quadratic Systems','Solving Equations by Graphing']),
+ L5('Trigonometry','#e11d48',['Unit Circle Introduction','Radians','The Pythagorean Identity','Trig Values of Special Angles','Graphs of sin(x), cos(x), and tan(x)','Amplitude, Midline, and Period','Transforming Sinusoidal Graphs','Graphing Sinusoidal Functions','Sinusoidal Models']),
+ L5('Modeling','#475569',['Modeling with Function Combination','Interpreting Features of Functions','Manipulating Formulas','Modeling with Two Variables','Modeling with Multiple Variables']),
+ L5('Rational functions (supplement)','#be123c',['Graphs of Rational Functions','Vertical and Horizontal Asymptotes','Holes (Removable Discontinuities)','Multiplying and Dividing Rational Expressions','Adding and Subtracting Rational Expressions'])]},
 {id:'PC',cat:'pre',label:'Pre-Calculus',modules:[
  L5('Functions and Their Graphs','#2563eb',['Analyzing Graphs of Functions','Transformations','Combining and Composing Functions','Inverse Functions','Piecewise Functions']),
  L5('Polynomial and Rational Functions','#0891b2',['Polynomial Behavior and Zeros','Complex Zeros','Rational Functions and Asymptotes','Polynomial and Rational Inequalities']),
@@ -1542,14 +1547,15 @@ const STAGES=[{k:'pic',n:'See It',i:'👀'},{k:'steps',n:'Move It',i:'🧩'},{k:
 const app=$('#app');
 const MODFILES={'1A-4':'js/1a-m4.js','1A-5':'js/1a-m5.js','1B-1':'js/1b-m1.js','1B-2':'js/1b-m2.js','1B-3':'js/1b-m3.js','1B-4':'js/1b-m4.js','1B-5':'js/1b-m5.js'};
 for(let i=1;i<=9;i++)MODFILES['GEO-'+i]=`js/geo-m${i}.js`;
-const PREREQ={GEO:'js/geo-core.js',KA:'js/ka-core.js'};
+const PREREQ={GEO:'js/geo-core.js',KA:'js/ka-core.js',A2:['js/ka-core.js','js/a2-core.js']};
+for(let u=1;u<=13;u++)MODFILES['A2-'+u]=`js/a2-u${u}.js`;
 for(const u of [1,2,3,4,5,6,7,8,10,11,13,14,15])MODFILES['KA-'+u]=`js/ka-u${u}.js`;
 function ensureLesson(id){if(L[id])return Promise.resolve();const src=KA_ALIAS[id];if(src)return ensureLesson(src).then(()=>{if(L[src]&&!L[id])L[id]=Object.assign({},L[src]);});return loadMod(modKey(id));}
 const modKey=id=>id.split('-').slice(0,2).join('-');
 const hasLesson=id=>!!L[id]||!!MODFILES[modKey(id)]||!!KA_ALIAS[id]||Object.keys(KA_ALIAS).some(k=>KA_ALIAS[k]===id);
 const LOADED={};
 function loadJS(src){return LOADED[src]||(LOADED[src]=new Promise((res,rej)=>{const sc=document.createElement('script');sc.src=src;sc.onload=res;sc.onerror=()=>{delete LOADED[src];rej();};document.head.appendChild(sc);}));}
-function loadMod(k){if(!MODFILES[k])return Promise.resolve();const pre=PREREQ[k.split('-')[0]];return (pre?loadJS(pre):Promise.resolve()).then(()=>loadJS(MODFILES[k]));}
+function loadMod(k){if(!MODFILES[k])return Promise.resolve();const pre=[].concat(PREREQ[k.split('-')[0]]||[]);return pre.reduce((p,src)=>p.then(()=>loadJS(src)),Promise.resolve()).then(()=>loadJS(MODFILES[k]));}
 const avail=ORDER.filter(hasLesson);
 function nextLesson(id){const i=avail.indexOf(id),n=avail[i+1];return n&&META[n].cat===META[id].cat?n:undefined;}
 const inCat=id=>META[id].cat===CUR;
@@ -1687,7 +1693,10 @@ function renderHome(ui){
  <div class="navrow" style="margin:22px 0">${ui>0?`<a class="btn" href="${unitHref(CUR,ui-1)}">◀ ${t('Previous unit')}</a>`:'<span></span>'}${ui<units.length-1?`<a class="btn" href="${unitHref(CUR,ui+1)}">${t('Next unit')} ▶</a>`:'<span></span>'}</div>`;
  app.innerHTML=`<div class="wrap course-page">${tabs}${progress}${pick}<div class="home-layout">${side}<main class="home-main">${panel}</main></div></div>`;
  tools.forEach(x=>x.m());if(ex)ex.m();
+ if(U.key.startsWith('A2-'))mountA2Tool(U.key);
 }
+function mountA2Tool(key){const host=document.createElement('div');host.id='a2tool';const nav=$('.home-main .navrow');if(!nav)return;nav.before(host);
+ loadMod(key).then(()=>{const x=window.A2&&A2.TOOLS[key];if(!x||!document.contains(host))return;host.innerHTML=`<section class="interactive-tools-heading"><h2>${t('Interactive Learning Tools')}</h2><p>${t('Use these visual tools to explore and practice key ideas.')}</p></section><section class="card"><div class="tag">${t('INTERACTIVE')}</div><h3>${x.title}</h3><p class="mute" style="margin-top:0">${x.hint}</p><div id="a2tool-body"></div></section>`;x.mount($('#a2tool-body'));}).catch(()=>{});}
 function mountUnit4Diag(){
  const questions=[
   {q:t('What does the point (3, 7) mean on a graph?'),opts:[t('x = 7 and y = 3'),t('x = 3 and y = 7'),t('The slope is 7')],a:1,why:t('Ordered pairs are written (x, y): move 3 units across, then 7 units up.')},
