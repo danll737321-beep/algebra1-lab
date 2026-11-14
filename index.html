@@ -537,6 +537,7 @@ svg text{font-family:var(--rf)}
 <script src="js/zh-a2.js"></script>
 <script src="js/zh-st.js"></script>
 <script src="js/zh-pc.js"></script>
+<script src="js/zh-ca.js"></script>
 <script>
 /* ============ helpers ============ */
 const $=(s,el=document)=>el.querySelector(s);
@@ -656,17 +657,17 @@ const NEWC=[
  L5('Conic Sections','#e11d48',['Introduction to Conics and Circles','Parabolas: Focus and Directrix','Ellipses','Hyperbolas','Identifying Conics and Systems']),
  L5('Series and the Binomial Theorem','#0d9488',['Sigma Notation and Arithmetic Series','Geometric Series','Mathematical Induction','The Binomial Theorem']),
  L5('Limits and Continuity','#475569',['Limits from Graphs and Tables','Limit Laws and Algebraic Techniques','Continuity and Discontinuities','Limits Involving Infinity','The Intermediate Value Theorem'])]},
-{id:'CALC',cat:'calc',label:'Calculus (AB + BC)',modules:[
- L5('Limits and Continuity','#2563eb',['Limits from Graphs and Tables','Limit Laws and Algebra','Limits at Infinity','The Squeeze Theorem','Continuity and the IVT']),
- L5('Derivatives','#0891b2',['Average vs. Instantaneous Rate of Change','The Definition of the Derivative','Power, Sum, and Constant Rules','Derivatives of sin, cos, eˣ, and ln x','Product and Quotient Rules','Differentiability']),
- L5('Chain Rule, Implicit and Inverse','#059669',['The Chain Rule','Implicit Differentiation','Derivatives of Inverse Functions','Inverse Trig Derivatives','Higher-Order Derivatives']),
- L5('Applications of Derivatives','#d97706',['Derivatives in Context','Position, Velocity, and Acceleration','Related Rates','Linear Approximation',"L'Hôpital's Rule"]),
- L5('Analyzing Functions','#0d9488',['Mean Value Theorem','Extreme Values and Critical Points','First Derivative Test','Concavity and the Second Derivative Test','Curve Sketching','Optimization']),
- L5('Integration','#9333ea',['Riemann Sums','The Definite Integral','Fundamental Theorem of Calculus','Antiderivatives','u-Substitution','Accumulation Functions','Integration by Parts (BC)','Partial Fractions and Improper Integrals (BC)']),
- L5('Differential Equations','#db2777',['Modeling with Differential Equations','Slope Fields','Separation of Variables','Exponential Growth and Decay Models',"Euler's Method (BC)",'Logistic Models (BC)']),
- L5('Applications of Integration','#e11d48',['Average Value of a Function','Motion with Integrals','Area Between Curves','Volume: Disks and Washers','Volume: Cross Sections','Arc Length (BC)']),
- L5('Parametric, Polar, and Vectors (BC)','#4f46e5',['Derivatives of Parametric Equations','Arc Length of Parametric Curves','Vector-Valued Functions and Motion','Polar Curves and Their Derivatives','Area in Polar Coordinates']),
- L5('Infinite Sequences and Series (BC)','#475569',['Convergence of Series','Geometric Series and p-Series','Comparison and Ratio Tests','Alternating Series and Error Bound','Taylor and Maclaurin Polynomials','Power Series and Radius of Convergence'])]}];
+{id:'CA',cat:'calc',label:'Calculus',unit:'Unit',modules:[
+ L5('Limits and Continuity','#2563eb',['Limits and One-Sided Limits','Evaluating Limits Algebraically','The Squeeze Theorem','Continuity and Types of Discontinuity','Infinite Limits and Vertical Asymptotes','Limits at Infinity','The Intermediate Value Theorem']),
+ L5('Differentiation: Definition and Basic Rules','#0891b2',['Average and Instantaneous Rate of Change','The Derivative as a Limit','Estimating Derivatives from Graphs and Tables','Differentiability and Continuity','Power, Constant, and Sum Rules','Derivatives of sin x, cos x, eˣ, and ln x','The Product Rule','The Quotient Rule and Trig Derivatives']),
+ L5('Differentiation: Composite, Implicit, and Inverse Functions','#059669',['The Chain Rule','Implicit Differentiation','Derivatives of Inverse Functions','Derivatives of Inverse Trig Functions','Choosing a Differentiation Strategy','Higher-Order Derivatives']),
+ L5('Contextual Applications of Differentiation','#d97706',['Derivatives in Context','Straight-Line Motion','Rates of Change in Other Contexts','Related Rates: Introduction','Related Rates: Harder Problems','Local Linear Approximation',"L'Hôpital's Rule"]),
+ L5('Analyzing Functions with Derivatives','#0d9488',['The Mean Value Theorem','Extreme Value Theorem and Critical Points','Increasing and Decreasing Intervals','The First Derivative Test','Concavity and Inflection Points','The Second Derivative Test','Connecting f, f′, and f″','Optimization']),
+ L5('Integration and Accumulation of Change','#9333ea',['Accumulation and Area','Riemann Sums','Riemann Sums and Definite Integral Notation','Accumulation Functions','The Fundamental Theorem of Calculus','Properties of Definite Integrals','Evaluating Definite Integrals with Antiderivatives','Indefinite Integrals and Basic Rules','u-Substitution','Integration by Parts (BC)','Integrating with Partial Fractions (BC)','Improper Integrals (BC)']),
+ L5('Differential Equations','#db2777',['Modeling with Differential Equations','Verifying Solutions','Slope Fields',"Euler's Method (BC)",'Separation of Variables','Exponential Growth and Decay','Logistic Models (BC)']),
+ L5('Applications of Integration','#e11d48',['Average Value of a Function','Displacement and Total Distance','Accumulation in Context','Area Between Curves','Volume with Cross Sections','Volume: The Disk Method','Volume: The Washer Method','Arc Length (BC)']),
+ L5('Parametric, Polar, and Vector-Valued Functions (BC)','#4f46e5',['Derivatives of Parametric Equations','Arc Length of Parametric Curves','Vector-Valued Functions','Motion in the Plane','Derivatives in Polar Coordinates','Area in Polar Coordinates','Area Between Polar Curves']),
+ L5('Infinite Sequences and Series (BC)','#475569',['Sequences and Partial Sums','Geometric Series','The nth-Term Test','The Integral Test and p-Series','Comparison Tests','Alternating Series and Error Bound','The Ratio Test','Absolute and Conditional Convergence','Taylor and Maclaurin Polynomials','The Lagrange Error Bound','Power Series: Radius and Interval of Convergence','Common Maclaurin Series'])]}];
 NEWC.forEach(c=>c.modules.forEach((m,i)=>m.n=i+1));COURSE.push(...NEWC);
 const KAC={id:'KA',cat:'ka',label:'Algebra 1',unit:'Unit',modules:[
  L5('Algebra foundations','#0f766e',['Variables and Evaluating Expressions','Writing Algebraic Expressions','Dependent and Independent Variables','Combining Like Terms','Equivalent Expressions','Division by Zero']),
@@ -1556,8 +1557,9 @@ const STAGES=[{k:'pic',n:'See It',i:'👀'},{k:'steps',n:'Move It',i:'🧩'},{k:
 const app=$('#app');
 const MODFILES={'1A-4':'js/1a-m4.js','1A-5':'js/1a-m5.js','1B-1':'js/1b-m1.js','1B-2':'js/1b-m2.js','1B-3':'js/1b-m3.js','1B-4':'js/1b-m4.js','1B-5':'js/1b-m5.js'};
 for(let i=1;i<=9;i++)MODFILES['GEO-'+i]=`js/geo-m${i}.js`;
-const PREREQ={GEO:'js/geo-core.js',KA:'js/ka-core.js',A2:['js/ka-core.js','js/a2-core.js'],ST:['js/ka-core.js','js/a2-core.js','js/st-core.js'],PC:['js/ka-core.js','js/a2-core.js','js/pc-core.js']};
+const PREREQ={GEO:'js/geo-core.js',KA:'js/ka-core.js',A2:['js/ka-core.js','js/a2-core.js'],ST:['js/ka-core.js','js/a2-core.js','js/st-core.js'],PC:['js/ka-core.js','js/a2-core.js','js/pc-core.js'],CA:['js/ka-core.js','js/a2-core.js','js/pc-core.js','js/ca-core.js']};
 for(let u=1;u<=10;u++)MODFILES['PC-'+u]=`js/pc-u${u}.js`;
+for(let u=1;u<=10;u++)MODFILES['CA-'+u]=`js/ca-u${u}.js`;
 for(let u=1;u<=6;u++)MODFILES['ST-'+u]=`js/st-u${u}.js`;
 for(let u=1;u<=13;u++)MODFILES['A2-'+u]=`js/a2-u${u}.js`;
 for(const u of [1,2,3,4,5,6,7,8,10,11,13,14,15])MODFILES['KA-'+u]=`js/ka-u${u}.js`;
@@ -1704,7 +1706,7 @@ function renderHome(ui){
  <div class="navrow" style="margin:22px 0">${ui>0?`<a class="btn" href="${unitHref(CUR,ui-1)}">◀ ${t('Previous unit')}</a>`:'<span></span>'}${ui<units.length-1?`<a class="btn" href="${unitHref(CUR,ui+1)}">${t('Next unit')} ▶</a>`:'<span></span>'}</div>`;
  app.innerHTML=`<div class="wrap course-page">${tabs}${progress}${pick}<div class="home-layout">${side}<main class="home-main">${panel}</main></div></div>`;
  tools.forEach(x=>x.m());if(ex)ex.m();
- if(/^(A2|ST|PC)-/.test(U.key))mountA2Tool(U.key);
+ if(/^(A2|ST|PC|CA)-/.test(U.key))mountA2Tool(U.key);
 }
 function mountA2Tool(key){const host=document.createElement('div');host.id='a2tool';const nav=$('.home-main .navrow');if(!nav)return;nav.before(host);
  loadMod(key).then(()=>{const x=window.A2&&A2.TOOLS[key];if(!x||!document.contains(host))return;host.innerHTML=`<section class="interactive-tools-heading"><h2>${t('Interactive Learning Tools')}</h2><p>${t('Use these visual tools to explore and practice key ideas.')}</p></section><section class="card"><div class="tag">${t('INTERACTIVE')}</div><h3>${x.title}</h3><p class="mute" style="margin-top:0">${x.hint}</p><div id="a2tool-body"></div></section>`;x.mount($('#a2tool-body'));}).catch(()=>{});}
