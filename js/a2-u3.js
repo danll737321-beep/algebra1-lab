@@ -1,4 +1,4 @@
-/* Khan Algebra 2 · Unit 3 · Polynomial factorization */
+/* Algebra 2 · Unit 3 · Polynomial factorization */
 (function(){const {ps,mono,pmul,peval,sliders,chooser,areaTable,ex,q,mc,num,nz,stepper,graphLab,TOOLS,nf,sup}=A2;
 function pf(n){const r=[];let d=2;n=Math.abs(n);while(n>1){while(n%d===0){r.push(d);n/=d;}d++;}return r;}
 const chip=(t,on,col)=>`<span style="display:inline-block;padding:4px 9px;margin:3px;border-radius:8px;font-weight:800;border:2px solid ${on?col:'#cbd5e1'};background:${on?col+'22':'#f8fafc'};color:${on?col:'#64748b'}">${t}</span>`;
@@ -25,10 +25,6 @@ function mountIdentity(el){chooser(el,[
  {t:'Fake: (a + b)² = a² + b²',html:()=>'',after:b=>idBox(b,'(a + b)²','a² + b²',(a,c)=>(a+c)**2,(a,c)=>a*a+c*c)},
  {t:'(x² + y²)² = (x² − y²)² + (2xy)²',html:()=>'',after:b=>idBox(b,'(a² + b²)²','(a² − b²)² + (2ab)²',(a,c)=>(a*a+c*c)**2,(a,c)=>(a*a-c*c)**2+(2*a*c)**2)}]);
  function idBox(b,L,R,f,g){sliders(b,[{k:'a',l:'a',min:-6,max:6,v:2},{k:'b',l:'b',min:-6,max:6,v:3}],V=>{const l=f(V.a,V.b),r=g(V.a,V.b);$('.id-r',b).innerHTML=`<div class="eqline math">${L} ${l===r?'=':'≠'} ${R}</div>Left side = <b>${l}</b>, right side = <b>${r}</b> → ${l===r?'<span class="good">equal ✓</span>':'<span class="bad">NOT equal ✗ — one counterexample proves it is not an identity.</span>'}<br><span class="mute">An identity is true for <b>every</b> a and b. Testing values can disprove one; algebra (expanding) proves one.</span>`;},`<div class="readout id-r"></div>`).run();}}
-function mountGeoSeries(el){sliders(el,[{k:'a',l:'first term a',min:1,max:20,v:3},{k:'r',l:'ratio r',min:-2,max:3,step:.5,v:2},{k:'n',l:'terms n',min:1,max:8,v:5}],V=>{const {a,r,n}=V;const t=Array.from({length:n},(_,i)=>a*r**i);const S=t.reduce((s,x)=>s+x,0);const mx_=Math.max(...t.map(Math.abs),1);
-  let s='';t.forEach((v,i)=>{const h=Math.abs(v)/mx_*120;s+=`<rect x="${20+i*52}" y="${v>=0?140-h:140}" width="40" height="${Math.max(h,1)}" rx="4" fill="${v>=0?'#86efac':'#fca5a5'}" stroke="${v>=0?'#15803d':'#b91c1c'}"/><text x="${40+i*52}" y="${v>=0?134-h:156+h}" text-anchor="middle" font-size="11" font-weight="800">${nf(v)}</text>`;});
-  $('.gs-g',el).innerHTML=`<svg viewBox="0 0 ${Math.max(440,30+n*52)} 290" class="fig" style="max-width:460px"><line x1="10" y1="140" x2="${30+n*52}" y2="140" class="ax"/>${s}</svg>`;
-  $('.gs-r',el).innerHTML=`Terms: ${t.map(nf).join(', ')}<br>Sum S${A2.sup(n).replace(/./g,c=>c)} = <b>${nf(S)}</b>${r!==1?` &nbsp;=&nbsp; a(1 − rⁿ)/(1 − r) = ${a}(1 − ${P(r)}${sup(n)})/(1 − ${P(r)}) = <b>${nf(a*(1-r**n)/(1-r))}</b>`:' (r = 1: just n·a)'}<br><span class="mute">Each term is the one before times r. The formula adds all n terms in one step.</span>`;},`<div class="gs-g"></div><div class="readout gs-r"></div>`).run();}
 
 L['A2-3-1']={goal:'I can write a monomial as a product of two monomial factors.',
  life:{title:'Rectangles with the same area',html:'A rectangle with area 24x⁵ could be 4x² by 6x³, or 8x by 3x⁴, or 24 by x⁵. Factoring a monomial means finding the <b>side lengths</b> that make the area — the first step toward factoring bigger polynomials.'},
@@ -95,16 +91,6 @@ L['A2-3-6']={goal:'I can prove polynomial identities and use them to factor and 
  practice(){const a=rand(2,7),b=rand(1,a-1);return num(`Use (a² + b²)² = (a² − b²)² + (2ab)² with a = ${a}, b = ${b} to make a Pythagorean triple (legs, then hypotenuse).`,[['a² − b² =',a*a-b*b],['2ab =',2*a*b],['a² + b² =',a*a+b*b]],'Plug in a and b.',[[`${a*a-b*b}² + ${2*a*b}² = ${a*a+b*b}²`,`${(a*a-b*b)**2} + ${(2*a*b)**2} = ${(a*a+b*b)**2}.`]]);},
  check:[q('Which is an identity?',['(x + 1)² = x² + 1','(x − 1)(x + 1) = x² − 1','x² = 2x','x³ = x'],1,'True for all x.'),q('To disprove an identity you need…',['a proof','one counterexample','three examples','a graph only'],1,'One is enough.'),q('a³ − b³ = ?',['(a − b)³','(a − b)(a² + ab + b²)','(a − b)(a² − ab + b²)','(a + b)(a² − ab + b²)'],1,'Difference of cubes.')]};
 
-L['A2-3-7']={goal:'I can find the sum of a finite geometric series with the formula.',
- life:{title:'Saving with a doubling rule',html:'Save $3 the first week, then double it every week: 3 + 6 + 12 + 24 + 48. Adding many terms by hand is slow. The formula <b>S = a(1 − rⁿ)/(1 − r)</b> — which comes from the factoring identity 1 − rⁿ = (1 − r)(1 + r + … + rⁿ⁻¹) — does it in one step.'},
- see:[{title:'Geometric series bars',hint:'Change a, r, n. Compare the sum with the formula.',mount:mountGeoSeries}],
- vocab:[['Geometric series','a + ar + ar² + … + arⁿ⁻¹.'],['Common ratio r','Each term ÷ the term before.'],['Sum formula','Sₙ = a(1 − rⁿ)/(1 − r), r ≠ 1.']],
- examples:[ex('Example 1','Sum 3 + 6 + 12 + 24 + 48',[['a = 3, r = 2, n = 5','Identify.'],['S = 3(1 − 2⁵)/(1 − 2) = 3(−31)/(−1)','Formula.'],['S = 93','Check: 3+6+12+24+48 = 93.']]),
-  ex('Example 2','Sum 80 − 40 + 20 − 10 + 5 − 2.5',[['a = 80, r = −½, n = 6',''],['S = 80(1 − 1/64)/(1.5) = 52.5','Formula.']])],
- mistake:{bad:'n = the last exponent',good:'n = number of terms',why:'a + ar + … + ar⁵ has <b>6</b> terms (exponents 0 to 5).'},
- practice(){const a=rand(1,9),r=pick([2,3,-2,-3]),n=rand(3,7);const S=a*(1-r**n)/(1-r);const terms=Array.from({length:Math.min(n,4)},(_,i)=>fmtNeg(a*r**i)).join(' + ').replace(/\+ −/g,'− ');
-  return num(`Find the sum of the first <b>${n}</b> terms of the geometric series <b>${terms} + …</b>`,[['S =',S]],'a(1 − rⁿ)/(1 − r).',[[`a = ${a}, r = ${r}, n = ${n}`,'Identify.'],[`S = ${a}(1 − ${P(r)}${sup(n)})/(1 − ${P(r)}) = ${S}`,'Formula.']]);},
- check:[q('r for 5, 15, 45, …',['10','3','5','1/3'],1,'15/5.'),q('How many terms: 2 + 2·3 + … + 2·3⁷?',['7','8','9','6'],1,'Exponents 0–7.'),q('Sum 1 + 2 + 4 + 8 + 16 = ?',['31','32','30','15'],0,'(1 − 2⁵)/(1 − 2).')]};
 
 TOOLS['A2-3']={title:'Pattern gallery for factoring',hint:'Click a pattern to see how its structure factors.',mount:mountStructure};
 })();

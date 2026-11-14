@@ -1,4 +1,4 @@
-/* Khan Algebra 2 · Unit 2 · Complex numbers */
+/* Algebra 2 · Unit 2 · Complex numbers */
 (function(){const {cs,cmul,sliders,cplane,ex,q,mc,num,nz,graphLab,curve,TOOLS,nf}=A2;
 const IP=['1','i','−1','−i'],IPV=[[1,0],[0,1],[-1,0],[0,-1]];
 function mountPowers(el){sliders(el,[{k:'n',l:'n',min:0,max:12,v:1}],V=>{const n=V.n,r=n%4;

@@ -1,4 +1,4 @@
-/* Khan Algebra 2 · Unit 1 · Polynomial arithmetic */
+/* Algebra 2 · Unit 1 · Polynomial arithmetic */
 (function(){const {ps,mono,padd,pneg,pmul,peval,sliders,graphLab,chooser,areaTable,ex,q,mc,num,nz,stepper,TOOLS}=A2;
 const NAME=n=>n===1?'monomial':n===2?'binomial':n===3?'trinomial':'polynomial with '+n+' terms';
 const DEG=['constant','linear','quadratic','cubic','quartic'];
