@@ -597,6 +597,10 @@ input[type=range],.slope-control input{accent-color:var(--kb)}
 .goal{display:flex;align-items:flex-start;gap:10px}
 .goal-ic{flex:none;width:22px;height:22px;margin-top:3px;fill:none;stroke:var(--ok-d);stroke-width:2;stroke-linecap:round}
 .goal-ic .dot{fill:var(--ok-d);stroke:none}
+/* 介面圖示：線條風格 */
+.ico{width:1.15em;height:1.15em;flex:none;vertical-align:-.2em;margin-right:.35em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pencilnote .ico{color:var(--s-write-d)}.done-banner .ico{color:var(--ok-d)}.mistake .tag .ico{color:var(--bad)}.unit-goal b .ico{color:var(--kb)}
+button .ico,.btn .ico{margin-right:0}
 </style>
 </head>
 <body>
@@ -641,10 +645,10 @@ zh:{btnCheck:'檢查答案',brand:'高中數學<span>視覺實驗室</span>',zhN
 '{0} Visual Lab':'{0} 視覺實驗室','See the idea first. Then do it with your pencil.':'先看懂概念，再動筆練習。',
 'See It':'看懂它','Move It':'動手做','Write It':'寫下來','Prove It':'驗證它','Explore':'探索','Module {0}':'模組 {0}','Unit {0}':'第 {0} 單元','Lesson {0}':'第 {0} 課',
 '← All {0} lessons':'← 全部{0}課程','Next: {0} ▶':'下一步：{0} ▶','Next lesson ▶':'下一課 ▶','All lessons':'全部課程',
-'Real life':'生活中的例子','See it':'看圖理解','Key words':'關鍵詞','Next step ▼':'下一步 ▼','Show all':'全部顯示','⚠ Common mistake':'⚠ 常見錯誤',
+'Real life':'生活中的例子','See it':'看圖理解','Key words':'關鍵詞','Next step ▼':'下一步 ▼','Show all':'全部顯示','Common mistake':'常見錯誤',
 'Correct answers: <b>{0}</b> · ':'答對：<b>{0}</b> 題 · ','✓ Write It complete':'✓「寫下來」完成',' — keep practicing or move on to Prove It.':'，可以繼續練習或進入「驗證它」。','Get 2 correct to complete this step.':'答對 2 題即完成這一步。',
 'Your turn':'換你做','<b>Write it first:</b> work it out on paper — write each step and why. Then enter your answer.':'<b>先寫下來：</b>在紙上寫出每一步和理由，再輸入答案。',
-'💡 Hint':'💡 提示','Show solution':'看解答','New problem ↻':'換一題 ↻','✓ Correct! ':'✓ 答對了！','Not quite — look at the picture again and try another choice.':'還不對——再看看圖，選另一個答案。',
+'Hint':'提示','Show solution':'看解答','New problem ↻':'換一題 ↻','✓ Correct! ':'✓ 答對了！','Not quite — look at the picture again and try another choice.':'還不對——再看看圖，選另一個答案。',
 'Enter an answer in every box first.':'請先在每個空格填入答案。','✓ Correct! Nice pencil work. Try another one with “New problem”.':'✓ 答對了！做得好。按「換一題」再練一題。','Not yet. Check your work step by step, or tap 💡 Hint.':'還不對。一步一步檢查，或按 💡 提示。',
 'Quick check':'小測驗','Answer all 3. Get at least 2 right to complete the lesson.':'3 題都要作答，答對至少 2 題即完成本課。','Submit':'送出','Answer all 3 questions first.':'請先回答全部 3 題。',
 '{0}/3 — Lesson complete!':'{0}/3 — 本課完成！','Next lesson: {0} ▶':'下一課：{0} ▶','{0}/3. Read the explanations, review the Steps, then try again.':'{0}/3。先看解析、複習步驟，再試一次。','◀ Review Steps':'◀ 複習步驟','Try again':'再試一次',
@@ -1623,6 +1627,7 @@ L['1A-3-6']={
 
 /* ============ views ============ */
 const METHOD='Picture to Pencil';
+const IC={bulb:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>',alert:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4M12 17h.01M10.3 3.9 2.4 17.5A2 2 0 0 0 4.1 20.5h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>',pencil:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L18.5 9.5a2.8 2.8 0 0 0-4-4L4 16v4zM13.5 6.5l4 4"/></svg>',check:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>',pin:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6-5.4-6-11a6 6 0 0 1 12 0c0 5.6-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/></svg>',ruler:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20 20 4M4 20V8l12 12H4zM8 16h2"/></svg>',cycle:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.5-4.5L4 8M4 4v4h4M4 13a8 8 0 0 0 14.5 4.5L20 16M20 20v-4h-4"/></svg>',target:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>'};
 const STAGES=[{k:'pic',n:'See It',i:'👀'},{k:'steps',n:'Move It',i:'🧩'},{k:'pencil',n:'Write It',i:'✏️'},{k:'check',n:'Prove It',i:'✅'}];
 const app=$('#app');
 const MODFILES={'1A-4':'js/1a-m4.js','1A-5':'js/1a-m5.js','1B-1':'js/1b-m1.js','1B-2':'js/1b-m2.js','1B-3':'js/1b-m3.js','1B-4':'js/1b-m4.js','1B-5':'js/1b-m5.js'};
@@ -1743,7 +1748,7 @@ const TOOLS={
  <div class="balance-controls"><button class="primary" id="balance-next">${t('Next step')} →</button></div></section></div>`,m:()=>mountBalanceLab()}],
  'KA-4':[{h:()=>`<section class="card slope-lab" id="slope-lab"><div class="slope-head"><div><h2>${t('Slope Explorer')}</h2><div class="mute" style="font-size:14px">${t('Change the slope and y-intercept. Watch the line move.')}</div></div><span class="tag">${t('INTERACTIVE')}</span></div><div class="slope-grid"><div><div class="slope-plot" id="slope-plot"></div><div class="slope-legend"><span><i class="slope-dot"></i> ${t('Y-intercept (b)')}</span><span>🟠 Rise / Run</span></div></div><div class="slope-controls"><div class="slope-control"><label for="slope-m">${t('Slope (m)')} <output id="slope-m-out">1</output></label><input id="slope-m" type="range" min="-3" max="3" step="0.5" value="1"></div><div class="slope-control"><label for="slope-b">${t('Y-intercept (b)')} <output id="slope-b-out">0</output></label><input id="slope-b" type="range" min="-4" max="4" step="1" value="0"></div><div class="slope-equation" id="slope-eq">y = x</div><div class="slope-insight" id="slope-insight" aria-live="polite"></div></div></div></section>`,m:()=>mountSlopeExplorer()}]
 };
-const EXTRAS={'KA-4':{h:()=>` <section class="unit-goals"><div class="unit-goal"><b>📍 ${t('Read a graph')}</b><span>${t('Identify solutions, intercepts, and key points on a line.')}</span></div><div class="unit-goal"><b>📐 ${t('Interpret slope')}</b><span>${t('Explain rise over run and connect slope to a rate of change.')}</span></div><div class="unit-goal"><b>🔄 ${t('Connect representations')}</b><span>${t('Move between equations, ordered pairs, graphs, and contexts.')}</span></div></section>
+const EXTRAS={'KA-4':{h:()=>` <section class="unit-goals"><div class="unit-goal"><b>${IC.pin}${t('Read a graph')}</b><span>${t('Identify solutions, intercepts, and key points on a line.')}</span></div><div class="unit-goal"><b>${IC.ruler}${t('Interpret slope')}</b><span>${t('Explain rise over run and connect slope to a rate of change.')}</span></div><div class="unit-goal"><b>${IC.cycle}${t('Connect representations')}</b><span>${t('Move between equations, ordered pairs, graphs, and contexts.')}</span></div></section>
  <section class="unit-section"><h2>${t('Check your starting point')}</h2><p class="mute">${t('Try these three quick questions before beginning. Use the feedback to decide what to review.')}</p>
  <div class="unit-diagnostic" id="unit-diagnostic"><p class="diag-q" id="diag-q"></p><div class="diag-options" id="diag-options"></div><div class="diag-feedback" id="diag-feedback" aria-live="polite"></div><div class="row" style="justify-content:space-between;align-items:center;margin-top:10px"><span class="mute" id="diag-count"></span><button class="primary" id="diag-next" disabled>${t('Next question')} →</button></div></div></section>
  <div class="unit-callout"><b>${t('Remember:')}</b> ${t('Slope describes how y changes when x increases. A horizontal line has slope 0; a vertical line has undefined slope.')}</div>`,m:mountUnit4Diag}};
@@ -1812,7 +1817,7 @@ function lineHTML(l,raw,hide){return `<div class="ln-step ${hide?'hide':''}"><di
 function stSteps(el,id,D){
  el.innerHTML=D.examples.map((e,i)=>`<div class="card ex" data-i="${i}"><div class="tag">${e.title}</div><div class="prob">${e.prob}</div><div class="lines">${e.lines.map((l,j)=>lineHTML(l,e.raw,j>0)).join('')}</div>
  <div class="row"><button class="primary" data-a="next">${t('Next step ▼')}</button><button data-a="all">${t('Show all')}</button></div></div>`).join('')+
- `<div class="card mistake"><div class="tag">${t('⚠ Common mistake')}</div><div class="mk"><div class="x"><span class="bad">✗</span> <span class="math">${D.mistake.bad}</span></div><div class="o"><span class="good">✓</span> <span class="math">${D.mistake.good}</span></div></div><p style="margin-bottom:0">${D.mistake.why}</p></div>`;
+ `<div class="card mistake"><div class="tag">${IC.alert}${t('Common mistake')}</div><div class="mk"><div class="x"><span class="bad">✗</span> <span class="math">${D.mistake.bad}</span></div><div class="o"><span class="good">✓</span> <span class="math">${D.mistake.good}</span></div></div><p style="margin-bottom:0">${D.mistake.why}</p></div>`;
  const chk=()=>{if(!$$('.ln-step.hide',el).length)markStage(id,'steps');};
  el.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const card=b.closest('.ex');const hidden=$$('.ln-step.hide',card);
   if(b.dataset.a==='next'&&hidden.length)hidden[0].classList.remove('hide');if(b.dataset.a==='all')hidden.forEach(h=>h.classList.remove('hide'));
@@ -1822,10 +1827,10 @@ function stPencil(el,id,D,pr){
  let p,counted,shown;
  const status=()=>t('Correct answers: <b>{0}</b> · ',pr.pc||0)+(pr.pencil?`<span class="good">${t('✓ Write It complete')}</span>${t(' — keep practicing or move on to Prove It.')}`:t('Get 2 correct to complete this step.'));
  const fresh=()=>{p=D.practice();counted=false;shown=false;draw();};
- const draw=()=>{el.innerHTML=`<div class="card"><div class="tag">${t('Your turn')}</div><div class="pencilnote">✏️ ${t('<b>Write it first:</b> work it out on paper — write each step and why. Then enter your answer.')}</div>
+ const draw=()=>{el.innerHTML=`<div class="card"><div class="tag">${t('Your turn')}</div><div class="pencilnote">${IC.pencil}${t('<b>Write it first:</b> work it out on paper — write each step and why. Then enter your answer.')}</div>
   <div class="prob">${p.q}</div>${p.fig||''}
   <div style="margin-top:8px">${p.type==='mc'?p.opts.map((o,i)=>`<button class="opt" data-o="${i}">${o}</button>`).join(''):p.fields.map((f,i)=>`<label class="fld">${f.label} <input data-f="${i}" autocomplete="off" inputmode="decimal"> ${f.unit||''}</label>`).join('')}</div>
-  <div class="row">${p.type==='mc'?'':`<button class="primary" data-a="check">${t('btnCheck')}</button>`}${p.hint?`<button data-a="hint">${t('💡 Hint')}</button>`:''}${p.sol?`<button data-a="sol">${t('Show solution')}</button>`:''}<button data-a="new">${t('New problem ↻')}</button></div>
+  <div class="row">${p.type==='mc'?'':`<button class="primary" data-a="check">${t('btnCheck')}</button>`}${p.hint?`<button data-a="hint">${IC.bulb}${t('Hint')}</button>`:''}${p.sol?`<button data-a="sol">${t('Show solution')}</button>`:''}<button data-a="new">${t('New problem ↻')}</button></div>
   <div class="fb"></div>${p.sol?`<div class="solbox" hidden>${p.sol.map(l=>lineHTML(l,p.raw,false)).join('')}</div>`:''}<div class="streak">${status()}</div></div>`;
   const inp=$('input',el);if(inp)inp.focus({preventScroll:true});};
  const win=()=>{if(!counted&&!shown){counted=true;pr.pc=(pr.pc||0)+1;save();if(pr.pc>=2)markStage(id,'pencil');}$('.streak',el).innerHTML=status();};
@@ -1857,7 +1862,7 @@ function stCheck(el,id,D,pr){
    D.check.forEach((c,i)=>{const ok=sel[i]===c.a;if(ok)score++;$(`.qq[data-q="${i}"]`,el).classList.add('shown');$$(`.opt[data-q="${i}"]`,el).forEach(x=>{const j=+x.dataset.j;x.classList.remove('sel');if(j===c.a)x.classList.add('right');else if(j===sel[i])x.classList.add('wrong');x.disabled=true;});});
    b.disabled=true;
    if(score>=2){pr.check=score;pr.done=true;save();markStage(id,'check');topProg();const nx=nextLesson(id);
-    $('#res',el).innerHTML=`<div class="done-banner">🎉 ${t('{0}/3 — Lesson complete!',score)}${nx?` <a class="btn primary" href="#/l/${nx}/0" style="margin-left:8px">${t('Next lesson: {0} ▶',lt(nx))}</a>`:''}</div>`;}
+    $('#res',el).innerHTML=`<div class="done-banner">${IC.check}${t('{0}/3 — Lesson complete!',score)}${nx?` <a class="btn primary" href="#/l/${nx}/0" style="margin-left:8px">${t('Next lesson: {0} ▶',lt(nx))}</a>`:''}</div>`;}
    else $('#res',el).innerHTML=`<p class="bad">${t('{0}/3. Read the explanations, review the Steps, then try again.',score)}</p><div class="row"><a class="btn" href="#/l/${id}/1">${t('◀ Review Steps')}</a><button data-a="retry">${t('Try again')}</button></div>`;}
   if(b.dataset.a==='retry'){delete el.dataset.locked;sel.length=0;draw();}});
 }
