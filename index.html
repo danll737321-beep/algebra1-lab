@@ -594,6 +594,9 @@ input[type=range],.slope-control input{accent-color:var(--kb)}
 .stepper .pill[data-k=pencil].on{background:#b07a00;border-color:#b07a00}
 .stepper .pill.done:not(.on){color:var(--sd);border-color:transparent}
 @media(max-width:680px){.stepper{gap:6px}.stepper .pill,.stepper .pill.on{padding:8px 10px;font-size:13px}}
+.goal{display:flex;align-items:flex-start;gap:10px}
+.goal-ic{flex:none;width:22px;height:22px;margin-top:3px;fill:none;stroke:var(--ok-d);stroke-width:2;stroke-linecap:round}
+.goal-ic .dot{fill:var(--ok-d);stroke:none}
 </style>
 </head>
 <body>
@@ -1791,7 +1794,7 @@ function mountUnit4Diag(){
 function renderLesson(id,stage){
  const M=META[id],D=L[id],pr=prog(id);document.documentElement.style.setProperty('--acc','#1865f2');
  const nx=nextLesson(id);
- app.innerHTML=`<div class="wrap"><a href="${unitHref(M.cat,unitIndexOf(id))}">← ${t(M.u+' {0}',M.m)}: ${mt(M.c+'-'+M.m,M.mt)}</a><div class="crumb">${t(M.lab)} · ${t(M.u+' {0}',M.m)}: ${mt(M.c+'-'+M.m,M.mt)} · ${t('Lesson {0}',M.n)}</div><h1>${lt(id)}${ZHON()?`<span class="h1en">${M.title}</span>`:''}</h1><div class="goal">🎯 ${D.goal}</div>
+ app.innerHTML=`<div class="wrap"><a href="${unitHref(M.cat,unitIndexOf(id))}">← ${t(M.u+' {0}',M.m)}: ${mt(M.c+'-'+M.m,M.mt)}</a><div class="crumb">${t(M.lab)} · ${t(M.u+' {0}',M.m)}: ${mt(M.c+'-'+M.m,M.mt)} · ${t('Lesson {0}',M.n)}</div><h1>${lt(id)}${ZHON()?`<span class="h1en">${M.title}</span>`:''}</h1><div class="goal"><svg class="goal-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" class="dot"/></svg><span>${D.goal}</span></div>
  <nav class="stepper">${STAGES.map((s,i)=>`<a class="pill ${i===stage?'on':''} ${pr[s.k]?'done':''}" data-k="${s.k}" href="#/l/${id}/${i}"><span class="ic">${s.i} </span>${t(s.n)}</a>`).join('')}</nav>
  <section id="stage"></section>
  <div class="navrow">${stage>0?`<a class="btn" href="#/l/${id}/${stage-1}">◀ ${t(STAGES[stage-1].n)}</a>`:'<span></span>'}${stage<3?`<a class="btn primary" href="#/l/${id}/${stage+1}">${t('Next: {0} ▶',t(STAGES[stage+1].n))}</a>`:(nx?`<a class="btn" href="#/l/${nx}/0">${t('Next lesson ▶')}</a>`:`<a class="btn" href="${unitHref(M.cat,unitIndexOf(id))}">${t('All lessons')}</a>`)}</div></div>`;
