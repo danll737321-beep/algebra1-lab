@@ -1,4 +1,4 @@
-/* Khan Algebra 2 · Unit 6 · Rational exponents & radicals */
+/* Algebra 2 · Unit 6 · Rational exponents & radicals */
 (function(){const {sliders,graphLab,chooser,ex,q,mc,num,nz,curve,stepper,TOOLS,nf,sup,fr}=A2;
 const E=(m,n)=>`<sup>${n===1?fmtNeg(m):fr(m,n)}</sup>`;
 const root=(n,x)=>n===2?`√${x}`:`${sup(n)}√${x}`;
