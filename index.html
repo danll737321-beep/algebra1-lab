@@ -527,6 +527,55 @@ input,select,textarea{border-radius:12px}
 .stepper .pill,.stepper .pill.on{border-bottom-width:3px;font-weight:800}
 .fb{border-radius:12px}
 svg text{font-family:var(--rf)}
+
+/* ============ THEME A · 極簡學院 (final layer) ============ */
+:root{--kb:#1865f2;--kb-d:#1b50b3;--kb-soft:#e8f0fe;--k-ink:#21242c;--k-mute:#5f6168;--k-line:#e4e6eb;--k-bg:#f7f8fa;--acc:#1865f2;--alg-blue:#1865f2;--x:#1865f2;--ink:#21242c;--mute:#5f6168;--line:#e4e6eb;--bg:#f7f8fa;--ok:#00a60e;--ok-d:#0b6b19;--bad:#d92916;--shadow:none;--shadow-hover:none;
+ --s-see:#1865f2;--s-see-bg:#e8f0fe;--s-see-d:#1b4fbf;--s-move:#00a60e;--s-move-bg:#e6f6ea;--s-move-d:#0b6b19;--s-write:#d99a00;--s-write-bg:#fff4dc;--s-write-d:#7a4e00;--s-prove:#7b3fe4;--s-prove-bg:#f3e8fd;--s-prove-d:#6a2bb0}
+body{background:#fff;color:var(--k-ink);font-size:17px;line-height:1.7}
+h1{font-size:clamp(24px,3vw,30px);line-height:1.25}h2{font-size:clamp(20px,2vw,22px)}h3{font-size:18px}
+h1,h2,h3{font-weight:700;letter-spacing:0;color:var(--k-ink)}
+.mute,.crumb,.topprog,.course-tabs small{color:var(--k-mute)}
+.card,.hero,.visual-lab,.slope-lab,.life,.mistake,.done-banner,.goal,.unit-callout{background-image:none;box-shadow:none}
+.hero,.visual-lab,.slope-lab{background:var(--k-bg);border-color:var(--k-line)}
+.hero:after{display:none}
+.card{background:#fff;border-color:var(--k-line)}
+header.top{background:#fff;backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none}
+.brand span{color:var(--kb)}
+button,.btn{box-shadow:none;border-color:#d6d8da;font-weight:700}
+button:hover,.btn:hover{border-color:var(--kb);transform:none;box-shadow:none}
+button.primary,.btn.primary{background:var(--kb);border-color:var(--kb);color:#fff;box-shadow:none}
+button.primary:hover,.btn.primary:hover{background:var(--kb-d);border-color:var(--kb-d)}
+button:focus-visible,.btn:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #9bbcf9;outline-offset:2px}
+.bar,.unit-progress,.su-bar{background:var(--k-line)}
+.bar>i,.bar i,.unit-progress>i,.unit-panel .unit-progress>i,.su-bar b{background:var(--ok);background-image:none}
+.goal{background:var(--s-move-bg);border-left:0}
+.done-banner{background:var(--s-move-bg);border-color:#9ad6a3;color:var(--ok-d)}
+.good,.fb.okk,.st.d{color:var(--ok-d)}
+.opt.right{background:var(--s-move-bg);border-color:var(--ok);color:var(--ok-d)}
+.opt.wrong,.mk .x{background:#fdecea}.opt.wrong{border-color:var(--bad);color:#a3200f}
+.bad,.fb.no{color:#a3200f}
+.opt.sel,.sel{border-color:var(--kb)!important;background:var(--kb-soft)!important}
+.slope-equation,.tile-expression{color:var(--kb-d);background:var(--kb-soft);border-color:#c3d7fb}
+.slope-control output,.lab-kicker{color:var(--kb)}
+input[type=range],.slope-control input{accent-color:var(--kb)}
+.pencilnote{background:var(--s-write-bg);border-color:#f0c44c}
+/* 四步驟固定顏色：See 藍 · Move 綠 · Write 黃 · Prove 紫 */
+.stepper .pill[data-k=pic]{--sc:var(--s-see);--sd:var(--s-see-d);--sb:var(--s-see-bg)}
+.stepper .pill[data-k=steps]{--sc:var(--s-move);--sd:var(--s-move-d);--sb:var(--s-move-bg)}
+.stepper .pill[data-k=pencil]{--sc:var(--s-write);--sd:var(--s-write-d);--sb:var(--s-write-bg)}
+.stepper .pill[data-k=check]{--sc:var(--s-prove);--sd:var(--s-prove-d);--sb:var(--s-prove-bg)}
+.stepper .pill:hover{color:var(--sd)}
+.stepper .pill.on{color:var(--sd);border-bottom-color:var(--sc);background:var(--sb)}
+.stepper .pill.done:not(.on){color:var(--sd)}
+.mod li a,.unit-lesson-list a{font-weight:600}
+/* 課程分頁：膠囊按鈕 */
+.course-tabs{display:flex;flex-wrap:nowrap;gap:8px;border-bottom:0;padding:4px 0 6px;margin:0 0 18px;overflow-x:auto;scrollbar-width:none}
+.course-tabs::-webkit-scrollbar{display:none}
+.course-tabs a,.course-tabs a.on{flex:none;white-space:nowrap;border:0;border-radius:999px;margin:0;padding:8px 16px;min-height:40px;display:inline-flex;align-items:center;font-size:15px;font-weight:700;background:#f0f1f3;color:#3b3d45}
+.course-tabs a:not(.on):hover{background:#e4e6eb;color:var(--k-ink)}
+.course-tabs a.on{background:var(--kb);color:#fff}
+.course-tabs a.on small{color:#dbe6fd}
+@media(max-width:680px){.course-tabs a,.course-tabs a.on{padding:8px 14px;font-size:14px}}
 </style>
 </head>
 <body>
