@@ -1,0 +1,65 @@
+/* Statistics & Probability · Unit 4 · Two-variable data */
+(function(){const {ex,q,mc,num,nz,TOOLS,nf,sliders,chooser,graphLab,curve}=A2;const S=ST;
+const TT={rows:['9th grade','12th grade'],cols:['Phone','Laptop','Tablet'],d:[[30,10,20],[24,36,0]]};
+function mTwoWay(el){let mode=0;const M=['Counts','Joint %','Row %','Column %'];el.innerHTML=`<div class="row">${M.map((m,i)=>`<button data-m="${i}" class="${i?'':'sel'}">${m}</button>`).join('')}</div><div class="tw-t"></div><div class="readout tw-r"></div>`;
+ const draw=()=>{const d=TT.d,R=d.map(r=>S.sum(r)),C=TT.cols.map((_,j)=>d[0][j]+d[1][j]),N=S.sum(R);const f=(v,i,j)=>mode===0?v:mode===1?S.pct(v/N):mode===2?S.pct(v/(i<2?R[i]:N)):S.pct(v/(j<3?C[j]:N));
+  let h=`<table class="t" style="margin:8px auto"><tr><th></th>${TT.cols.map(c=>`<th>${c}</th>`).join('')}<th>Total</th></tr>`;d.forEach((r,i)=>{h+=`<tr><th>${TT.rows[i]}</th>${r.map((v,j)=>`<td>${f(v,i,j)}</td>`).join('')}<td><b>${f(R[i],i,3)}</b></td></tr>`;});h+=`<tr><th>Total</th>${C.map((v,j)=>`<td><b>${f(v,2,j)}</b></td>`).join('')}<td><b>${f(N,2,3)}</b></td></tr></table>`;
+  $('.tw-t',el).innerHTML=h;$('.tw-r',el).innerHTML=['Survey: which device do you use most for homework? Totals sit in the <b>margins</b> (marginal frequencies).','Each cell ÷ grand total (120). Joint relative frequency: “9th grader AND phone” is '+S.pct(30/120)+'.','Each cell ÷ its <b>row</b> total: “Of 9th graders, what % use phones?” → '+S.pct(30/60)+' vs. '+S.pct(24/60)+' of 12th graders. Rows differ → device choice is <b>associated</b> with grade.','Each cell ÷ its <b>column</b> total: “Of phone users, what % are 9th graders?” → '+S.pct(30/54)+'.'][mode];
+  $$('[data-m]',el).forEach(b=>b.classList.toggle('sel',+b.dataset.m===mode));};
+ el.addEventListener('click',e=>{const b=e.target.closest('[data-m]');if(b){mode=+b.dataset.m;draw();}});draw();}
+function genXY(r,seed,n=24){const R=S.rng(seed);const xs=[],ys=[];for(let i=0;i<n;i++){const x=S.gauss(R),e=S.gauss(R);xs.push(x);ys.push(r*x+Math.sqrt(Math.max(0,1-r*r))*e);}return {xs:xs.map(x=>5+x*1.6),ys:ys.map(y=>5+y*1.6)};}
+function mCorr(el){sliders(el,[{k:'r',l:'target strength / direction',min:-1,max:1,step:.1,v:0.7},{k:'o',l:'add an outlier',min:0,max:1,v:0,f:v=>v?'yes':'no'}],V=>{const {xs,ys}=genXY(V.r,7);if(V.o){xs.push(9.5);ys.push(V.r>=0?0.5:9.5);}const r=S.corr(xs,ys);
+ const G=grid({x0:0,x1:10,y0:0,y1:10,u:34,lab:2,laby:2});$('.cr-g',el).innerHTML=G.svg(S.scatter(G,xs,ys)+(V.o?`<circle cx="${G.X(9.5)}" cy="${G.Y(ys[ys.length-1])}" r="9" fill="none" stroke="#e11d48" stroke-width="3"/>`:''));
+ const a=Math.abs(r),word=a>0.8?'strong':a>0.5?'moderate':a>0.2?'weak':'no clear';$('.cr-r',el).innerHTML=`r = <b>${r.toFixed(2)}</b> → ${word} ${a>0.2?(r>0?'positive':'negative'):''} linear association.<br><span class="mute">r is between −1 and 1. The sign is the direction; the size is how tightly points hug a line. ${V.o?'One outlier can change r a lot!':''}</span>`;},`<div class="cr-g"></div><div class="readout cr-r"></div>`).run();}
+const HX=[1,2,2,3,4,4,5,6,7,8],HY=[52,58,61,63,70,66,74,79,81,90];
+function mFit(el){const L_=S.lsrl(HX,HY);graphLab(el,{g:{x0:0,x1:9,y0:40,y1:100,u:48,uy:4.4,lab:1,laby:10,gsy:10,xl:'hours studied',yl:'score'},params:[{k:'m',l:'your slope',min:0,max:10,step:.5,v:3},{k:'b',l:'your intercept',min:30,max:70,v:55},{k:'s',l:'show least-squares line',min:0,max:1,v:0,f:v=>v?'yes':'no'}],
+ curves:V=>[{f:x=>V.m*x+V.b,col:'#f59e0b'},...(V.s?[{f:x=>L_.b*x+L_.a,col:'#059669',w:2,dash:'6 4'}]:[])],
+ extra:(G,V)=>HX.map((x,i)=>`<line x1="${G.X(x)}" y1="${G.Y(HY[i])}" x2="${G.X(x)}" y2="${G.Y(V.m*x+V.b)}" stroke="#e11d48" stroke-width="2"/>`).join('')+S.scatter(G,HX,HY),
+ eq:V=>`ŷ = ${nf(V.m)}x + ${V.b}`,read:V=>{const sse=S.sum(HX.map((x,i)=>(HY[i]-(V.m*x+V.b))**2)),best=S.sum(HX.map((x,i)=>(HY[i]-(L_.b*x+L_.a))**2));return `Residual = actual − predicted (red segments). Sum of squared residuals: <b>${nf(+sse.toFixed(1))}</b> (best possible ${nf(+best.toFixed(1))}).${V.s?`<br>Least-squares line: <b>ŷ = ${L_.b.toFixed(2)}x + ${L_.a.toFixed(2)}</b>. Slope: each extra hour adds about ${L_.b.toFixed(1)} points.`:''}<br><span class="mute">Try to make the red segments as small as possible overall.</span>`;}});}
+function mCause(el){chooser(el,[
+ {t:'Ice cream & drownings',html:`<div class="readout">Ice-cream sales and drownings rise together (r ≈ 0.8). Does ice cream cause drowning? No — <b>hot weather</b> (a lurking variable) increases both swimming and ice-cream eating.</div>`},
+ {t:'Shoe size & reading',html:`<div class="readout">Among elementary students, bigger shoes go with better reading scores. The lurking variable is <b>age</b>: older kids have bigger feet and read better.</div>`},
+ {t:'Fire trucks & damage',html:`<div class="readout">More fire trucks at a fire ↔ more damage. Trucks don’t cause damage; <b>bigger fires</b> bring more trucks and cause more damage.</div>`},
+ {t:'How to show causation',html:`<div class="readout">Only a <b>randomized experiment</b> can show cause and effect: randomly assign the treatment so that lurking variables are balanced between groups (Unit 6).</div>`}]);}
+
+L['ST-4-1']={goal:'I can read two-way tables and use joint, marginal, and conditional relative frequencies to look for association.',
+ life:{title:'Is device choice related to grade?',html:'A school surveys 120 students about their main homework device. A <b>two-way table</b> splits answers by grade and device. Comparing row percents reveals whether the two variables are <b>associated</b>.'},
+ see:[{title:'Two-way table views',hint:'Switch between counts and the three kinds of percents.',mount:mTwoWay}],
+ vocab:[['Two-way table','Counts for two categorical variables.'],['Marginal frequency','A row or column total.'],['Joint relative frequency','Cell ÷ grand total.'],['Conditional relative frequency','Cell ÷ its row (or column) total.']],
+ examples:[ex('Example','Of 60 12th graders, 36 use laptops. Of 60 9th graders, 10 do.',[['36/60 = 60% vs 10/60 ≈ 17%','Conditional percents.'],['very different → association','Grade and device are related.']])],
+ mistake:{bad:'Compare raw counts when groups have different sizes',good:'compare percents',why:'A bigger group has bigger counts automatically; percents put the groups on the same scale.'},
+ practice(){const a=rand(10,40),b=rand(10,40),c=rand(10,40),d=rand(10,40);const t=pick(['joint','row','col','marg']);const N=a+b+c+d;
+  const tbl=`<table class="t" style="margin:6px 0"><tr><th></th><th>Yes</th><th>No</th></tr><tr><th>Group A</th><td>${a}</td><td>${b}</td></tr><tr><th>Group B</th><td>${c}</td><td>${d}</td></tr></table>`;
+  const Q={joint:[`What fraction of all people are in Group A AND said Yes?`,a/N,`${a}/${N}`],row:[`Of Group A, what fraction said Yes?`,a/(a+b),`${a}/${a+b}`],col:[`Of those who said Yes, what fraction are in Group B?`,c/(a+c),`${c}/${a+c}`],marg:[`What fraction of all people said No?`,(b+d)/N,`${b+d}/${N}`]}[t];
+  return num(`${tbl}${Q[0]} (decimal, nearest hundredth)`,[['≈',+Q[1].toFixed(2),0.006]],'Pick the right denominator: grand total, row total, or column total.',[[Q[2]+' ≈ '+Q[1].toFixed(2),'']]);},
+ check:[q('A row total is a…',['joint frequency','marginal frequency','conditional frequency','residual'],1,''),q('“Of the girls, what % play sports?” uses…',['grand total','girls total','sports total','both totals'],1,''),q('Equal row percents in every row suggest…',['strong association','no association','causation','an error'],1,'')]};
+
+L['ST-4-2']={goal:'I can describe a scatter plot by direction, form, and strength, and interpret r.',
+ life:{title:'Height and arm span',html:'Measure everyone’s height and arm span and plot them: the points form a tight upward line. The <b>correlation coefficient r</b> ≈ 0.95 sums up that pattern in one number.'},
+ see:[{title:'Correlation explorer',hint:'Change the strength and direction. Add an outlier.',mount:mCorr}],
+ vocab:[['Scatter plot','Points (x, y) for two quantitative variables.'],['Correlation r','−1 ≤ r ≤ 1: direction and strength of a linear pattern.'],['Positive / negative','y tends to increase / decrease as x increases.']],
+ examples:[ex('Example','Hours of TV vs. GPA: r = −0.45',[['negative: more TV ↔ lower GPA','Direction.'],['|r| = 0.45: moderate','Strength.']])],
+ mistake:{bad:'r = 0 means no relationship at all',good:'no LINEAR relationship',why:'A perfect U-shape can have r ≈ 0. Always look at the plot.'},
+ practice(){const r=pick([0.95,0.75,0.4,0.05,-0.4,-0.75,-0.95]);const ans=Math.abs(r)>0.8?'strong':Math.abs(r)>0.5?'moderate':Math.abs(r)>0.2?'weak':'no linear';const dir=Math.abs(r)<0.2?'':r>0?' positive':' negative';return mc(`r = <b>${r}</b>. Best description?`,`${ans}${dir}`,['strong positive','moderate positive','weak positive','no linear','weak negative','moderate negative','strong negative'].filter(x=>x!==`${ans}${dir}`).sort(()=>Math.random()-.5),'Sign = direction; |r| near 1 = strong.');},
+ check:[q('Strongest correlation?',['0.6','−0.9','0.85','0'],1,''),q('r = 1 means…',['perfect positive line','no pattern','causation','steep slope'],0,''),q('r has units…',['of x','of y','none','x·y'],2,'')]};
+
+L['ST-4-3']={goal:'I can fit a line to data, interpret slope and intercept, and use residuals.',
+ life:{title:'Predicting a test score',html:'Each extra hour of study tends to raise scores by about 4.5 points. The <b>least-squares line</b> makes the squared prediction errors as small as possible, and its slope says exactly how much y changes per unit of x.'},
+ see:[{title:'Beat the least-squares line',hint:'Adjust your line to shrink the red residuals, then reveal the best line.',mount:mFit}],
+ vocab:[['Least-squares line ŷ = a + bx','Line with the smallest sum of squared residuals.'],['Residual','Actual y − predicted ŷ.'],['Slope b','Predicted change in y per 1-unit increase in x.'],['Extrapolation','Predicting far outside the data — risky.']],
+ examples:[ex('Example','ŷ = 4.5x + 49 (score vs. hours). Student studied 6 h, scored 79.',[['ŷ = 4.5(6) + 49 = 76','Prediction.'],['residual = 79 − 76 = 3','Above the line.'],['slope 4.5: +4.5 points per hour','Interpretation.']])],
+ mistake:{bad:'Residual = predicted − actual',good:'actual − predicted',why:'Points above the line have <b>positive</b> residuals.'},
+ practice(){const b=pick([1.5,2,2.5,3,4,5]),a=rand(10,60),x=rand(1,12),e=rand(-8,8);const yhat=a+b*x,y=yhat+e;return num(`The line ŷ = ${a} + ${b}x models the data. For x = ${x}, the actual y is ${nf(y)}. Find ŷ and the residual.`,[['ŷ =',yhat,0.01],['residual =',e,0.01]],'Residual = actual − predicted.',[[`ŷ = ${a} + ${b}(${x}) = ${nf(yhat)}`,'Predict.'],[`${nf(y)} − ${nf(yhat)} = ${e}`,'Residual.']]);},
+ check:[q('A point below the line has a residual that is…',['positive','negative','zero','undefined'],1,''),q('ŷ = 20 + 3x. Slope meaning?',['y starts at 3','y rises 3 per unit x','x rises 3','r = 3'],1,''),q('Predicting at x = 100 when data runs 1–10 is…',['interpolation','extrapolation','a residual','correlation'],1,'')]};
+
+L['ST-4-4']={goal:'I can explain why correlation does not prove causation and identify lurking variables.',
+ life:{title:'Ice cream causes drowning?',html:'In summer, ice-cream sales and drownings both rise. They are strongly correlated, but banning ice cream would not save anyone. A <b>lurking variable</b> — hot weather — drives both.'},
+ see:[{title:'Spot the lurking variable',hint:'Click each example.',mount:mCause}],
+ vocab:[['Causation','A change in x actually produces a change in y.'],['Lurking variable','A hidden variable that affects both x and y.'],['Randomized experiment','The way to establish causation.']],
+ examples:[ex('Example','Countries with more TVs per person have longer life expectancy.',[['lurking variable: wealth','Wealth → more TVs and better health care.'],['TVs don’t cause long life','']])],
+ mistake:{bad:'r = 0.9, so x causes y',good:'strong association only',why:'Correlation measures how well points fit a line, not why.'},
+ practice(){const E=pick([['Cities with more churches have more crime.','population size'],['Students who eat breakfast get better grades.','home routines / family support'],['More firefighters at a fire → more damage.','size of the fire'],['Kids with bigger shoe sizes read better.','age'],['Ice-cream sales and sunburns rise together.','hot, sunny weather']]);return mc(`${E[0]} Which lurking variable best explains this?`,E[1],['population size','home routines / family support','size of the fire','age','hot, sunny weather'],'What could affect both variables at once?');},
+ check:[q('Which can establish causation?',['observational study','randomized experiment','scatter plot','r near 1'],1,''),q('A lurking variable…',['is the response','affects both variables','is always time','is an outlier'],1,''),q('Correlation tells you…',['why','how strongly variables move together linearly','the cause','the slope'],1,'')]};
+
+TOOLS['ST-4']={title:'Correlation explorer',hint:'Change the pattern and watch r. Add an outlier.',mount:mCorr};
+})();
