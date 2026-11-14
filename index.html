@@ -536,6 +536,7 @@ svg text{font-family:var(--rf)}
 <script src="js/zh.js"></script>
 <script src="js/zh-a2.js"></script>
 <script src="js/zh-st.js"></script>
+<script src="js/zh-pc.js"></script>
 <script>
 /* ============ helpers ============ */
 const $=(s,el=document)=>el.querySelector(s);
@@ -644,17 +645,17 @@ const NEWC=[
  L5('Two-variable data','#059669',['Two-Way Tables','Scatter Plots and Correlation','Line of Best Fit and Residuals','Correlation vs. Causation']),
  L5('Probability','#d97706',['Sample Spaces and Basic Probability','The Addition Rule','Independent Events and the Multiplication Rule','Conditional Probability','Permutations and Combinations','Expected Value']),
  L5('Statistical inference','#e11d48',['Sampling Methods and Bias','Surveys, Experiments, and Observational Studies','Simulation and Margin of Error','Comparing Two Groups with Randomization'])]},
-{id:'PC',cat:'pre',label:'Pre-Calculus',modules:[
- L5('Functions and Their Graphs','#2563eb',['Analyzing Graphs of Functions','Transformations','Combining and Composing Functions','Inverse Functions','Piecewise Functions']),
- L5('Polynomial and Rational Functions','#0891b2',['Polynomial Behavior and Zeros','Complex Zeros','Rational Functions and Asymptotes','Polynomial and Rational Inequalities']),
- L5('Exponential and Logarithmic Functions','#059669',['Exponential Functions','Logarithmic Functions','Properties of Logarithms','Exponential and Logarithmic Equations','Growth, Decay, and Logistic Models']),
- L5('Trigonometric Functions','#d97706',['Radian Measure','The Unit Circle','Graphs of Sine and Cosine','Graphs of Other Trig Functions','Inverse Trig Functions']),
- L5('Trig Identities and Equations','#0d9488',['Fundamental Identities','Verifying Identities','Sum and Difference Formulas','Double- and Half-Angle Formulas','Solving Trig Equations']),
- L5('Applications of Trigonometry','#9333ea',['Law of Sines','Law of Cosines','Vectors in the Plane','The Dot Product']),
- L5('Polar and Parametric','#db2777',['Polar Coordinates','Graphs of Polar Equations','Complex Numbers in Polar Form','Parametric Equations']),
- L5('Conic Sections','#e11d48',['Parabolas','Ellipses','Hyperbolas','Systems with Conics']),
- L5('Matrices and Systems','#4f46e5',['Systems in Three Variables','Matrix Operations','Inverse Matrices and Determinants']),
- L5('Sequences, Series, and Limits','#475569',['Sequences and Series','Mathematical Induction','The Binomial Theorem','Introduction to Limits'])]},
+{id:'PC',cat:'pre',label:'Pre-Calculus',unit:'Unit',modules:[
+ L5('Composite and Inverse Functions','#2563eb',['Composing Functions','Modeling with Composite Functions','Invertible Functions','Finding Inverse Functions','Verifying Inverses by Composition','Domain of Advanced Functions']),
+ L5('Trigonometry','#d97706',['The Unit Circle and Six Trig Functions','Graphs of tan, cot, sec, and csc','Inverse Trig Functions','Sinusoidal Graphs and Models','Fundamental Identities','Proving Trig Identities','Angle Addition Identities','Double- and Half-Angle Identities','Solving Trig Equations']),
+ L5('Non-Right Triangles and Vectors','#9333ea',['Law of Sines','Law of Cosines','Vector Basics','Adding and Scaling Vectors','Unit Vectors and Component Form','Vector Applications']),
+ L5('Parametric Equations and Polar Coordinates','#db2777',['Parametric Equations','Eliminating the Parameter','Polar Coordinates','Converting Polar and Rectangular Equations','Graphs of Polar Equations']),
+ L5('Complex Numbers','#0891b2',['Distance and Midpoint in the Complex Plane','Conjugates and Division','Modulus and Argument','Polar Form and Multiplication',"Powers and De Moivre's Theorem",'Roots of Complex Numbers']),
+ L5('Matrices','#4f46e5',['Introduction to Matrices','Row Operations and Gaussian Elimination','Matrix Operations','Matrices as Transformations','Determinants','Inverse Matrices and Systems']),
+ L5('Rational Functions','#059669',['Asymptotes and Holes','Graphing Rational Functions','Rational Inequalities','Modeling with Rational Functions','Partial Fractions']),
+ L5('Conic Sections','#e11d48',['Introduction to Conics and Circles','Parabolas: Focus and Directrix','Ellipses','Hyperbolas','Identifying Conics and Systems']),
+ L5('Series and the Binomial Theorem','#0d9488',['Sigma Notation and Arithmetic Series','Geometric Series','Mathematical Induction','The Binomial Theorem']),
+ L5('Limits and Continuity','#475569',['Limits from Graphs and Tables','Limit Laws and Algebraic Techniques','Continuity and Discontinuities','Limits Involving Infinity','The Intermediate Value Theorem'])]},
 {id:'CALC',cat:'calc',label:'Calculus (AB + BC)',modules:[
  L5('Limits and Continuity','#2563eb',['Limits from Graphs and Tables','Limit Laws and Algebra','Limits at Infinity','The Squeeze Theorem','Continuity and the IVT']),
  L5('Derivatives','#0891b2',['Average vs. Instantaneous Rate of Change','The Definition of the Derivative','Power, Sum, and Constant Rules','Derivatives of sin, cos, eˣ, and ln x','Product and Quotient Rules','Differentiability']),
@@ -1555,7 +1556,8 @@ const STAGES=[{k:'pic',n:'See It',i:'👀'},{k:'steps',n:'Move It',i:'🧩'},{k:
 const app=$('#app');
 const MODFILES={'1A-4':'js/1a-m4.js','1A-5':'js/1a-m5.js','1B-1':'js/1b-m1.js','1B-2':'js/1b-m2.js','1B-3':'js/1b-m3.js','1B-4':'js/1b-m4.js','1B-5':'js/1b-m5.js'};
 for(let i=1;i<=9;i++)MODFILES['GEO-'+i]=`js/geo-m${i}.js`;
-const PREREQ={GEO:'js/geo-core.js',KA:'js/ka-core.js',A2:['js/ka-core.js','js/a2-core.js'],ST:['js/ka-core.js','js/a2-core.js','js/st-core.js']};
+const PREREQ={GEO:'js/geo-core.js',KA:'js/ka-core.js',A2:['js/ka-core.js','js/a2-core.js'],ST:['js/ka-core.js','js/a2-core.js','js/st-core.js'],PC:['js/ka-core.js','js/a2-core.js','js/pc-core.js']};
+for(let u=1;u<=10;u++)MODFILES['PC-'+u]=`js/pc-u${u}.js`;
 for(let u=1;u<=6;u++)MODFILES['ST-'+u]=`js/st-u${u}.js`;
 for(let u=1;u<=13;u++)MODFILES['A2-'+u]=`js/a2-u${u}.js`;
 for(const u of [1,2,3,4,5,6,7,8,10,11,13,14,15])MODFILES['KA-'+u]=`js/ka-u${u}.js`;
@@ -1702,7 +1704,7 @@ function renderHome(ui){
  <div class="navrow" style="margin:22px 0">${ui>0?`<a class="btn" href="${unitHref(CUR,ui-1)}">◀ ${t('Previous unit')}</a>`:'<span></span>'}${ui<units.length-1?`<a class="btn" href="${unitHref(CUR,ui+1)}">${t('Next unit')} ▶</a>`:'<span></span>'}</div>`;
  app.innerHTML=`<div class="wrap course-page">${tabs}${progress}${pick}<div class="home-layout">${side}<main class="home-main">${panel}</main></div></div>`;
  tools.forEach(x=>x.m());if(ex)ex.m();
- if(U.key.startsWith('A2-')||U.key.startsWith('ST-'))mountA2Tool(U.key);
+ if(/^(A2|ST|PC)-/.test(U.key))mountA2Tool(U.key);
 }
 function mountA2Tool(key){const host=document.createElement('div');host.id='a2tool';const nav=$('.home-main .navrow');if(!nav)return;nav.before(host);
  loadMod(key).then(()=>{const x=window.A2&&A2.TOOLS[key];if(!x||!document.contains(host))return;host.innerHTML=`<section class="interactive-tools-heading"><h2>${t('Interactive Learning Tools')}</h2><p>${t('Use these visual tools to explore and practice key ideas.')}</p></section><section class="card"><div class="tag">${t('INTERACTIVE')}</div><h3>${x.title}</h3><p class="mute" style="margin-top:0">${x.hint}</p><div id="a2tool-body"></div></section>`;x.mount($('#a2tool-body'));}).catch(()=>{});}
