@@ -576,6 +576,24 @@ input[type=range],.slope-control input{accent-color:var(--kb)}
 .course-tabs a.on{background:var(--kb);color:#fff}
 .course-tabs a.on small{color:#dbe6fd}
 @media(max-width:680px){.course-tabs a,.course-tabs a.on{padding:8px 14px;font-size:14px}}
+/* 四步驟：膠囊標籤（首頁 + 課程頁） */
+[data-k=pic]{--sc:var(--s-see);--sd:var(--s-see-d);--sb:var(--s-see-bg)}
+[data-k=steps]{--sc:var(--s-move);--sd:var(--s-move-d);--sb:var(--s-move-bg)}
+[data-k=pencil]{--sc:var(--s-write);--sd:var(--s-write-d);--sb:var(--s-write-bg)}
+[data-k=check]{--sc:var(--s-prove);--sd:var(--s-prove-d);--sb:var(--s-prove-bg)}
+.course-progress .flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.course-progress .flow span{background:var(--sb);color:var(--sd);border-radius:999px;padding:4px 12px;margin:0;font-size:14px;font-weight:700}
+.course-progress .flow span+span:before{content:none}
+.course-progress .flow .method{margin-right:4px}
+.stepper{display:flex;gap:8px;border-bottom:0;padding:10px 0;background:#fff;overflow-x:auto;scrollbar-width:none}
+.stepper::-webkit-scrollbar{display:none}
+.stepper .pill,.stepper .pill.on{flex:1 0 auto;border:2px solid transparent;border-radius:999px;margin:0;padding:8px 14px;min-height:40px;background:var(--sb);color:var(--sd);font-weight:700;box-shadow:none;text-align:center}
+.stepper .pill .ic{display:none}
+.stepper .pill:hover{background:var(--sb);color:var(--sd);border-color:var(--sc)}
+.stepper .pill.on{background:var(--sc);border-color:var(--sc);color:#fff}
+.stepper .pill[data-k=pencil].on{background:#b07a00;border-color:#b07a00}
+.stepper .pill.done:not(.on){color:var(--sd);border-color:transparent}
+@media(max-width:680px){.stepper{gap:6px}.stepper .pill,.stepper .pill.on{padding:8px 10px;font-size:13px}}
 </style>
 </head>
 <body>
@@ -1738,7 +1756,7 @@ function renderHome(ui){
  const tabs=`<nav class="tabs course-tabs" aria-label="${t('Course list')}" style="--tc:${cat.c}">${CATS.map(c=>{const n=avail.filter(id=>META[id].cat===c.k).length;return `<a class="${c.k===CUR?'on':''}" href="#/c/${c.k}" ${c.k===CUR?'aria-current="page"':''}>${t(c.n)}${n?'':`<small>${t('soon')}</small>`}</a>`;}).join('')}</nav>`;
  const pct=av.length?Math.round(done/av.length*100):0;
  const progress=`<section class="card hero course-progress"><div class="cp-top"><div><h1>${t('{0} Visual Lab',t(cat.n))}</h1><p class="mute" style="margin:2px 0 0">${t('See the idea first. Then do it with your pencil.')}</p></div>${nid?`<a class="btn primary" href="#/l/${nid}/0">${done?t('Continue'):t('Start')}: ${lt(nid)} ▶</a>`:''}</div>
- <div class="flow"><b class="method">${METHOD}</b>${STAGES.map((x,i)=>`<span>${x.i} ${i+1}. ${t(x.n)}</span>`).join('')}</div>
+ <div class="flow"><b class="method">${METHOD}</b>${STAGES.map(x=>`<span data-k="${x.k}">${t(x.n)}</span>`).join('')}</div>
  ${av.length?`<div class="bar" role="progressbar" aria-label="${t('Course progress')}" aria-valuemin="0" aria-valuemax="${av.length}" aria-valuenow="${done}"><i style="width:${pct}%"></i></div><div class="mute" style="font-size:14px">${t('{0} of {1} lessons complete',done,av.length)} · ${units.length} ${t('units')} · ${ord.length} ${t('lessons')}${av.length<ord.length?t(' · {0} lessons open now, more coming soon',av.length):''}</div>`
   :`<div class="mute" style="font-size:15px">${t('Course map is ready: {0} modules, {1} lessons. Interactive lessons coming soon.',units.length,ord.length)}</div>`}
  ${t('zhNote')?`<div class="mute" style="font-size:13px;margin-top:8px">${t('zhNote')}</div>`:''}</section>`;
