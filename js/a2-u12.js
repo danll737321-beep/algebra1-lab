@@ -33,7 +33,7 @@ function mMatch(el){let T;const nt=()=>{T={A:pick([1,1.5,2,3]),B:pick([0.5,1,2])
  const host=document.createElement('div');el.appendChild(host);
  const sp=graphLab(host,{g:G2,params:[{k:'A',l:'A',min:0.5,max:3,step:.5,v:1},{k:'B',l:'B',min:0.5,max:2,step:.5,v:1},{k:'D',l:'D',min:-2,max:2,step:.5,v:0}],
   curves:V=>[{f:x=>T.A*Math.sin(T.B*x)+T.D,col:'#f59e0b',w:6},{f:x=>V.A*Math.sin(V.B*x)+V.D,col:'#2563eb',w:2.5}],extra:G=>piTicks(G,0,4),eq:V=>`your graph: y = ${nf(V.A)} sin(${nf(V.B)}x) + ${nf(V.D)}`,
-  read:V=>V.A===T.A&&V.B===T.B&&V.D===T.D?`<span class="good">🎯 Match! Amplitude ${T.A}, period ${(2*PI/T.B).toFixed(2)} (B = ${T.B}), midline y = ${T.D}.</span>`:`Match the thick orange target. Read its <b>midline</b> (middle height), <b>amplitude</b> (top − middle), and <b>period</b> (length of one full wave).`});
+  read:V=>V.A===T.A&&V.B===T.B&&V.D===T.D?`<span class="good">${IC.target}Match! Amplitude ${T.A}, period ${(2*PI/T.B).toFixed(2)} (B = ${T.B}), midline y = ${T.D}.</span>`:`Match the thick orange target. Read its <b>midline</b> (middle height), <b>amplitude</b> (top − middle), and <b>period</b> (length of one full wave).`});
  const b=document.createElement('div');b.className='row';b.innerHTML='<button>New target ↻</button>';el.appendChild(b);b.addEventListener('click',()=>{nt();sp.run();});}
 function mFerris(el){sliders(el,[{k:'r',l:'radius (m)',min:5,max:25,v:15},{k:'T',l:'minutes per turn',min:2,max:12,v:8},{k:'t',l:'time t (min)',min:0,max:24,step:.25,v:2}],V=>{const c=V.r+2,h=t=>-V.r*Math.cos(2*PI*t/V.T)+c;const a=2*PI*V.t/V.T;
   const W=180,cx=90,cy=95,R=70,px=cx+R*Math.sin(a),py=cy+R*Math.cos(a);
