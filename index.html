@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HS Math Visual Lab</title>
+<title>HS Math Illustrated · 圖解數學</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Huninn&display=swap" rel="stylesheet">
 <style>
 :root{--ink:#1f2937;--mute:#6b7280;--line:#e5e7eb;--bg:#f6f5f1;--x:#2563eb;--k:#ea580c;--ok:#15803d;--bad:#b91c1c;--rise:#7c3aed;--run:#059669;--acc:#2563eb}
@@ -604,7 +604,7 @@ button .ico,.btn .ico{margin-right:0}
 </style>
 </head>
 <body>
-<header class="top"><a class="brand" href="#/">HS Math <span>Visual Lab</span></a><span class="hdr-r"><span class="topprog" id="topprog"></span><button id="langbtn" class="langbtn" onclick="setLang(LANG==='zh'?'en':'zh')">中文</button></span></header>
+<header class="top"><a class="brand" href="#/">HS Math <span>Illustrated</span></a><span class="hdr-r"><span class="topprog" id="topprog"></span><button id="langbtn" class="langbtn" onclick="setLang(LANG==='zh'?'en':'zh')">中文</button></span></header>
 <main id="app"></main>
 <footer>Picture to Pencil: See It → Move It → Write It → Prove It · Algebra 1 · Geometry · Algebra II · Pre-Calculus · Calculus</footer>
 <script src="js/zh.js"></script>
@@ -636,13 +636,13 @@ function parseAns(s){s=String(s).trim().replace(/[−–]/g,'-').replace(/\s+/g,
 
 /* ============ language ============ */
 let LANG=(()=>{try{return localStorage.getItem('alg1lab-lang')||'en';}catch(e){return 'en';}})();
-const I18N={en:{btnCheck:'Check',brand:'HS Math <span>Visual Lab</span>',zhNote:''},
-zh:{btnCheck:'檢查答案',brand:'高中數學<span>圖解實驗室</span>',zhNote:'介面、課名與關鍵詞為繁體中文；例題與題目維持英文。',
+const I18N={en:{btnCheck:'Check',brand:'HS Math <span>Illustrated</span>',zhNote:''},
+zh:{btnCheck:'檢查答案',brand:'<span>圖解</span>數學',zhNote:'介面、課名與關鍵詞為繁體中文；例題與題目維持英文。',
 'Slope Explorer':'斜率探索器','Change the slope and y-intercept. Watch the line move.':'調整斜率與 y 截距，觀察直線變化。','Slope (m)':'斜率 (m)','Y-intercept (b)':'y 截距 (b)','The line rises {0} for every 1 step right.':'每向右移動 1，直線上升 {0}。','The line falls {0} for every 1 step right.':'每向右移動 1，直線下降 {0}。','The line is horizontal.':'這是一條水平線。','The y-intercept is {0}.':'y 截距是 {0}。',
 'INTERACTIVE':'互動操作','VISUAL MODEL 01':'視覺模型 01','VISUAL MODEL 02':'視覺模型 02','Algebra Tiles':'代數方塊','Build an expression with positive and negative tiles.':'使用正負方塊組成代數式。','Your tiles':'你的方塊','Cancel zero pairs':'消去相反數配對','You have {0} zero pair(s). A positive and a negative tile cancel to make 0.':'目前有 {0} 組零對。正數與負數方塊可以互相抵消，結果為 0。','Combine like tiles: x-tiles with x-tiles, and unit tiles with unit tiles.':'合併同類方塊：x 方塊與 x 方塊合併，單位方塊與單位方塊合併。','{0} x-tile(s) · {1} unit tile(s)':'{0} 個 x 方塊 · {1} 個單位方塊','Equation Balancer':'等式平衡器','Solve an equation while keeping both sides equal.':'解方程式，同時保持等式兩邊平衡。','The equation is balanced. Our goal is to get x by itself. Undo the +3 first.':'等式目前保持平衡。目標是讓 x 單獨留在一邊，先消去 +3。','Subtract 3 from BOTH sides. The balance stays level: 2x + 3 − 3 = 11 − 3, so 2x = 8.':'兩邊同時減去 3，天平仍然平衡：2x + 3 − 3 = 11 − 3，因此 2x = 8。','Divide BOTH sides by 2. The balance stays level: 2x ÷ 2 = 8 ÷ 2, so x = 4.':'兩邊同時除以 2，天平仍然平衡：2x ÷ 2 = 8 ÷ 2，因此 x = 4。','Starting equation':'原始方程式','Step {0} of 2':'第 {0} 步，共 2 步','Keep both sides equal':'保持等式兩邊相等','Solution: x = 4':'解答：x = 4','Try another time':'再操作一次','Next step':'下一步','Reset':'重設','Algebra 1':'代數一','Algebra 1 (Khan)':'代數一（Khan）','Geometry':'幾何','Algebra II':'代數二','Statistics & Probability':'統計與機率','Pre-Calculus':'微積分預備','Calculus':'微積分',
 '{0} of {1} lessons done':'已完成 {0} / {1} 課','soon':'即將推出','Continue':'繼續','Start':'開始','{0} of {1} lessons complete':'已完成 {0} / {1} 課',
 ' · {0} lessons open now, more coming soon':' · 目前開放 {0} 課，更多即將推出','Course map is ready: {0} modules, {1} lessons. Interactive lessons coming soon.':'課程地圖已完成：{0} 個模組、{1} 課。互動課程即將推出。',
-'{0} Visual Lab':'{0} 圖解實驗室','See the idea first. Then do it with your pencil.':'先看懂概念，再動筆練習。',
+'{0} Illustrated':'{0} 圖解','See the idea first. Then do it with your pencil.':'先看懂概念，再動筆練習。',
 'See It':'看懂它','Move It':'動手做','Write It':'寫下來','Prove It':'驗證它','Explore':'探索','Module {0}':'模組 {0}','Unit {0}':'第 {0} 單元','Lesson {0}':'第 {0} 課',
 '← All {0} lessons':'← 全部{0}課程','Next: {0} ▶':'下一步：{0} ▶','Next lesson ▶':'下一課 ▶','All lessons':'全部課程',
 'Real life':'生活中的例子','See it':'看圖理解','Key words':'關鍵詞','Next step ▼':'下一步 ▼','Show all':'全部顯示','Common mistake':'常見錯誤',
@@ -1763,7 +1763,7 @@ function renderHome(ui){
  const uStat=u=>{const r=u.ids.filter(hasLesson);return {r,f:r.filter(isDone).length};};
  const tabs=`<nav class="tabs course-tabs" aria-label="${t('Course list')}" style="--tc:${cat.c}">${CATS.map(c=>{const n=avail.filter(id=>META[id].cat===c.k).length;return `<a class="${c.k===CUR?'on':''}" href="#/c/${c.k}" ${c.k===CUR?'aria-current="page"':''}>${t(c.n)}${n?'':`<small>${t('soon')}</small>`}</a>`;}).join('')}</nav>`;
  const pct=av.length?Math.round(done/av.length*100):0;
- const progress=`<section class="card hero course-progress"><div class="cp-top"><div><h1>${t('{0} Visual Lab',t(cat.n))}</h1><p class="mute" style="margin:2px 0 0">${t('See the idea first. Then do it with your pencil.')}</p></div>${nid?`<a class="btn primary" href="#/l/${nid}/0">${done?t('Continue'):t('Start')}: ${lt(nid)} ▶</a>`:''}</div>
+ const progress=`<section class="card hero course-progress"><div class="cp-top"><div><h1>${t('{0} Illustrated',t(cat.n))}</h1><p class="mute" style="margin:2px 0 0">${t('See the idea first. Then do it with your pencil.')}</p></div>${nid?`<a class="btn primary" href="#/l/${nid}/0">${done?t('Continue'):t('Start')}: ${lt(nid)} ▶</a>`:''}</div>
  <div class="flow"><b class="method">${METHOD}</b>${STAGES.map(x=>`<span data-k="${x.k}">${t(x.n)}</span>`).join('')}</div>
  ${av.length?`<div class="bar" role="progressbar" aria-label="${t('Course progress')}" aria-valuemin="0" aria-valuemax="${av.length}" aria-valuenow="${done}"><i style="width:${pct}%"></i></div><div class="mute" style="font-size:14px">${t('{0} of {1} lessons complete',done,av.length)} · ${units.length} ${t('units')} · ${ord.length} ${t('lessons')}${av.length<ord.length?t(' · {0} lessons open now, more coming soon',av.length):''}</div>`
   :`<div class="mute" style="font-size:15px">${t('Course map is ready: {0} modules, {1} lessons. Interactive lessons coming soon.',units.length,ord.length)}</div>`}
