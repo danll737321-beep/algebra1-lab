@@ -646,7 +646,7 @@ zh:{btnCheck:'檢查答案',brand:'<span>圖解</span>數學',zhNote:'',
 '{0} Illustrated':'{0} 圖解','See the idea first. Then do it with your pencil.':'先看懂概念，再動筆練習。',
 'See It':'看懂它','Move It':'動手做','Write It':'寫下來','Prove It':'驗證它','Explore':'探索','Module {0}':'模組 {0}','Unit {0}':'第 {0} 單元','Lesson {0}':'第 {0} 課',
 '← All {0} lessons':'← 全部{0}課程','Next: {0} ▶':'下一步：{0} ▶','Next lesson ▶':'下一課 ▶','All lessons':'全部課程',
-'Real life':'生活中的例子','See it':'看圖理解','Key words':'關鍵詞','Next step ▼':'下一步 ▼','Show all':'全部顯示','Common mistake':'常見錯誤',
+'Real life':'生活中的例子','Extra note':'補充說明','See it':'看圖理解','Key words':'關鍵詞','Next step ▼':'下一步 ▼','Show all':'全部顯示','Common mistake':'常見錯誤',
 'Correct answers: <b>{0}</b> · ':'答對：<b>{0}</b> 題 · ','✓ Write It complete':'✓「寫下來」完成',' — keep practicing or move on to Prove It.':'，可以繼續練習或進入「驗證它」。','Get 2 correct to complete this step.':'答對 2 題即完成這一步。',
 'Your turn':'換你做','<b>Write it first:</b> work it out on paper — write each step and why. Then enter your answer.':'<b>先寫下來：</b>在紙上寫出每一步和理由，再輸入答案。',
 'Hint':'提示','Show solution':'看解答','New problem ↻':'換一題 ↻','✓ Correct! ':'✓ 答對了！','Not quite — look at the picture again and try another choice.':'還不對——再看看圖，選另一個答案。',
@@ -1824,7 +1824,8 @@ function markStage(id,k){const pr=prog(id);if(!pr[k]){pr[k]=true;save();}const p
 function stPicture(el,id,D){
  el.innerHTML=`<div class="card life"><div class="tag">${t('Real life')}</div><h3>${D.life.title}</h3><div>${D.life.html}</div></div>
  ${D.see.map((s,i)=>`<div class="card"><div class="tag">${t('Explore')}</div><h3>${s.title}</h3><p class="mute" style="margin-top:0">${s.hint}</p><div id="see${i}"></div></div>`).join('')}
- <div class="card"><div class="tag">${t('Key words')}</div><dl class="vocab" data-nozh>${vocabHTML(id,D.vocab)}</dl></div>`;
+ <div class="card"><div class="tag">${t('Key words')}</div><dl class="vocab" data-nozh>${vocabHTML(id,D.vocab)}</dl></div>
+ ${D.note?`<div class="card life"><div class="tag">${t('Extra note')}</div><h3>${D.note.title}</h3><div>${D.note.html}</div></div>`:''}`;
  D.see.forEach((s,i)=>s.mount($('#see'+i)));markStage(id,'pic');
 }
 function lineHTML(l,raw,hide){return `<div class="ln-step ${hide?'hide':''}"><div class="m math">${raw||l[2]?l[0]:mx(l[0])}</div><div class="why">${l[1]}</div></div>`;}
