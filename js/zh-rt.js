@@ -20,9 +20,19 @@ function fnorm(k){const out=[],ch=[];let cur='';
  if(cur){const m=/^(\s*)([\s\S]*?)([\s,.;:!?…]*)$/.exec(cur);out.push(m[1]);if(m[2]){out.push('§');ch.push(m[2]);}out.push(m[3]);}
  let n=0;const s=out.join('').replace(/§/g,()=>'§'+(++n));return [s,ch];}
 function famTR(k){const r=fnorm(k),t=FAM[r[0]];if(t==null)return null;
- return t.replace(/§(\d+)/g,(a,d)=>r[1][d-1]!==undefined?r[1][d-1]:a);}
+ return t.replace(/§(\d+)/g,(a,d)=>r[1][d-1]!==undefined?r[1][d-1]:a).replace(/，\s*,\s*/g,'，');}
 const COLLECT=/[?&]collect=1/.test(location.search);
 const COL=COLLECT?new Map():null;window.ZHCOL=COL;window.ZHCOLLECT=COLLECT;window.ZHCTX='';
+/* 中英對照：英文在上、中文在下；短的寫在同一行 */
+const BIM='\u2060';
+const isBI=()=>typeof LANG!=='undefined'&&LANG==='bi';
+function plain(x){return x.replace(/<[^>]*>/g,'').replace(/&[a-z]+;/g,' ');}
+function zhBi(en,zh,inl){if(zh==null||zh===en||en==='')return en;
+ if((inl||plain(en).length<=28)&&!/<(br|div|p|ul|ol|table|svg)\b/i.test(en+zh))return en+BIM+'<span class="bi-in"> '+zh+'</span>';
+ return en+'<span class="bi-zh">'+zh+'</span>';}
+function zhSplit(x){let i=x.indexOf(BIM+'<span class="bi-in"> ');if(i>=0&&x.endsWith('</span>'))return [x.slice(0,i),x.slice(i+22,-7)];
+ i=x.indexOf('<span class="bi-zh">');if(i>=0&&x.endsWith('</span>'))return [x.slice(0,i),x.slice(i+20,-7)];return [x,x];}
+window.zhBi=zhBi;window.zhSplit=zhSplit;
 const MISS=new Map();window.ZHMISS=MISS;
 const MARK='⁣';
 const FN=new Set('sin cos tan cot sec csc log ln lim max min exp det arcsin arccos arctan sinh cosh tanh mod gcd lcm arg cis sqrt dx dy dt du dv dr dθ'.split(' '));
@@ -64,7 +74,7 @@ function TR(s,how){
  let v=DICT[m.k];if(v==null&&!COLLECT)v=famTR(m.k);
  if(v==null){if(!isI18N(m.k))MISS.set(m.k,(MISS.get(m.k)||0)+1);return s;}
  const lead=s.match(/^\s*/)[0],trail=s.match(/\s*$/)[0];
- return lead+fill(v,m.p)+trail;}
+ const out=lead+fill(v,m.p)+trail;return isBI()?zhBi(s,out):out;}
 window.zhTR=TR;window.zhMask=mask;
 /* ---------- (a) 課程資料層 ---------- */
 const SKIP=new Set(['vocab','answer','a','mount','raw','tol','id','k','color']);
@@ -79,10 +89,10 @@ function trObj(o,key){
  return o;}
 window.zhObj=trObj;
 const CACHE={};
-window.zhLesson=(id,D)=>{if(!D)return D;window.ZHCTX=id;if(COLLECT)return CACHE[id]||(CACHE[id]=trObj(D));
+window.zhLesson=(id,D)=>{if(!D)return D;window.ZHCTX=id;if(COLLECT)return CACHE[id]||(CACHE[id]=trObj(D));const L0=LANG;
  /* 翻譯結果依字典內容快取 */
- const c=CACHE[id];if(c&&c.__d===D&&c.__n===Object.keys(DICT).length)return c.v;
- const v=trObj(D);CACHE[id]={__d:D,__n:Object.keys(DICT).length,v};return v;};
+ const c=CACHE[id];if(c&&c.__d===D&&c.__L===L0&&c.__n===Object.keys(DICT).length)return c.v;
+ const v=trObj(D);CACHE[id]={__d:D,__L:L0,__n:Object.keys(DICT).length,v};return v;};
 /* ---------- (b) 畫面層：互動工具、圖形 ---------- */
 const INL=new Set(['B','STRONG','I','EM','SUP','SUB','SPAN','BR','SMALL','U','MARK','CODE','TSPAN','KBD','S','SVG:TSPAN']);
 const isInl=n=>n.nodeType===3||(n.nodeType===1&&INL.has(n.nodeName.toUpperCase())&&[...n.childNodes].every(isInl));
@@ -94,6 +104,7 @@ function runs(el){const out=[];let cur=[];
 function trNode(el){
  if(el.nodeType!==1||el.nodeName==='SCRIPT'||el.nodeName==='STYLE')return;
  if(el.closest&&el.closest('[data-nozh]'))return;
+ if(isBI()&&el.closest&&el.closest('svg'))return;/* 圖上的標籤只放英文 */
  const covered=new Set();
  for(const r of runs(el)){
   if(!r.some(n=>n.nodeType===3&&/[A-Za-z]/.test(n.data)))continue;
@@ -107,12 +118,12 @@ function trNode(el){
   const frag=rg.createContextualFragment(out);[...frag.childNodes].forEach(n=>covered.add(n));
   el.insertBefore(frag,r[0]);r.forEach(n=>n.remove());}
  for(const c of [...el.children])if(!covered.has(c))trNode(c);
- for(const a of ['placeholder','title']){const v=el.getAttribute&&el.getAttribute(a);if(v&&/[A-Za-z]{3}/.test(v)){const o=TR(v,'b');if(!COLLECT&&o!==v)el.setAttribute(a,o);}}}
+ for(const a of ['placeholder','title']){const v=el.getAttribute&&el.getAttribute(a);if(v&&/[A-Za-z]{3}/.test(v)){let o=TR(v,'b');if(isBI()){const q=zhSplit(o);if(q[0]!==q[1])o=q[0]+' / '+plain(q[1]);}if(!COLLECT&&o!==v)el.setAttribute(a,o);}}}
 window.zhNode=trNode;
 function collectHTML(s){const d=document.createElement('div');d.innerHTML=s;trNode(d);}
 window.zhCollectHTML=collectHTML;
 let obs=null;const ROOTS='#stage,#a2tool-body,.visual-lab,.slope-lab,#unit-diagnostic';
-function active(){return COLLECT||(typeof LANG!=='undefined'&&LANG==='zh');}
+function active(){return COLLECT||(typeof LANG!=='undefined'&&(LANG==='zh'||LANG==='bi'));}
 function inRoot(n){const e=n.nodeType===1?n:n.parentElement;return e&&e.closest(ROOTS);}
 function handle(list){if(!active())return;const seen=new Set();
  for(const m of list){
