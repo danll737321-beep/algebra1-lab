@@ -772,18 +772,24 @@ COURSE.forEach(c=>c.modules.forEach(m=>m.lessons.forEach((t,i)=>{const id=`${c.i
 /* ============ graph grid ============ */
 let GID=0;
 function grid(o){
- const {x0=-6,x1=6,y0=-6,y1=6,u=30,lab=2,xl='',yl='',gs=1}=o;const uy=o.uy||u,laby=o.laby||lab,gsy=o.gsy||gs;const pad=28;
+ let {x0=-6,x1=6,y0=-6,y1=6,u=30,lab=2,xl='',yl='',gs=1}=o;let uy=o.uy||u,laby=o.laby||lab,gsy=o.gsy||gs;const pad=28;
+ /* true 1:1 scale: one x-unit = one y-unit on screen, unless the axes measure different quantities
+    (labelled word axes) or the window is too lopsided to draw at equal scale */
+ const xr=x1-x0,yr=y1-y0,rat=yr/xr,sameQ=(!xl||/^[xθ]$/i.test(xl))&&(!yl||/^[a-zθ]$/i.test(yl)||/^[a-z]\(x\)$/i.test(yl));
+ if(uy!==u&&sameQ&&!o.free&&rat<=5&&rat>=0.2){const L=Math.max(xr*u,yr*uy);u=uy=L/Math.max(xr,yr);
+  const nice=(st,minPx)=>{if(st>=100)return st;for(const k of [1,2,5,10,20,25,50,100])if(k>=st&&k*u>=minPx)return k;return st;};
+  lab=nice(lab,30);laby=nice(laby,22);gs=gsy=Math.min(nice(Math.min(gs,gsy),9),lab,laby);}
  const W=(x1-x0)*u+pad*2,H=(y1-y0)*uy+pad*2+(xl?22:0);const X=x=>pad+(x-x0)*u,Y=y=>pad+(y1-y)*uy;const id='clp'+(++GID);
  let s=`<defs><clipPath id="${id}"><rect x="${X(x0)}" y="${Y(y1)}" width="${(x1-x0)*u}" height="${(y1-y0)*uy}"/></clipPath></defs>`;
- for(let x=x0;x<=x1;x++)if(x%gs===0)s+=`<line x1="${X(x)}" y1="${Y(y0)}" x2="${X(x)}" y2="${Y(y1)}" class="gl"/>`;
- for(let y=y0;y<=y1;y++)if(y%gsy===0)s+=`<line x1="${X(x0)}" y1="${Y(y)}" x2="${X(x1)}" y2="${Y(y)}" class="gl"/>`;
+ for(let x=Math.ceil(x0);x<=x1;x++)if(x%gs===0)s+=`<line x1="${X(x)}" y1="${Y(y0)}" x2="${X(x)}" y2="${Y(y1)}" class="gl"/>`;
+ for(let y=Math.ceil(y0);y<=y1;y++)if(y%gsy===0)s+=`<line x1="${X(x0)}" y1="${Y(y)}" x2="${X(x1)}" y2="${Y(y)}" class="gl"/>`;
  const ay=(y0<=0&&y1>=0)?Y(0):Y(y0),axx=(x0<=0&&x1>=0)?X(0):X(x0);
  s+=`<line x1="${X(x0)}" y1="${ay}" x2="${X(x1)}" y2="${ay}" class="ax"/><line x1="${axx}" y1="${Y(y0)}" x2="${axx}" y2="${Y(y1)}" class="ax"/>`;
- for(let x=x0;x<=x1;x++)if(x!==0&&x%lab===0)s+=`<text x="${X(x)}" y="${ay+16}" text-anchor="middle" class="tl">${fmtNeg(x)}</text>`;
- for(let y=y0;y<=y1;y++)if(y!==0&&y%laby===0)s+=`<text x="${axx-6}" y="${Y(y)+4}" text-anchor="end" class="tl">${fmtNeg(y)}</text>`;
+ for(let x=Math.ceil(x0);x<=x1;x++)if(x!==0&&x%lab===0)s+=`<text x="${X(x)}" y="${ay+16}" text-anchor="middle" class="tl">${fmtNeg(x)}</text>`;
+ for(let y=Math.ceil(y0);y<=y1;y++)if(y!==0&&y%laby===0)s+=`<text x="${axx-6}" y="${Y(y)+4}" text-anchor="end" class="tl">${fmtNeg(y)}</text>`;
  if(xl)s+=`<text x="${X((x0+x1)/2)}" y="${Y(y0)+40}" text-anchor="middle" class="tl" font-weight="700">${xl} →</text>`;
  if(yl)s+=`<text x="${axx+6}" y="${Y(y1)-8}" class="tl" font-weight="700">${yl}</text>`;
- return {W,H,X,Y,x0,x1,y0,y1,u,uy,clip:id,base:s,svg:inner=>`<svg viewBox="0 0 ${W} ${H}" class="fig" style="max-width:${Math.min(W,480)}px">${s}${inner}</svg>`};
+ return {W,H,X,Y,x0,x1,y0,y1,u,uy,clip:id,base:s,svg:inner=>`<svg viewBox="0 0 ${W} ${H}" class="fig" style="max-width:${Math.round(Math.min(W,480,W*600/H))}px">${s}${inner}</svg>`};
 }
 function gline(g,m,b,cls='ln',extra=''){const a=g.x0-1,z=g.x1+1;return `<line clip-path="url(#${g.clip})" x1="${g.X(a)}" y1="${g.Y(m*a+b)}" x2="${g.X(z)}" y2="${g.Y(m*z+b)}" class="${cls}" ${extra}/>`;}
 function gdot(g,x,y,col='#1f2937',r=6,label=''){return `<circle cx="${g.X(x)}" cy="${g.Y(y)}" r="${r}" fill="${col}" stroke="#fff" stroke-width="2"/>`+(label?`<text x="${g.X(x)+9}" y="${g.Y(y)-9}" font-size="13" font-weight="700" fill="${col}" paint-order="stroke" stroke="#fff" stroke-width="4">${label}</text>`:'');}
