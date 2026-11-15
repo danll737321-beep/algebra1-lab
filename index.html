@@ -1825,7 +1825,7 @@ function stPicture(el,id,D){
  el.innerHTML=`<div class="card life"><div class="tag">${t('Real life')}</div><h3>${D.life.title}</h3><div>${D.life.html}</div></div>
  ${D.see.map((s,i)=>`<div class="card"><div class="tag">${t('Explore')}</div><h3>${s.title}</h3><p class="mute" style="margin-top:0">${s.hint}</p><div id="see${i}"></div></div>`).join('')}
  <div class="card"><div class="tag">${t('Key words')}</div><dl class="vocab" data-nozh>${vocabHTML(id,D.vocab)}</dl></div>
- ${D.note?`<div class="card life"><div class="tag">${t('Extra note')}</div><h3>${D.note.title}</h3><div>${D.note.html}</div></div>`:''}`;
+ ${D.note?(N=>`<div class="card life"><div class="tag">${t('Extra note')}</div><h3>${N.title}</h3><div>${N.html}</div></div>`)(zhOn()&&D.note.zh?D.note.zh:D.note):''}`;
  D.see.forEach((s,i)=>s.mount($('#see'+i)));markStage(id,'pic');
 }
 function lineHTML(l,raw,hide){return `<div class="ln-step ${hide?'hide':''}"><div class="m math">${raw||l[2]?l[0]:mx(l[0])}</div><div class="why">${l[1]}</div></div>`;}
