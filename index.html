@@ -612,6 +612,7 @@ button .ico,.btn .ico{margin-right:0}
 <script src="js/zh-st.js"></script>
 <script src="js/zh-pc.js"></script>
 <script src="js/zh-ca.js"></script>
+<script src="js/zh-rt.js"></script>
 <script>
 /* ============ helpers ============ */
 const $=(s,el=document)=>el.querySelector(s);
@@ -637,7 +638,7 @@ function parseAns(s){s=String(s).trim().replace(/[−–]/g,'-').replace(/\s+/g,
 /* ============ language ============ */
 let LANG=(()=>{try{return localStorage.getItem('alg1lab-lang')||'en';}catch(e){return 'en';}})();
 const I18N={en:{btnCheck:'Check',brand:'HS Math <span>Illustrated</span>',zhNote:''},
-zh:{btnCheck:'檢查答案',brand:'<span>圖解</span>數學',zhNote:'介面、課名與關鍵詞為繁體中文；例題與題目維持英文。',
+zh:{btnCheck:'檢查答案',brand:'<span>圖解</span>數學',zhNote:'',
 'Slope Explorer':'斜率探索器','Change the slope and y-intercept. Watch the line move.':'調整斜率與 y 截距，觀察直線變化。','Slope (m)':'斜率 (m)','Y-intercept (b)':'y 截距 (b)','The line rises {0} for every 1 step right.':'每向右移動 1，直線上升 {0}。','The line falls {0} for every 1 step right.':'每向右移動 1，直線下降 {0}。','The line is horizontal.':'這是一條水平線。','The y-intercept is {0}.':'y 截距是 {0}。',
 'INTERACTIVE':'互動操作','Picture to Pencil':'圖解四步','VISUAL MODEL 01':'圖解模型 01','VISUAL MODEL 02':'圖解模型 02','Algebra Tiles':'代數方塊','Build an expression with positive and negative tiles.':'使用正負方塊組成代數式。','Your tiles':'你的方塊','Cancel zero pairs':'消去相反數配對','You have {0} zero pair(s). A positive and a negative tile cancel to make 0.':'目前有 {0} 組零對。正數與負數方塊可以互相抵消，結果為 0。','Combine like tiles: x-tiles with x-tiles, and unit tiles with unit tiles.':'合併同類方塊：x 方塊與 x 方塊合併，單位方塊與單位方塊合併。','{0} x-tile(s) · {1} unit tile(s)':'{0} 個 x 方塊 · {1} 個單位方塊','Equation Balancer':'等式平衡器','Solve an equation while keeping both sides equal.':'解方程式，同時保持等式兩邊平衡。','The equation is balanced. Our goal is to get x by itself. Undo the +3 first.':'等式目前保持平衡。目標是讓 x 單獨留在一邊，先消去 +3。','Subtract 3 from BOTH sides. The balance stays level: 2x + 3 − 3 = 11 − 3, so 2x = 8.':'兩邊同時減去 3，天平仍然平衡：2x + 3 − 3 = 11 − 3，因此 2x = 8。','Divide BOTH sides by 2. The balance stays level: 2x ÷ 2 = 8 ÷ 2, so x = 4.':'兩邊同時除以 2，天平仍然平衡：2x ÷ 2 = 8 ÷ 2，因此 x = 4。','Starting equation':'原始方程式','Step {0} of 2':'第 {0} 步，共 2 步','Keep both sides equal':'保持等式兩邊相等','Solution: x = 4':'解答：x = 4','Try another time':'再操作一次','Next step':'下一步','Reset':'重設','Algebra 1':'代數一','Algebra 1 (Khan)':'代數一（Khan）','Geometry':'幾何','Algebra II':'代數二','Statistics & Probability':'統計與機率','Pre-Calculus':'微積分預備','Calculus':'微積分',
 '{0} of {1} lessons done':'已完成 {0} / {1} 課','soon':'即將推出','Continue':'繼續','Start':'開始','{0} of {1} lessons complete':'已完成 {0} / {1} 課',
@@ -1638,7 +1639,12 @@ for(let u=1;u<=10;u++)MODFILES['CA-'+u]=`js/ca-u${u}.js`;
 for(let u=1;u<=6;u++)MODFILES['ST-'+u]=`js/st-u${u}.js`;
 for(let u=1;u<=13;u++)MODFILES['A2-'+u]=`js/a2-u${u}.js`;
 for(const u of [1,2,3,4,5,6,7,8,10,11,13,14,15])MODFILES['KA-'+u]=`js/ka-u${u}.js`;
-function ensureLesson(id){if(L[id])return Promise.resolve();const src=KA_ALIAS[id];if(src)return ensureLesson(src).then(()=>{if(L[src]&&!L[id])L[id]=Object.assign({},L[src]);});return loadMod(modKey(id));}
+const ZHREADY={};
+function zhDictLoad(id){const f=LANG==='zh'&&window.zhDictFor&&zhDictFor(id);if(!f||ZHREADY[f])return Promise.resolve();return loadJS(f).then(()=>{ZHREADY[f]=1;},()=>{});}
+function zhReady(id){const f=LANG==='zh'&&window.zhDictFor&&zhDictFor(id);return !f||!!ZHREADY[f];}
+const zhOn=()=>ZHON()||window.ZHCOLLECT;
+function ensureLesson(id){return ensureLesson0(id).then(()=>zhDictLoad(id));}
+function ensureLesson0(id){if(L[id])return Promise.resolve();const src=KA_ALIAS[id];if(src)return ensureLesson0(src).then(()=>{if(L[src]&&!L[id])L[id]=Object.assign({},L[src]);});return loadMod(modKey(id));}
 const modKey=id=>id.split('-').slice(0,2).join('-');
 const hasLesson=id=>!!L[id]||!!MODFILES[modKey(id)]||!!KA_ALIAS[id]||Object.keys(KA_ALIAS).some(k=>KA_ALIAS[k]===id);
 const LOADED={};
@@ -1784,7 +1790,7 @@ function renderHome(ui){
  if(/^(A2|ST|PC|CA)-/.test(U.key))mountA2Tool(U.key);
 }
 function mountA2Tool(key){const host=document.createElement('div');host.id='a2tool';const nav=$('.home-main .navrow');if(!nav)return;nav.before(host);
- loadMod(key).then(()=>{const x=window.A2&&A2.TOOLS[key];if(!x||!document.contains(host))return;host.innerHTML=`<section class="interactive-tools-heading"><h2>${t('Interactive Learning Tools')}</h2><p>${t('Use these visual tools to explore and practice key ideas.')}</p></section><section class="card"><div class="tag">${t('INTERACTIVE')}</div><h3>${x.title}</h3><p class="mute" style="margin-top:0">${x.hint}</p><div id="a2tool-body"></div></section>`;x.mount($('#a2tool-body'));}).catch(()=>{});}
+ Promise.all([loadMod(key),zhDictLoad(key)]).then(()=>{const x=window.A2&&A2.TOOLS[key];if(!x||!document.contains(host))return;host.innerHTML=`<section class="interactive-tools-heading"><h2>${t('Interactive Learning Tools')}</h2><p>${t('Use these visual tools to explore and practice key ideas.')}</p></section><section class="card"><div class="tag">${t('INTERACTIVE')}</div><h3>${zhOn()?zhTR(x.title):x.title}</h3><p class="mute" style="margin-top:0">${zhOn()?zhTR(x.hint):x.hint}</p><div id="a2tool-body"></div></section>`;x.mount($('#a2tool-body'));}).catch(()=>{});}
 function mountUnit4Diag(){
  const questions=[
   {q:t('What does the point (3, 7) mean on a graph?'),opts:[t('x = 7 and y = 3'),t('x = 3 and y = 7'),t('The slope is 7')],a:1,why:t('Ordered pairs are written (x, y): move 3 units across, then 7 units up.')},
@@ -1797,7 +1803,7 @@ function mountUnit4Diag(){
  $('#diag-next').addEventListener('click',()=>{if(!answered)return;if(qIndex<2){qIndex++;drawQ();}else{$('#unit-diagnostic').innerHTML=`<b>${t('Starting point:')} ${score}/3</b><p>${score===3?t('You are ready to begin Unit 4.'):t('Review the explanations above, then begin with Lesson 1. You can revisit this check anytime.')}</p><a class="btn primary" href="#/l/KA-4-1/0">${t('Start Lesson 1')} →</a>`;}});drawQ();
 }
 function renderLesson(id,stage){
- const M=META[id],D=L[id],pr=prog(id);document.documentElement.style.setProperty('--acc','#1865f2');
+ const M=META[id],D=zhOn()?zhLesson(id,L[id]):L[id],pr=prog(id);document.documentElement.style.setProperty('--acc','#1865f2');
  const nx=nextLesson(id);
  app.innerHTML=`<div class="wrap"><a href="${unitHref(M.cat,unitIndexOf(id))}">← ${t(M.u+' {0}',M.m)}: ${mt(M.c+'-'+M.m,M.mt)}</a><div class="crumb">${t(M.lab)} · ${t(M.u+' {0}',M.m)}: ${mt(M.c+'-'+M.m,M.mt)} · ${t('Lesson {0}',M.n)}</div><h1>${lt(id)}${ZHON()?`<span class="h1en">${M.title}</span>`:''}</h1><div class="goal"><svg class="goal-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" class="dot"/></svg><span>${D.goal}</span></div>
  <nav class="stepper">${STAGES.map((s,i)=>`<a class="pill ${i===stage?'on':''} ${pr[s.k]?'done':''}" data-k="${s.k}" href="#/l/${id}/${i}"><span class="ic">${s.i} </span>${t(s.n)}</a>`).join('')}</nav>
@@ -1810,7 +1816,7 @@ function markStage(id,k){const pr=prog(id);if(!pr[k]){pr[k]=true;save();}const p
 function stPicture(el,id,D){
  el.innerHTML=`<div class="card life"><div class="tag">${t('Real life')}</div><h3>${D.life.title}</h3><div>${D.life.html}</div></div>
  ${D.see.map((s,i)=>`<div class="card"><div class="tag">${t('Explore')}</div><h3>${s.title}</h3><p class="mute" style="margin-top:0">${s.hint}</p><div id="see${i}"></div></div>`).join('')}
- <div class="card"><div class="tag">${t('Key words')}</div><dl class="vocab">${vocabHTML(id,D.vocab)}</dl></div>`;
+ <div class="card"><div class="tag">${t('Key words')}</div><dl class="vocab" data-nozh>${vocabHTML(id,D.vocab)}</dl></div>`;
  D.see.forEach((s,i)=>s.mount($('#see'+i)));markStage(id,'pic');
 }
 function lineHTML(l,raw,hide){return `<div class="ln-step ${hide?'hide':''}"><div class="m math">${raw||l[2]?l[0]:mx(l[0])}</div><div class="why">${l[1]}</div></div>`;}
@@ -1873,9 +1879,9 @@ function route(){const h=location.hash.replace(/^#\/?/,'').split('/');
  if(h[0]==='l'&&META[h[1]]&&META[h[1]].cat==='alg1'){const k=Object.keys(KA_ALIAS).find(a=>KA_ALIAS[a]===h[1]);if(k){location.replace(`#/l/${k}/${h[2]||0}`);return;}}
  if(h[0]==='c'&&h[1]==='alg1'){location.replace('#/c/ka');return;}
  if(h[0]==='l'&&META[h[1]])CUR=META[h[1]].cat;else if(h[0]==='c'&&CATS.some(c=>c.k===h[1]))CUR=h[1];
- if(h[0]==='l'&&hasLesson(h[1])){const s=Math.max(0,Math.min(3,+h[2]||0));if(L[h[1]])renderLesson(h[1],s);else{app.innerHTML=`<div class="wrap"><p class="mute">${t('Loading lesson…')}</p></div>`;ensureLesson(h[1]).then(()=>{if(L[h[1]])renderLesson(h[1],s);else renderHome();topProg();}).catch(()=>{app.innerHTML=`<div class="wrap"><p class="bad">${t('Could not load this lesson. Check your internet connection and refresh.')}</p></div>`;});}}else{document.documentElement.style.setProperty('--acc','#1865f2');renderHome(h[0]==='c'&&h[2]==='u'?(+h[3]||1)-1:undefined);}
+ if(h[0]==='l'&&hasLesson(h[1])){const s=Math.max(0,Math.min(3,+h[2]||0));if(L[h[1]]&&zhReady(h[1]))renderLesson(h[1],s);else{app.innerHTML=`<div class="wrap"><p class="mute">${t('Loading lesson…')}</p></div>`;ensureLesson(h[1]).then(()=>{if(L[h[1]])renderLesson(h[1],s);else renderHome();topProg();}).catch(()=>{app.innerHTML=`<div class="wrap"><p class="bad">${t('Could not load this lesson. Check your internet connection and refresh.')}</p></div>`;});}}else{document.documentElement.style.setProperty('--acc','#1865f2');renderHome(h[0]==='c'&&h[2]==='u'?(+h[3]||1)-1:undefined);}
  topProg();window.scrollTo(0,0);}
-window.addEventListener('hashchange',route);applyChrome();route();
+window.addEventListener('hashchange',route);applyChrome();if(window.zhStart)zhStart();route();
 </script>
 </body>
 </html>
