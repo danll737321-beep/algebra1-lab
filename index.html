@@ -603,6 +603,8 @@ input[type=range],.slope-control input{accent-color:var(--kb)}
 button .ico,.btn .ico{margin-right:0}
 .langseg{display:inline-flex;border:1px solid #d0d7de;border-radius:999px;overflow:hidden}.langseg button{border:0;border-radius:0;min-height:32px;padding:4px 11px;font-size:13px;font-weight:700;background:#fff;color:#21242c;box-shadow:none;margin:0}.langseg button+button{border-left:1px solid #d0d7de}.langseg button.on{background:#1865f2;color:#fff}
 .bi-zh{display:block;color:inherit;opacity:.72;font-size:.92em;margin-top:2px;font-weight:400}h1 .bi-zh,h2 .bi-zh,h3 .bi-zh{font-size:.72em}.bi-in{color:inherit;opacity:.72;font-weight:400;margin-left:.25em}.btn .bi-zh,.btn .bi-in,button .bi-zh,button .bi-in,.pill .bi-in,.pill .bi-zh,.primary .bi-in{display:inline;color:inherit;opacity:.8;margin:0 0 0 .3em}
+.lesson-page .back-link{display:inline-block;text-decoration:none;font-weight:700;font-size:15px}.lesson-page .back-link:hover{text-decoration:underline}
+.lesson-main>h1{margin-top:6px}
 </style>
 </head>
 <body>
@@ -1775,6 +1777,12 @@ const EXTRAS={'KA-4':{h:()=>` <section class="unit-goals"><div class="unit-goal"
 function catUnits(cat){const r=[];COURSE.filter(c=>c.cat===cat).forEach(c=>c.modules.forEach(m=>r.push({c,m,key:c.id+'-'+m.n,ids:m.lessons.map((_,i)=>`${c.id}-${m.n}-${i+1}`)})));return r;}
 function unitHref(cat,i){return `#/c/${cat}/u/${i+1}`;}
 function unitIndexOf(id){const M=META[id];return catUnits(M.cat).findIndex(u=>u.key===M.c+'-'+M.m);}
+function sideNav(cat,ui,cur){
+ const units=catUnits(cat);
+ const uStat=u=>{const r=u.ids.filter(hasLesson);return {r,f:r.filter(isDone).length};};
+ const lessonLi=(id,i)=>hasLesson(id)?`<li><a href="#/l/${id}/0" class="${isDone(id)?'d':''}${id===cur?' cur':''}"><span class="st ${isDone(id)?'d':''}" aria-hidden="true">${isDone(id)?'✓':id===cur?'▶':'○'}</span><span>${i+1}. ${lt(id)}</span></a></li>`:`<li class="soon"><span class="st" aria-hidden="true">·</span><span>${i+1}. ${lt(id)}</span><small>${t('soon')}</small></li>`;
+ return `<aside class="course-sidebar" aria-label="${tA('Unit list')}"><div class="sidebar-heading">${t('Units')}</div><nav class="sidebar-units">${units.map((u,i)=>{const s=uStat(u),open=i===ui;return `<div class="side-unit${open?' open':''}" style="--mc:${u.m.color}"><a class="sidebar-unit${open?' active':''}" href="${unitHref(cat,i)}" ${open?'aria-current="page"':''}><span>${t((u.c.unit||'Module')+' {0}',u.m.n)}${s.r.length?`<em>${s.f}/${s.r.length}</em>`:''}</span><small>${mt(u.key,u.m.title)}</small>${s.r.length?`<i class="su-bar"><b style="width:${Math.round(s.f/s.r.length*100)}%"></b></i>`:''}</a>${open?`<ol class="side-lessons">${u.ids.map(lessonLi).join('')}</ol>`:''}</div>`;}).join('')}</nav></aside>`;
+}
 function renderHome(ui){
  const cat=CATS.find(c=>c.k===CUR),units=catUnits(CUR),av=avail.filter(inCat),ord=ORDER.filter(inCat),done=av.filter(isDone).length;
  const nid=av.find(id=>!isDone(id))||av[0];
@@ -1788,8 +1796,7 @@ function renderHome(ui){
  ${av.length?`<div class="bar" role="progressbar" aria-label="${tA('Course progress')}" aria-valuemin="0" aria-valuemax="${av.length}" aria-valuenow="${done}"><i style="width:${pct}%"></i></div><div class="mute" style="font-size:14px">${t('{0} of {1} lessons complete',done,av.length)} · ${units.length} ${t('units')} · ${ord.length} ${t('lessons')}${av.length<ord.length?t(' · {0} lessons open now, more coming soon',av.length):''}</div>`
   :`<div class="mute" style="font-size:15px">${t('Course map is ready: {0} modules, {1} lessons. Interactive lessons coming soon.',units.length,ord.length)}</div>`}
  ${t('zhNote')?`<div class="mute" style="font-size:13px;margin-top:8px">${t('zhNote')}</div>`:''}</section>`;
- const lessonLi=(id,i)=>hasLesson(id)?`<li><a href="#/l/${id}/0" class="${isDone(id)?'d':''}${id===nid?' cur':''}"><span class="st ${isDone(id)?'d':''}" aria-hidden="true">${isDone(id)?'✓':id===nid?'▶':'○'}</span><span>${i+1}. ${lt(id)}</span></a></li>`:`<li class="soon"><span class="st" aria-hidden="true">·</span><span>${i+1}. ${lt(id)}</span><small>${t('soon')}</small></li>`;
- const side=`<aside class="course-sidebar" aria-label="${tA('Unit list')}"><div class="sidebar-heading">${t('Units')}</div><nav class="sidebar-units">${units.map((u,i)=>{const s=uStat(u),open=i===ui;return `<div class="side-unit${open?' open':''}" style="--mc:${u.m.color}"><a class="sidebar-unit${open?' active':''}" href="${unitHref(CUR,i)}" ${open?'aria-current="page"':''}><span>${t((u.c.unit||'Module')+' {0}',u.m.n)}${s.r.length?`<em>${s.f}/${s.r.length}</em>`:''}</span><small>${mt(u.key,u.m.title)}</small>${s.r.length?`<i class="su-bar"><b style="width:${Math.round(s.f/s.r.length*100)}%"></b></i>`:''}</a>${open?`<ol class="side-lessons">${u.ids.map(lessonLi).join('')}</ol>`:''}</div>`;}).join('')}</nav></aside>`;
+ const side=sideNav(CUR,ui,nid);
  const pick=`<label class="unit-select"><span>${t('Units')}</span><select aria-label="${tA('Unit list')}" onchange="location.hash=this.value">${units.map((u,i)=>{const s=uStat(u);return `<option value="${unitHref(CUR,i)}" ${i===ui?'selected':''}>${t((u.c.unit||'Module')+' {0}',u.m.n)}: ${mt(u.key,u.m.title)}${s.r.length?` (${s.f}/${s.r.length})`:''}</option>`;}).join('')}</select></label>`;
  const s=uStat(U),upct=s.r.length?Math.round(s.f/s.r.length*100):0,unext=s.r.find(id=>!isDone(id))||s.r[0];
  const tools=(TOOLS[U.key]||[]),ex=EXTRAS[U.key];
@@ -1819,11 +1826,11 @@ function mountUnit4Diag(){
 function renderLesson(id,stage){
  const M=META[id],D=zhOn()?zhLesson(id,L[id]):L[id],pr=prog(id);document.documentElement.style.setProperty('--acc','#1865f2');
  const nx=nextLesson(id);
- app.innerHTML=`<div class="wrap"><a href="${unitHref(M.cat,unitIndexOf(id))}">← ${t(M.u+' {0}',M.m)}: ${mt(M.c+'-'+M.m,M.mt)}</a><div class="crumb">${t(M.lab)} · ${t(M.u+' {0}',M.m)}: ${mt(M.c+'-'+M.m,M.mt)} · ${t('Lesson {0}',M.n)}</div><h1>${lt(id)}${ZHON()&&!BIL()?`<span class="h1en">${M.title}</span>`:''}</h1><div class="goal"><svg class="goal-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" class="dot"/></svg><span>${D.goal}</span></div>
+ app.innerHTML=`<div class="wrap course-page lesson-page"><div class="home-layout">${sideNav(M.cat,unitIndexOf(id),id)}<main class="home-main lesson-main"><a class="back-link" href="${unitHref(M.cat,unitIndexOf(id))}">← ${t(M.u+' {0}',M.m)}: ${mt(M.c+'-'+M.m,M.mt)}</a><div class="crumb">${t(M.lab)} · ${t(M.u+' {0}',M.m)}: ${mt(M.c+'-'+M.m,M.mt)} · ${t('Lesson {0}',M.n)}</div><h1>${lt(id)}${ZHON()&&!BIL()?`<span class="h1en">${M.title}</span>`:''}</h1><div class="goal"><svg class="goal-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" class="dot"/></svg><span>${D.goal}</span></div>
  <nav class="stepper">${STAGES.map((s,i)=>`<a class="pill ${i===stage?'on':''} ${pr[s.k]?'done':''}" data-k="${s.k}" href="#/l/${id}/${i}"><span class="ic">${s.i} </span>${t(s.n)}</a>`).join('')}</nav>
  <section id="stage"></section>
- <div class="navrow">${stage>0?`<a class="btn" href="#/l/${id}/${stage-1}">◀ ${t(STAGES[stage-1].n)}</a>`:'<span></span>'}${stage<3?`<a class="btn primary" href="#/l/${id}/${stage+1}">${t('Next: {0} ▶',t(STAGES[stage+1].n))}</a>`:(nx?`<a class="btn" href="#/l/${nx}/0">${t('Next lesson ▶')}</a>`:`<a class="btn" href="${unitHref(M.cat,unitIndexOf(id))}">${t('All lessons')}</a>`)}</div></div>`;
- const el=$('#stage');[stPicture,stSteps,stPencil,stCheck][stage](el,id,D,pr);
+ <div class="navrow">${stage>0?`<a class="btn" href="#/l/${id}/${stage-1}">◀ ${t(STAGES[stage-1].n)}</a>`:'<span></span>'}${stage<3?`<a class="btn primary" href="#/l/${id}/${stage+1}">${t('Next: {0} ▶',t(STAGES[stage+1].n))}</a>`:(nx?`<a class="btn" href="#/l/${nx}/0">${t('Next lesson ▶')}</a>`:`<a class="btn" href="${unitHref(M.cat,unitIndexOf(id))}">${t('All lessons')}</a>`)}</div></main></div></div>`;
+ const el=$('#stage');const ca=$('.side-lessons a.cur');if(ca)ca.scrollIntoView({block:'nearest'});[stPicture,stSteps,stPencil,stCheck][stage](el,id,D,pr);
 }
 function markStage(id,k){const pr=prog(id);if(!pr[k]){pr[k]=true;save();}const p=$(`.pill[data-k="${k}"]`);if(p)p.classList.add('done');}
 
