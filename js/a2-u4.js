@@ -8,35 +8,37 @@ function mountByX(el){sliders(el,[{k:'d',l:'divide by x to the power',min:1,max:
 /* vertical long division by a linear divisor D=[d1,d0]; returns stepper steps */
 const LM=x=>`<span class="math" style="font-size:1.05em">${x}</span>`;
 function longDivSteps(N,D){const n=N.length-1,R=n,C=[],col=d=>1+(n-d);
- const term=(k,d,first)=>first?mono(k,d):(k<0?'− ':'+ ')+mono(Math.abs(k),d).replace(/^0$/,'0');
- const tz=(k,d,first)=>k===0?(first?mono(1,d).replace(/^1?/,'0'):'+ 0'+(d?pw('x',d):'')):term(k,d,first);
- const put=(row,c,html,st,kind)=>C.push({row,c,html,st,kind});
- put(1,0,ps(D),0,'dv');N.forEach((k,i)=>put(1,1+i,tz(k,n-i,i===0),0,'dd'));
+ const tz=(k,d,first)=>k===0?(first?'0'+pw('x',d):'+ 0'+pw('x',d)):first?mono(k,d):(k<0?'− ':'+ ')+mono(Math.abs(k),d);
+ /* split into [sign, term] so every term in a column lines up on its right edge */
+ const sp=(k,d,first)=>[first?'':(k<0?'−':'+'),k===0?'0'+pw('x',d):first?mono(k,d):mono(Math.abs(k),d)];
+ const put=(row,c,st,kind,[sg,tm],pre='',post='')=>C.push({row,c,st,kind,sg:pre?'−':sg,tm:(pre?'<span style="position:relative"><span style="position:absolute;right:100%;padding-right:1px">(</span></span>':'')+tm+(post?`<span style="display:inline-block;width:0;overflow:visible">${post}</span>`:'')});
+ C.push({row:1,c:0,st:0,kind:'dv',tm:ps(D)});N.forEach((k,i)=>put(1,1+i,0,'dd',sp(k,n-i,i===0)));
  const rem=N.slice(),Q=[],notes=['Set up: the divisor goes outside the bracket, the dividend inside, written in descending powers (use 0 for a missing power).'],line=[];
  for(let r=0;r<R;r++){const d=n-r,qk=rem[r]/D[0];Q.push(qk);const s=1+3*r,lead=tz(rem[r],d,true);
-  put(0,col(d-1),tz(qk,d-1,r===0),s,'q');
+  put(0,col(d-1),s,'q',sp(qk,d-1,r===0));
   notes.push(`Divide the leading terms: ${LM(lead+' ÷ '+mono(D[0],1)+' = '+tz(qk,d-1,true))}. Write ${LM(tz(qk,d-1,true))} on top, above the ${LM(d-1?pw('x',d-1):'constant')} column.`.replace(/above the <span[^>]*>constant<\/span> column/,'above the constant column'));
   const p0=qk*D[0],p1=qk*D[1];
-  put(2+2*r,col(d)-1,'−',s+1,'m');put(2+2*r,col(d),'('+tz(p0,d,true),s+1,'p');put(2+2*r,col(d-1),tz(p1,d-1,false)+')',s+1,'p');line.push([2+2*r,col(d),col(d-1)]);
-  notes.push(`Multiply: ${LM(tz(qk,d-1,true)+'('+ps(D)+') = '+ps([p0,p1].concat(Array(d-1).fill(0))).replace(/^0$/,'0'))}. Write it underneath, like terms lined up.`);
+  put(2+2*r,col(d),s+1,'p',sp(p0,d,true),'−&nbsp;(');put(2+2*r,col(d-1),s+1,'p',sp(p1,d-1,false),'',')');line.push([2+2*r,col(d),col(d-1)]);
+  notes.push(`Multiply: ${LM(tz(qk,d-1,true)+'('+ps(D)+') = '+ps([p0,p1].concat(Array(d-1).fill(0))))}. Write it underneath, like terms lined up.`);
   const a=rem[r+1];rem[r]=0;rem[r+1]-=p1;
-  put(3+2*r,col(d-1),tz(rem[r+1],d-1,true),s+2,'df');
-  if(r<R-1){put(3+2*r,col(d-2),tz(rem[r+2],d-2,false),s+2,'bd');
-   notes.push(`Subtract (change both signs): ${LM(tz(rem[r]+p0,d,true)+' − '+tz(p0,d,true)+' = 0')} and ${LM(tz(a,d-1,true)+' − ('+tz(p1,d-1,true)+') = '+tz(rem[r+1],d-1,true))}. Bring down the next term, ${LM(tz(rem[r+2],d-2,true))}.`);}
+  put(3+2*r,col(d-1),s+2,'df',sp(rem[r+1],d-1,true));
+  if(r<R-1){put(3+2*r,col(d-2),s+2,'bd',sp(rem[r+2],d-2,false));
+   notes.push(`Subtract (change both signs): ${LM(tz(p0,d,true)+' − '+tz(p0,d,true)+' = 0')} and ${LM(tz(a,d-1,true)+' − ('+tz(p1,d-1,true)+') = '+tz(rem[r+1],d-1,true))}. Bring down the next term, ${LM(tz(rem[r+2],d-2,true))}.`);}
   else notes.push(`Subtract: ${LM(tz(a,d-1,true)+' − ('+tz(p1,d-1,true)+') = '+tz(rem[r+1],d-1,true))}. Nothing is left to bring down, so the remainder is ${LM(fmtNeg(rem[r+1]))}.`);}
  const rm=rem[n],last=3*R+1,rows=2+2*R;
  const tbl=st=>{let h='';for(let row=0;row<rows;row++){h+='<tr>';for(let c=0;c<=n+1;c++){const x=C.find(o=>o.row===row&&o.c===c);const ln=line.find(l=>l[0]===row&&c>=l[1]&&c<=l[2]);
-   let sty='padding:3px 7px;white-space:nowrap;text-align:'+(c===0?'right':'left')+';';
-   if(row===1&&c===0)sty+='border-right:2.5px solid #374151;border-top-right-radius:12px;padding-right:10px;';
-   if(row===1&&c>0)sty+='border-top:2.5px solid #374151;';
+   let sty='white-space:nowrap;';
    if(row===0)sty+='font-weight:700;color:#2563eb;';
-   if(ln&&x&&x.st<=st)sty+='border-bottom:2px solid #374151;';
    if(x){if(x.st>st)sty+='visibility:hidden;';else{
      if(x.kind==='bd')sty+='color:#15803d;font-weight:700;';
-     if(x.kind==='p'||x.kind==='m')sty+='color:#b45309;';
+     if(x.kind==='p')sty+='color:#b45309;';
      if(x.st===st&&st>0)sty+='background:#fef3c7;';
      if(row===rows-1&&st>=last-1)sty+='background:'+(rm?'#fee2e2':'#dcfce7')+';font-weight:700;';}}
-   h+=`<td style="${sty}">${x?x.html:''}</td>`;}h+='</tr>';}
+   if(ln&&x&&x.st<=st)sty+='border-bottom:2px solid #374151;';
+   if(c===0){h+=`<td style="${sty}padding:4px 10px 4px 4px;text-align:right;${row===1?'border-right:2.5px solid #374151;':''}">${x?x.tm:''}</td>`;continue;}
+   const top=row===1?'border-top:2.5px solid #374151;':'';
+   h+=`<td style="${sty}${top}padding:4px ${x&&x.kind==='p'&&x.sg?10:4}px 4px ${c===1?4:12}px;text-align:right">${x?x.sg:''}</td><td style="${sty}${top}padding:4px 2px;text-align:right;min-width:2.2em">${x?x.tm:''}</td>`;}
+  h+=`<td style="width:12px;${row===1?'border-top:2.5px solid #374151;':''}"></td></tr>`;}
   return `<table class="math" style="margin:8px auto;border-collapse:collapse;font-size:1.25em">${h}</table>`;};
  const steps=notes.map((nt,i)=>({h:tbl(i),n:nt}));
  const qs=ps(Q),ans=`${ps(N)} = (${ps(D)})(${qs})${rm?(rm<0?' − ':' + ')+Math.abs(rm):''}`;

@@ -611,12 +611,12 @@ button .ico,.btn .ico{margin-right:0}
 <header class="top"><a class="brand" href="#/">HS Math <span>Illustrated</span></a><span class="hdr-r"><span class="topprog" id="topprog"></span><span class="langseg" id="langseg" role="group" aria-label="Language"><button data-l="zh" onclick="setLang('zh')">中文</button><button data-l="en" onclick="setLang('en')">EN</button><button data-l="bi" onclick="setLang('bi')">中英</button></span></span></header>
 <main id="app"></main>
 <footer>Picture to Pencil: Picture → Steps → Pencil → Check · Algebra 1 · Geometry · Algebra II · Pre-Calculus · Calculus</footer>
-<script src="js/zh.js?v=20261117b"></script>
-<script src="js/zh-a2.js?v=20261117b"></script>
-<script src="js/zh-st.js?v=20261117b"></script>
-<script src="js/zh-pc.js?v=20261117b"></script>
-<script src="js/zh-ca.js?v=20261117b"></script>
-<script src="js/zh-rt.js?v=20261117b"></script>
+<script src="js/zh.js?v=20261117c"></script>
+<script src="js/zh-a2.js?v=20261117c"></script>
+<script src="js/zh-st.js?v=20261117c"></script>
+<script src="js/zh-pc.js?v=20261117c"></script>
+<script src="js/zh-ca.js?v=20261117c"></script>
+<script src="js/zh-rt.js?v=20261117c"></script>
 <script>
 /* ============ helpers ============ */
 const $=(s,el=document)=>el.querySelector(s);
@@ -1664,7 +1664,7 @@ function ensureLesson0(id){if(L[id])return Promise.resolve();const src=KA_ALIAS[
 const modKey=id=>id.split('-').slice(0,2).join('-');
 const hasLesson=id=>!!L[id]||!!MODFILES[modKey(id)]||!!KA_ALIAS[id]||Object.keys(KA_ALIAS).some(k=>KA_ALIAS[k]===id);
 const LOADED={};
-const JSV='20261117b';function loadJS(src){return LOADED[src]||(LOADED[src]=new Promise((res,rej)=>{const sc=document.createElement('script');sc.src=src+'?v='+JSV;sc.onload=res;sc.onerror=()=>{delete LOADED[src];rej();};document.head.appendChild(sc);}));}
+const JSV='20261117c';function loadJS(src){return LOADED[src]||(LOADED[src]=new Promise((res,rej)=>{const sc=document.createElement('script');sc.src=src+'?v='+JSV;sc.onload=res;sc.onerror=()=>{delete LOADED[src];rej();};document.head.appendChild(sc);}));}
 function loadMod(k){if(!MODFILES[k])return Promise.resolve();const pre=[].concat(PREREQ[k.split('-')[0]]||[]);return pre.reduce((p,src)=>p.then(()=>loadJS(src)),Promise.resolve()).then(()=>loadJS(MODFILES[k]));}
 const avail=ORDER.filter(hasLesson);
 function nextLesson(id){const i=avail.indexOf(id),n=avail[i+1];return n&&META[n].cat===META[id].cat?n:undefined;}
