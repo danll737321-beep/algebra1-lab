@@ -1,21 +1,49 @@
 /* Algebra 2 · Unit 4 · Polynomial division */
-(function(){const {ps,mono,pmul,peval,synth,sliders,graphLab,areaTable,ex,q,mc,num,nz,stepper,TOOLS,nf,sup}=A2;
+(function(){const {ps,mono,pmul,peval,synth,sliders,graphLab,areaTable,ex,q,mc,num,nz,stepper,TOOLS,nf,sup,pw}=A2;
 function synTable(co,r){const {q:qq,rem}=synth(co,r);const mid=[''];let c=0;co.forEach((k,i)=>{if(i){mid.push(fmtNeg(c*r));}c=c*r+k;});
  return `<table class="t" style="margin:8px auto;font-size:1.1em"><tr><th rowspan="3" style="border-right:3px solid #374151">${fmtNeg(r)}</th>${co.map(k=>`<td>${fmtNeg(k)}</td>`).join('')}</tr><tr>${mid.map(v=>`<td style="color:#2563eb">${v}</td>`).join('')}</tr><tr style="border-top:3px solid #374151">${qq.map(v=>`<td><b>${fmtNeg(v)}</b></td>`).join('')}<td style="background:#fee2e2"><b>${fmtNeg(rem)}</b></td></tr></table>`;}
 function mountByX(el){sliders(el,[{k:'d',l:'divide by x to the power',min:1,max:2,v:1},{k:'c',l:'coefficient',min:1,max:3,v:2}],V=>{const N=[6,-4,2,0];const den=mono(V.c,V.d);
   const parts=N.map((k,i)=>[k,3-i]).filter(x=>x[0]);
   $('.bx-r',el).innerHTML=`<div class="eqline math">(${ps(N)}) ÷ ${den}</div><div class="eqline math" style="font-size:1.25em">= ${parts.map(([k,d])=>`<span style="display:inline-block;text-align:center;vertical-align:middle;margin:0 4px"><span style="border-bottom:2px solid #374151;display:block;padding:0 4px">${mono(k,d)}</span><span>${den}</span></span>`).join(' + ')}</div><div class="eqline math">= <b>${parts.map(([k,d])=>{const kk=k/V.c,dd=d-V.d;return dd<0?`${nf(kk)}/x${sup(-dd>1?-dd:'')}`:mono(+kk.toFixed(4),dd);}).join(' + ').replace(/\+ −/g,'− ')}</b></div><span class="mute">Split into one fraction per term, then divide coefficients and subtract exponents. ${V.d===2?'A negative exponent means a term like 1/x — the result is no longer a polynomial (there is a remainder).':''}</span>`;},`<div class="readout bx-r"></div>`).run();}
-function mountLong(el){stepper(el,[{t:'(x² + 7x + 10) ÷ (x + 2)',steps:[
- {h:'<div class="eqline math">x + 2 ) x² + 7x + 10</div>',n:'Divide the leading terms: x² ÷ x = x. Write x on top.'},
- {h:'<div class="eqline math">x(x + 2) = x² + 2x</div>',n:'Multiply x by the divisor.'},
- {h:'<div class="eqline math">(x² + 7x) − (x² + 2x) = 5x → bring down +10 → 5x + 10</div>',n:'Subtract and bring down the next term.'},
- {h:'<div class="eqline math">5x ÷ x = 5; 5(x + 2) = 5x + 10; remainder 0</div>',n:'Repeat: divide, multiply, subtract.'},
- {h:'<div class="eqline math">x² + 7x + 10 = (x + 2)(x + 5)</div>'+areaTable(['x','2'],['x','5'],(i,j)=>[['x²','5x'],['2x','10']][i][j],(i,j)=>i+j),n:'Remainder 0 means x + 2 is a factor. The area model shows the same answer.'}]},
- {t:'(2x² − 3x + 4) ÷ (x − 1)',steps:[
- {h:'<div class="eqline math">2x² ÷ x = 2x</div>',n:'Divide leading terms.'},
- {h:'<div class="eqline math">(2x² − 3x) − (2x² − 2x) = −x → −x + 4</div>',n:'Multiply 2x(x − 1), subtract, bring down.'},
- {h:'<div class="eqline math">−x ÷ x = −1; (−x + 4) − (−x + 1) = 3</div>',n:'Repeat. The remainder is 3.'},
- {h:'<div class="eqline math">2x² − 3x + 4 = (x − 1)(2x − 1) + 3</div><div class="eqline math">→ 2x − 1 + 3/(x − 1)</div>',n:'Write the answer: quotient + remainder/divisor.'}]}]);}
+/* vertical long division by a linear divisor D=[d1,d0]; returns stepper steps */
+const LM=x=>`<span class="math" style="font-size:1.05em">${x}</span>`;
+function longDivSteps(N,D){const n=N.length-1,R=n,C=[],col=d=>1+(n-d);
+ const term=(k,d,first)=>first?mono(k,d):(k<0?'− ':'+ ')+mono(Math.abs(k),d).replace(/^0$/,'0');
+ const tz=(k,d,first)=>k===0?(first?mono(1,d).replace(/^1?/,'0'):'+ 0'+(d?pw('x',d):'')):term(k,d,first);
+ const put=(row,c,html,st,kind)=>C.push({row,c,html,st,kind});
+ put(1,0,ps(D),0,'dv');N.forEach((k,i)=>put(1,1+i,tz(k,n-i,i===0),0,'dd'));
+ const rem=N.slice(),Q=[],notes=['Set up: the divisor goes outside the bracket, the dividend inside, written in descending powers (use 0 for a missing power).'],line=[];
+ for(let r=0;r<R;r++){const d=n-r,qk=rem[r]/D[0];Q.push(qk);const s=1+3*r,lead=tz(rem[r],d,true);
+  put(0,col(d-1),tz(qk,d-1,r===0),s,'q');
+  notes.push(`Divide the leading terms: ${LM(lead+' ÷ '+mono(D[0],1)+' = '+tz(qk,d-1,true))}. Write ${LM(tz(qk,d-1,true))} on top, above the ${LM(d-1?pw('x',d-1):'constant')} column.`.replace(/above the <span[^>]*>constant<\/span> column/,'above the constant column'));
+  const p0=qk*D[0],p1=qk*D[1];
+  put(2+2*r,col(d)-1,'−',s+1,'m');put(2+2*r,col(d),'('+tz(p0,d,true),s+1,'p');put(2+2*r,col(d-1),tz(p1,d-1,false)+')',s+1,'p');line.push([2+2*r,col(d),col(d-1)]);
+  notes.push(`Multiply: ${LM(tz(qk,d-1,true)+'('+ps(D)+') = '+ps([p0,p1].concat(Array(d-1).fill(0))).replace(/^0$/,'0'))}. Write it underneath, like terms lined up.`);
+  const a=rem[r+1];rem[r]=0;rem[r+1]-=p1;
+  put(3+2*r,col(d-1),tz(rem[r+1],d-1,true),s+2,'df');
+  if(r<R-1){put(3+2*r,col(d-2),tz(rem[r+2],d-2,false),s+2,'bd');
+   notes.push(`Subtract (change both signs): ${LM(tz(rem[r]+p0,d,true)+' − '+tz(p0,d,true)+' = 0')} and ${LM(tz(a,d-1,true)+' − ('+tz(p1,d-1,true)+') = '+tz(rem[r+1],d-1,true))}. Bring down the next term, ${LM(tz(rem[r+2],d-2,true))}.`);}
+  else notes.push(`Subtract: ${LM(tz(a,d-1,true)+' − ('+tz(p1,d-1,true)+') = '+tz(rem[r+1],d-1,true))}. Nothing is left to bring down, so the remainder is ${LM(fmtNeg(rem[r+1]))}.`);}
+ const rm=rem[n],last=3*R+1,rows=2+2*R;
+ const tbl=st=>{let h='';for(let row=0;row<rows;row++){h+='<tr>';for(let c=0;c<=n+1;c++){const x=C.find(o=>o.row===row&&o.c===c);const ln=line.find(l=>l[0]===row&&c>=l[1]&&c<=l[2]);
+   let sty='padding:3px 7px;white-space:nowrap;text-align:'+(c===0?'right':'left')+';';
+   if(row===1&&c===0)sty+='border-right:2.5px solid #374151;border-top-right-radius:12px;padding-right:10px;';
+   if(row===1&&c>0)sty+='border-top:2.5px solid #374151;';
+   if(row===0)sty+='font-weight:700;color:#2563eb;';
+   if(ln&&x&&x.st<=st)sty+='border-bottom:2px solid #374151;';
+   if(x){if(x.st>st)sty+='visibility:hidden;';else{
+     if(x.kind==='bd')sty+='color:#15803d;font-weight:700;';
+     if(x.kind==='p'||x.kind==='m')sty+='color:#b45309;';
+     if(x.st===st&&st>0)sty+='background:#fef3c7;';
+     if(row===rows-1&&st>=last-1)sty+='background:'+(rm?'#fee2e2':'#dcfce7')+';font-weight:700;';}}
+   h+=`<td style="${sty}">${x?x.html:''}</td>`;}h+='</tr>';}
+  return `<table class="math" style="margin:8px auto;border-collapse:collapse;font-size:1.25em">${h}</table>`;};
+ const steps=notes.map((nt,i)=>({h:tbl(i),n:nt}));
+ const qs=ps(Q),ans=`${ps(N)} = (${ps(D)})(${qs})${rm?(rm<0?' − ':' + ')+Math.abs(rm):''}`;
+ steps.push({h:tbl(last)+`<div class="eqline math">${ans}</div>`+(rm?`<div class="eqline math">→ ${qs} ${rm<0?'−':'+'} ${Math.abs(rm)}/(${ps(D)})</div>`:areaTable([mono(D[0],1),fmtNeg(D[1])],[mono(Q[0],1),fmtNeg(Q[1])],(i,j)=>mono(D[i]*Q[j],2-i-j),(i,j)=>i+j)),
+  n:rm?'Write the answer: quotient + remainder/divisor.':'Remainder 0 means the divisor is a factor. The area model shows the same answer.'});
+ return steps;}
+function mountLong(el){stepper(el,[[[1,7,10],[1,2]],[[2,-3,4],[1,-1]],[[1,0,-9],[1,3]]].map(([N,D])=>({t:`(${ps(N)}) ÷ (${ps(D)})`,steps:longDivSteps(N,D)})));}
 const POLYS=[[1,-2,-5,6],[2,-3,0,4],[1,0,-7,6],[1,4,1,-6]];
 function mountSynth(el){let pi=0;el.innerHTML=`<div class="row">${POLYS.map((p,i)=>`<button data-p="${i}">${ps(p)}</button>`).join('')}</div><div class="sy-s"></div>`;
  const sp=sliders($('.sy-s',el),[{k:'r',l:'divide by (x − r): r',min:-4,max:4,v:1}],V=>{const co=POLYS[pi],{q:qq,rem}=synth(co,V.r);
